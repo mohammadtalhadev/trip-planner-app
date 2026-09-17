@@ -165,14 +165,35 @@ src/
 
 ---
 
-## 💾 State Management
+## 💾 State Management & Per-User Isolation
 
-The application uses **Zustand** stores with localStorage persistence:
+The application uses **Zustand** stores with per-user `localStorage` partitioning:
 
-- **`useTripStore`**: Manages all user trips, day-by-day itineraries, activities, reordering, and expenses.
-- **`useSavedPlacesStore`**: Handles bookmarked destinations and curated attractions.
-- **`usePreferencesStore`**: Stores user settings (currency, temperature unit, theme, default travelers).
-- **`useUserStore`**: Holds local user profile information.
+- **`useTripStore`**: Manages all user trips, day-by-day itineraries, activities, reordering, and budget expense ledgers. Scoped per user under `tp_trips_<userId>`. Pre-seeded with the reference Turkey Vacation (Istanbul) demo for the admin account.
+- **`useSavedPlacesStore`**: Handles bookmarked destinations and curated attractions. Scoped per user under `tp_saved_<userId>`.
+- **`usePreferencesStore`**: Stores user settings (currency, temperature unit, theme, travel style, default travelers). Scoped per user under `tp_pref_<userId>`.
+- **`useUserStore`**: Holds user profile and session state (`usr-admin` or newly registered users).
+- **`userSessionSync`**: Coordinates seamless state swapping across all stores when switching users, logging in, or logging out.
+
+---
+
+## 💡 Important Technical Decisions
+
+### 1. State Management with Zustand over Redux or React Context
+- **Why Zustand?** React Context causes full subtree re-renders whenever any nested state property changes, which causes unnecessary re-renders in heavy itinerary and budget views. Redux Toolkit introduces significant boilerplate for client-side persistence. Zustand provides fine-grained selector subscriptions (`useTripStore(state => state.trips)`), zero provider nesting, and lightweight middleware.
+
+### 2. Client-Side Per-User Data Isolation
+- **Why scoped storage keys (`tp_trips_<userId>`)?** As specified in the project requirements, every user needs their own isolated saved places, distinct budget ledgers, customized itinerary builder, and personalized preferences. By scoping keys by `userId`, multiple users can register and log in on the same browser without data bleed, while the default Admin account retains the reference Turkey Vacation demo.
+
+### 3. API Resilience & Partial Failure Handling (`Promise.allSettled`)
+- **Independent API calls**: The Destination Details page loads data from four separate sources (Open-Meteo, Wikipedia REST API, Wikimedia Live Metrics, Geoapify/OpenStreetMap). By using `Promise.allSettled` and component-level error boundaries, if the Weather API or Places API experiences downtime or rate limiting, the remaining sections continue to render gracefully with fallback UI and retry buttons.
+
+### 4. Debounced Search & Race Condition Prevention (`AbortController`)
+- **Keystroke Optimization**: Keystrokes in destination search are debounced (300ms) to prevent hammering public APIs.
+- **Preventing Stale Results**: When a user quickly types "London" then changes to "Tokyo", earlier asynchronous responses might resolve after newer ones. We bind each fetch to an `AbortController`, canceling pending requests on subsequent keystrokes to guarantee the UI always displays the latest query's results.
+
+### 5. Multi-Step Onboarding Wizard with Skip Capabilities
+- **Frictionless Sign Up**: The 3-step Sign Up wizard (`Account Basics` → `Personalize Preferences` → `First Destination`) validates security on Step 1 while offering non-blocking **"Skip"** options on Steps 2 and 3, ensuring users can either immediately explore with sensible defaults or fully tailor their initial workspace.
 
 ---
 
