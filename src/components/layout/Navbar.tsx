@@ -619,6 +619,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         {/* "Start Planning Free ->" Button with interactive hover effect */}
         <button
           onClick={() => {
+            if (!user.isLoggedIn) {
+              navigate('/signup');
+              return;
+            }
             if (onOpenCreateTrip) onOpenCreateTrip();
             else navigate('/trips/new');
           }}
@@ -730,6 +734,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           <button
             onClick={() => {
               setIsMobileMenuOpen(false);
+              if (!user.isLoggedIn) {
+                navigate('/signup');
+                return;
+              }
               if (onOpenCreateTrip) onOpenCreateTrip();
               else navigate('/trips/new');
             }}

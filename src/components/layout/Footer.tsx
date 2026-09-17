@@ -196,11 +196,6 @@ export const Footer: React.FC = () => {
                     Destination Guides
                   </Link>
                 </li>
-                <li>
-                  <span className="text-slate-400 dark:text-slate-600 cursor-not-allowed">
-                    Mobile App (Coming Soon)
-                  </span>
-                </li>
               </ul>
             </div>
 

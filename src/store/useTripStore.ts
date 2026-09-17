@@ -1,11 +1,13 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import { Trip, Activity, Expense, ItineraryDay } from '../types/trip';
 import { addDaysToDate, calculateTripDays } from '../utils/date';
+import { getInitialActiveUserId } from './userStorageHelper';
 
-interface TripStoreState {
+export interface TripStoreState {
   trips: Trip[];
   currentTripId: string | null;
+  activeUserId: string;
+  loadUserTrips: (userId: string) => void;
 
   // Trip Actions
   createTrip: (
@@ -58,7 +60,7 @@ interface TripStoreState {
 }
 
 // Initial demo trip matching the PDF specification (Turkey Vacation: Istanbul)
-const INITIAL_DEMO_TRIPS: Trip[] = [
+export const INITIAL_DEMO_TRIPS: Trip[] = [
   {
     id: 'demo-turkey-vacation',
     name: 'Turkey Vacation',
@@ -179,33 +181,33 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
             time: '10:00',
             category: 'shopping',
             location: 'Beyazıt',
-            cost: 80,
-            notes: 'Explore ceramics, spices, carpets, and lamps',
-            completed: false,
+            cost: 0,
+            notes: 'Explore covered alleys, Turkish spices, and handicrafts',
+            completed: true,
             orderIndex: 0,
           },
           {
             id: 'act-2-2',
             dayId: 'day-2',
-            title: 'Lunch at Karaköy Waterfront',
+            title: 'Lunch near Spice Market',
             time: '13:00',
             category: 'food',
-            location: 'Karaköy Güllüoğlu',
-            cost: 50,
-            notes: 'Fresh seafood sandwich and world famous pistachio baklava',
-            completed: false,
+            location: 'Eminönü Fishermen Wharf',
+            cost: 30,
+            notes: 'Fresh Balık Ekmek (fish sandwich)',
+            completed: true,
             orderIndex: 1,
           },
           {
             id: 'act-2-3',
             dayId: 'day-2',
-            title: 'Galata Tower Viewpoint',
+            title: 'Galata Tower Panoramic View',
             time: '16:00',
             category: 'sightseeing',
-            location: 'Beyoğlu',
+            location: 'Bereketzade, Beyoğlu',
             cost: 30,
-            notes: '360-degree panoramic view of Golden Horn and Old City',
-            completed: false,
+            notes: '360 degree panoramic view across Golden Horn',
+            completed: true,
             orderIndex: 2,
           },
         ],
@@ -213,8 +215,8 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
           {
             id: 'exp-2-1',
             dayId: 'day-2',
-            description: 'Grand Bazaar Handicrafts & Spices',
-            amount: 150,
+            description: 'Spices and Turkish Delights',
+            amount: 70,
             currency: 'USD',
             category: 'Shopping',
             date: '2026-09-21',
@@ -222,29 +224,20 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
           {
             id: 'exp-2-2',
             dayId: 'day-2',
-            description: 'Karaköy Dining & Desserts',
-            amount: 70,
-            currency: 'USD',
-            category: 'Food',
-            date: '2026-09-21',
-          },
-          {
-            id: 'exp-2-3',
-            dayId: 'day-2',
-            description: 'Galata Tower Tickets (3 persons)',
+            description: 'Galata Tower 3x Entry Tickets',
             amount: 90,
             currency: 'USD',
             category: 'Activities',
             date: '2026-09-21',
           },
           {
-            id: 'exp-2-4',
+            id: 'exp-2-3',
             dayId: 'day-2',
-            description: 'International Flights (Allocated)',
-            amount: 690,
+            description: 'Seafood Dinner under Galata Bridge',
+            amount: 120,
             currency: 'USD',
-            category: 'Transportation',
-            date: '2026-09-20',
+            category: 'Food',
+            date: '2026-09-21',
           },
         ],
       },
@@ -253,6 +246,7 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
         dayNumber: 3,
         date: '2026-09-22',
         title: 'Taksim & Istiklal Street',
+        notes: 'Casual afternoon walking tour and local cafes.',
         activities: [
           {
             id: 'act-3-1',
@@ -277,369 +271,433 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
             orderIndex: 1,
           },
         ],
-        expenses: [],
+        expenses: [
+          {
+            id: 'exp-3-1',
+            dayId: 'day-3',
+            description: 'Flight Booking Deposit',
+            amount: 720,
+            currency: 'USD',
+            category: 'Transportation',
+            date: '2026-09-22',
+          },
+        ],
       },
     ],
   },
 ];
 
-export const useTripStore = create<TripStoreState>()(
-  persist(
-    (set) => ({
-      trips: INITIAL_DEMO_TRIPS,
-      currentTripId: 'demo-turkey-vacation',
+const getTripsKey = (userId: string) => `tp_trips_${userId || 'guest'}`;
 
-      createTrip: (data) => {
-        const totalDays = calculateTripDays(data.startDate, data.endDate);
-        const days: ItineraryDay[] =
-          data.days && data.days.length > 0
-            ? data.days
-            : Array.from({ length: totalDays }, (_, idx) => ({
-                id: `day-${Date.now()}-${idx + 1}`,
-                dayNumber: idx + 1,
-                date: addDaysToDate(data.startDate, idx),
-                title: `Day ${idx + 1}`,
-                activities: [],
-                expenses: [],
-              }));
+export function loadStoredTrips(userId: string): Trip[] {
+  const key = getTripsKey(userId);
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+    // Legacy migration for admin
+    if (userId === 'usr-admin') {
+      const legacy = localStorage.getItem('trip-planner-trips');
+      if (legacy) {
+        const parsed = JSON.parse(legacy);
+        const trips = parsed.state?.trips || parsed;
+        if (Array.isArray(trips) && trips.length > 0) {
+          localStorage.setItem(key, JSON.stringify(trips));
+          return trips;
+        }
+      }
+      // If admin has nothing yet, seed with demo trips
+      localStorage.setItem(key, JSON.stringify(INITIAL_DEMO_TRIPS));
+      return INITIAL_DEMO_TRIPS;
+    }
+  } catch (err) {
+    console.warn('Failed to parse trips for user:', userId, err);
+  }
+  return [];
+}
 
-        const newTrip: Trip = {
-          ...data,
-          id: `trip-${Date.now()}`,
-          days,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
+function saveUserTrips(userId: string, trips: Trip[]) {
+  try {
+    localStorage.setItem(getTripsKey(userId), JSON.stringify(trips));
+  } catch (err) {
+    console.warn('Failed to save user trips:', err);
+  }
+}
 
-        set((state) => ({
-          trips: [newTrip, ...state.trips],
-          currentTripId: newTrip.id,
-        }));
+const initialUserId = getInitialActiveUserId();
+const initialTrips = loadStoredTrips(initialUserId);
 
-        return newTrip;
-      },
+export const useTripStore = create<TripStoreState>((set) => {
+  const setWithSave = (updater: (state: TripStoreState) => Partial<TripStoreState>) => {
+    set((state) => {
+      const next = updater(state);
+      if (next.trips) {
+        saveUserTrips(state.activeUserId, next.trips);
+      }
+      return next;
+    });
+  };
 
-      updateTrip: (id, updates) => {
-        set((state) => ({
-          trips: state.trips.map((trip) =>
-            trip.id === id
-              ? { ...trip, ...updates, updatedAt: new Date().toISOString() }
-              : trip
-          ),
-        }));
-      },
+  return {
+    trips: initialTrips,
+    currentTripId: initialTrips[0]?.id || null,
+    activeUserId: initialUserId,
 
-      deleteTrip: (id) => {
-        set((state) => {
-          const remaining = state.trips.filter((t) => t.id !== id);
-          return {
-            trips: remaining,
-            currentTripId:
-              state.currentTripId === id ? remaining[0]?.id || null : state.currentTripId,
-          };
-        });
-      },
+    loadUserTrips: (userId: string) => {
+      const loaded = loadStoredTrips(userId);
+      set({
+        activeUserId: userId,
+        trips: loaded,
+        currentTripId: loaded[0]?.id || null,
+      });
+    },
 
-      setCurrentTrip: (id) => {
-        set({ currentTripId: id });
-      },
-
-      addDay: (tripId) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
-            const newDayNum = trip.days.length + 1;
-            const lastDate = trip.days[trip.days.length - 1]?.date || trip.startDate;
-            const newDate = addDaysToDate(lastDate, 1);
-
-            const newDay: ItineraryDay = {
-              id: `day-${Date.now()}-${newDayNum}`,
-              dayNumber: newDayNum,
-              date: newDate,
-              title: `Day ${newDayNum}`,
+    createTrip: (data) => {
+      const totalDays = calculateTripDays(data.startDate, data.endDate);
+      const days: ItineraryDay[] =
+        data.days && data.days.length > 0
+          ? data.days
+          : Array.from({ length: totalDays }, (_, idx) => ({
+              id: `day-${Date.now()}-${idx + 1}`,
+              dayNumber: idx + 1,
+              date: addDaysToDate(data.startDate, idx),
+              title: `Day ${idx + 1}`,
               activities: [],
               expenses: [],
-            };
-
-            return {
-              ...trip,
-              days: [...trip.days, newDay],
-              endDate: newDate,
-              updatedAt: new Date().toISOString(),
-            };
-          }),
-        }));
-      },
-
-      removeDay: (tripId, dayId) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
-            const filtered = trip.days.filter((d) => d.id !== dayId);
-            // Re-number days
-            const renumbered = filtered.map((d, index) => ({
-              ...d,
-              dayNumber: index + 1,
             }));
-            return {
-              ...trip,
-              days: renumbered,
-              updatedAt: new Date().toISOString(),
-            };
-          }),
-        }));
-      },
 
-      updateDayNotes: (tripId, dayId, notes) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
-            return {
-              ...trip,
-              days: trip.days.map((day) =>
-                day.id === dayId ? { ...day, notes } : day
-              ),
-              updatedAt: new Date().toISOString(),
-            };
-          }),
-        }));
-      },
+      const newTrip: Trip = {
+        ...data,
+        id: `trip-${Date.now()}`,
+        days,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
 
-      addActivity: (tripId, dayId, activityData) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
+      setWithSave((state) => ({
+        trips: [newTrip, ...state.trips],
+        currentTripId: newTrip.id,
+      }));
 
-            return {
-              ...trip,
-              days: trip.days.map((day) => {
-                if (day.id !== dayId) return day;
+      return newTrip;
+    },
 
-                const newActivity: Activity = {
-                  ...activityData,
-                  id: `act-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-                  dayId,
-                  orderIndex: day.activities.length,
-                };
+    updateTrip: (id, updates) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) =>
+          trip.id === id
+            ? { ...trip, ...updates, updatedAt: new Date().toISOString() }
+            : trip
+        ),
+      }));
+    },
 
-                return {
-                  ...day,
-                  activities: [...day.activities, newActivity],
-                };
-              }),
-              updatedAt: new Date().toISOString(),
-            };
-          }),
-        }));
-      },
+    deleteTrip: (id) => {
+      setWithSave((state) => {
+        const remaining = state.trips.filter((t) => t.id !== id);
+        return {
+          trips: remaining,
+          currentTripId:
+            state.currentTripId === id ? remaining[0]?.id || null : state.currentTripId,
+        };
+      });
+    },
 
-      updateActivity: (tripId, activityId, updates) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
+    setCurrentTrip: (id) => {
+      set({ currentTripId: id });
+    },
 
-            return {
-              ...trip,
-              days: trip.days.map((day) => ({
-                ...day,
-                activities: day.activities.map((act) =>
-                  act.id === activityId ? { ...act, ...updates } : act
-                ),
-              })),
-              updatedAt: new Date().toISOString(),
-            };
-          }),
-        }));
-      },
+    addDay: (tripId) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
+          const newDayNum = trip.days.length + 1;
+          const lastDate = trip.days[trip.days.length - 1]?.date || trip.startDate;
+          const newDate = addDaysToDate(lastDate, 1);
 
-      deleteActivity: (tripId, activityId) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
-
-            return {
-              ...trip,
-              days: trip.days.map((day) => ({
-                ...day,
-                activities: day.activities
-                  .filter((act) => act.id !== activityId)
-                  .map((act, idx) => ({ ...act, orderIndex: idx })),
-              })),
-              updatedAt: new Date().toISOString(),
-            };
-          }),
-        }));
-      },
-
-      toggleActivityCompleted: (tripId, activityId) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
-
-            return {
-              ...trip,
-              days: trip.days.map((day) => ({
-                ...day,
-                activities: day.activities.map((act) =>
-                  act.id === activityId ? { ...act, completed: !act.completed } : act
-                ),
-              })),
-              updatedAt: new Date().toISOString(),
-            };
-          }),
-        }));
-      },
-
-      reorderActivities: (tripId, dayId, sourceIndex, destinationIndex) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
-
-            return {
-              ...trip,
-              days: trip.days.map((day) => {
-                if (day.id !== dayId) return day;
-
-                const items = Array.from(day.activities);
-                const [removed] = items.splice(sourceIndex, 1);
-                items.splice(destinationIndex, 0, removed);
-
-                return {
-                  ...day,
-                  activities: items.map((item, idx) => ({ ...item, orderIndex: idx })),
-                };
-              }),
-              updatedAt: new Date().toISOString(),
-            };
-          }),
-        }));
-      },
-
-      moveActivity: (tripId, activityId, fromDayId, toDayId, newIndex) => {
-        if (fromDayId === toDayId) return;
-
-        set((state) => {
-          const trip = state.trips.find((t) => t.id === tripId);
-          if (!trip) return state;
-
-          const fromDay = trip.days.find((d) => d.id === fromDayId);
-          const toDay = trip.days.find((d) => d.id === toDayId);
-          if (!fromDay || !toDay) return state;
-
-          const activity = fromDay.activities.find((a) => a.id === activityId);
-          if (!activity) return state;
-
-          const updatedFromActivities = fromDay.activities
-            .filter((a) => a.id !== activityId)
-            .map((a, idx) => ({ ...a, orderIndex: idx }));
-
-          const targetActivities = Array.from(toDay.activities);
-          const insertIdx =
-            typeof newIndex === 'number' && newIndex >= 0
-              ? Math.min(newIndex, targetActivities.length)
-              : targetActivities.length;
-
-          targetActivities.splice(insertIdx, 0, {
-            ...activity,
-            dayId: toDayId,
-          });
-
-          const updatedToActivities = targetActivities.map((a, idx) => ({
-            ...a,
-            orderIndex: idx,
-          }));
+          const newDay: ItineraryDay = {
+            id: `day-${Date.now()}-${newDayNum}`,
+            dayNumber: newDayNum,
+            date: newDate,
+            title: `Day ${newDayNum}`,
+            activities: [],
+            expenses: [],
+          };
 
           return {
-            trips: state.trips.map((t) => {
-              if (t.id !== tripId) return t;
+            ...trip,
+            days: [...trip.days, newDay],
+            endDate: newDate,
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      }));
+    },
+
+    removeDay: (tripId, dayId) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
+          const filtered = trip.days.filter((d) => d.id !== dayId);
+          const renumbered = filtered.map((d, index) => ({
+            ...d,
+            dayNumber: index + 1,
+          }));
+          return {
+            ...trip,
+            days: renumbered,
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      }));
+    },
+
+    updateDayNotes: (tripId, dayId, notes) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
+          return {
+            ...trip,
+            days: trip.days.map((day) =>
+              day.id === dayId ? { ...day, notes } : day
+            ),
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      }));
+    },
+
+    addActivity: (tripId, dayId, activityData) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
+
+          return {
+            ...trip,
+            days: trip.days.map((day) => {
+              if (day.id !== dayId) return day;
+
+              const newActivity: Activity = {
+                ...activityData,
+                id: `act-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+                dayId,
+                orderIndex: day.activities.length,
+              };
 
               return {
-                ...t,
-                days: t.days.map((d) => {
-                  if (d.id === fromDayId) {
-                    return { ...d, activities: updatedFromActivities };
-                  }
-                  if (d.id === toDayId) {
-                    return { ...d, activities: updatedToActivities };
-                  }
-                  return d;
-                }),
-                updatedAt: new Date().toISOString(),
+                ...day,
+                activities: [...day.activities, newActivity],
               };
             }),
+            updatedAt: new Date().toISOString(),
           };
+        }),
+      }));
+    },
+
+    updateActivity: (tripId, activityId, updates) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
+
+          return {
+            ...trip,
+            days: trip.days.map((day) => ({
+              ...day,
+              activities: day.activities.map((act) =>
+                act.id === activityId ? { ...act, ...updates } : act
+              ),
+            })),
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      }));
+    },
+
+    deleteActivity: (tripId, activityId) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
+
+          return {
+            ...trip,
+            days: trip.days.map((day) => ({
+              ...day,
+              activities: day.activities
+                .filter((act) => act.id !== activityId)
+                .map((act, idx) => ({ ...act, orderIndex: idx })),
+            })),
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      }));
+    },
+
+    toggleActivityCompleted: (tripId, activityId) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
+
+          return {
+            ...trip,
+            days: trip.days.map((day) => ({
+              ...day,
+              activities: day.activities.map((act) =>
+                act.id === activityId ? { ...act, completed: !act.completed } : act
+              ),
+            })),
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      }));
+    },
+
+    reorderActivities: (tripId, dayId, sourceIndex, destinationIndex) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
+
+          return {
+            ...trip,
+            days: trip.days.map((day) => {
+              if (day.id !== dayId) return day;
+
+              const items = Array.from(day.activities);
+              const [removed] = items.splice(sourceIndex, 1);
+              items.splice(destinationIndex, 0, removed);
+
+              return {
+                ...day,
+                activities: items.map((item, idx) => ({ ...item, orderIndex: idx })),
+              };
+            }),
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      }));
+    },
+
+    moveActivity: (tripId, activityId, fromDayId, toDayId, newIndex) => {
+      if (fromDayId === toDayId) return;
+
+      setWithSave((state) => {
+        const trip = state.trips.find((t) => t.id === tripId);
+        if (!trip) return state;
+
+        const fromDay = trip.days.find((d) => d.id === fromDayId);
+        const toDay = trip.days.find((d) => d.id === toDayId);
+        if (!fromDay || !toDay) return state;
+
+        const activity = fromDay.activities.find((a) => a.id === activityId);
+        if (!activity) return state;
+
+        const updatedFromActivities = fromDay.activities
+          .filter((a) => a.id !== activityId)
+          .map((a, idx) => ({ ...a, orderIndex: idx }));
+
+        const targetActivities = Array.from(toDay.activities);
+        const insertIdx =
+          typeof newIndex === 'number' && newIndex >= 0
+            ? Math.min(newIndex, targetActivities.length)
+            : targetActivities.length;
+
+        targetActivities.splice(insertIdx, 0, {
+          ...activity,
+          dayId: toDayId,
         });
-      },
 
-      addExpense: (tripId, expenseData) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
+        const updatedToActivities = targetActivities.map((a, idx) => ({
+          ...a,
+          orderIndex: idx,
+        }));
 
-            const newExpense: Expense = {
-              ...expenseData,
-              id: `exp-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-            };
-
-            // If dayId is provided, also insert into that specific day
-            const updatedDays = trip.days.map((day) => {
-              if (newExpense.dayId && day.id === newExpense.dayId) {
-                return {
-                  ...day,
-                  expenses: [...day.expenses, newExpense],
-                };
-              }
-              return day;
-            });
+        return {
+          trips: state.trips.map((t) => {
+            if (t.id !== tripId) return t;
 
             return {
-              ...trip,
-              days: updatedDays,
+              ...t,
+              days: t.days.map((d) => {
+                if (d.id === fromDayId) {
+                  return { ...d, activities: updatedFromActivities };
+                }
+                if (d.id === toDayId) {
+                  return { ...d, activities: updatedToActivities };
+                }
+                return d;
+              }),
               updatedAt: new Date().toISOString(),
             };
           }),
-        }));
-      },
+        };
+      });
+    },
 
-      updateExpense: (tripId, expenseId, updates) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
+    addExpense: (tripId, expenseData) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
 
-            return {
-              ...trip,
-              days: trip.days.map((day) => ({
+          const newExpense: Expense = {
+            ...expenseData,
+            id: `exp-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          };
+
+          const updatedDays = trip.days.map((day) => {
+            if (newExpense.dayId && day.id === newExpense.dayId) {
+              return {
                 ...day,
-                expenses: day.expenses.map((exp) =>
-                  exp.id === expenseId ? { ...exp, ...updates } : exp
-                ),
-              })),
-              updatedAt: new Date().toISOString(),
-            };
-          }),
-        }));
-      },
+                expenses: [...day.expenses, newExpense],
+              };
+            }
+            return day;
+          });
 
-      deleteExpense: (tripId, expenseId) => {
-        set((state) => ({
-          trips: state.trips.map((trip) => {
-            if (trip.id !== tripId) return trip;
+          return {
+            ...trip,
+            days: updatedDays,
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      }));
+    },
 
-            return {
-              ...trip,
-              days: trip.days.map((day) => ({
-                ...day,
-                expenses: day.expenses.filter((exp) => exp.id !== expenseId),
-              })),
-              updatedAt: new Date().toISOString(),
-            };
-          }),
-        }));
-      },
-    }),
-    {
-      name: 'trip-planner-trips',
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
-);
+    updateExpense: (tripId, expenseId, updates) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
+
+          return {
+            ...trip,
+            days: trip.days.map((day) => ({
+              ...day,
+              expenses: day.expenses.map((exp) =>
+                exp.id === expenseId ? { ...exp, ...updates } : exp
+              ),
+            })),
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      }));
+    },
+
+    deleteExpense: (tripId, expenseId) => {
+      setWithSave((state) => ({
+        trips: state.trips.map((trip) => {
+          if (trip.id !== tripId) return trip;
+
+          return {
+            ...trip,
+            days: trip.days.map((day) => ({
+              ...day,
+              expenses: day.expenses.filter((exp) => exp.id !== expenseId),
+            })),
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      }));
+    },
+  };
+});

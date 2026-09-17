@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+import { syncUserAcrossStores } from './userSessionSync';
+
 export interface UserProfile {
   id: string;
   name: string;
@@ -80,18 +82,23 @@ export const useUserStore = create<UserState>()(
       user: DEFAULT_USER,
       notifications: DEFAULT_NOTIFICATIONS,
 
-      setUser: (user) => set({ user }),
+      setUser: (user) => {
+        set({ user });
+        syncUserAcrossStores(user.isLoggedIn ? user.id : 'guest');
+      },
 
       login: () => {
         set((state) => ({
           user: { ...state.user, isLoggedIn: true },
         }));
+        syncUserAcrossStores(get().user.id);
       },
 
       logout: () => {
         set((state) => ({
           user: { ...state.user, isLoggedIn: false },
         }));
+        syncUserAcrossStores('guest');
       },
 
       updateProfile: (updates) => {
@@ -145,6 +152,11 @@ export const useUserStore = create<UserState>()(
     {
       name: 'trip-planner-user-profile',
       storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (state) => {
+        if (state?.user) {
+          syncUserAcrossStores(state.user.isLoggedIn ? state.user.id : 'guest');
+        }
+      },
     }
   )
 );

@@ -1,9 +1,11 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import { CurrencyCode, TempUnit, ThemeMode, TravelStyle, UserPreferences } from '../types/settings';
+import { getInitialActiveUserId } from './userStorageHelper';
 
-interface PreferencesState {
+export interface PreferencesState {
   preferences: UserPreferences;
+  activeUserId: string;
+  loadUserPreferences: (userId: string) => void;
   setCurrency: (currency: CurrencyCode) => void;
   setTempUnit: (unit: TempUnit) => void;
   setTheme: (theme: ThemeMode) => void;
@@ -26,65 +28,109 @@ function resolveTheme(mode: ThemeMode): boolean {
   return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
-export const usePreferencesStore = create<PreferencesState>()(
-  persist(
-    (set, get) => ({
-      preferences: DEFAULT_PREFERENCES,
+const getPrefKey = (userId: string) => `tp_pref_${userId || 'guest'}`;
 
-      setCurrency: (currency) => {
-        set((state) => ({
-          preferences: { ...state.preferences, currency },
-        }));
-      },
-
-      setTempUnit: (tempUnit) => {
-        set((state) => ({
-          preferences: { ...state.preferences, tempUnit },
-        }));
-      },
-
-      setTheme: (theme) => {
-        set((state) => ({
-          preferences: { ...state.preferences, theme },
-        }));
-        const isDark = resolveTheme(theme);
-        if (isDark) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      },
-
-      setDefaultTravelers: (defaultTravelers) => {
-        set((state) => ({
-          preferences: { ...state.preferences, defaultTravelers: Math.max(1, defaultTravelers) },
-        }));
-      },
-
-      setTravelStyle: (travelStyle) => {
-        set((state) => ({
-          preferences: { ...state.preferences, travelStyle },
-        }));
-      },
-
-      applyTheme: () => {
-        const theme = get().preferences.theme;
-        const isDark = resolveTheme(theme);
-        if (isDark) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      },
-    }),
-    {
-      name: 'trip-planner-preferences',
-      storage: createJSONStorage(() => localStorage),
-      onRehydrateStorage: () => (state) => {
-        if (state) {
-          state.applyTheme();
-        }
-      },
+export function loadStoredPreferences(userId: string): UserPreferences {
+  const key = getPrefKey(userId);
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') return { ...DEFAULT_PREFERENCES, ...parsed };
     }
-  )
-);
+    // Legacy migration for admin
+    if (userId === 'usr-admin') {
+      const legacy = localStorage.getItem('trip-planner-preferences');
+      if (legacy) {
+        const parsed = JSON.parse(legacy);
+        const prefs = parsed.state?.preferences || parsed;
+        if (prefs) {
+          localStorage.setItem(key, JSON.stringify(prefs));
+          return { ...DEFAULT_PREFERENCES, ...prefs };
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to parse preferences for user:', userId, e);
+  }
+  return DEFAULT_PREFERENCES;
+}
+
+function saveUserPreferences(userId: string, prefs: UserPreferences) {
+  try {
+    localStorage.setItem(getPrefKey(userId), JSON.stringify(prefs));
+  } catch (err) {
+    console.warn('Failed to save user preferences:', err);
+  }
+}
+
+const initialUserId = getInitialActiveUserId();
+const initialPreferences = loadStoredPreferences(initialUserId);
+
+export const usePreferencesStore = create<PreferencesState>((set, get) => ({
+  preferences: initialPreferences,
+  activeUserId: initialUserId,
+
+  loadUserPreferences: (userId: string) => {
+    const prefs = loadStoredPreferences(userId);
+    set({ activeUserId: userId, preferences: prefs });
+    const isDark = resolveTheme(prefs.theme);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  },
+
+  setCurrency: (currency) => {
+    const updated = { ...get().preferences, currency };
+    set({ preferences: updated });
+    saveUserPreferences(get().activeUserId, updated);
+  },
+
+  setTempUnit: (tempUnit) => {
+    const updated = { ...get().preferences, tempUnit };
+    set({ preferences: updated });
+    saveUserPreferences(get().activeUserId, updated);
+  },
+
+  setTheme: (theme) => {
+    const updated = { ...get().preferences, theme };
+    set({ preferences: updated });
+    saveUserPreferences(get().activeUserId, updated);
+    const isDark = resolveTheme(theme);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  },
+
+  setDefaultTravelers: (defaultTravelers) => {
+    const updated = {
+      ...get().preferences,
+      defaultTravelers: Math.max(1, defaultTravelers),
+    };
+    set({ preferences: updated });
+    saveUserPreferences(get().activeUserId, updated);
+  },
+
+  setTravelStyle: (travelStyle) => {
+    const updated = { ...get().preferences, travelStyle };
+    set({ preferences: updated });
+    saveUserPreferences(get().activeUserId, updated);
+  },
+
+  applyTheme: () => {
+    const theme = get().preferences.theme;
+    const isDark = resolveTheme(theme);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  },
+}));
+
+// Apply theme on module load
+usePreferencesStore.getState().applyTheme();
