@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   DollarSign,
   Moon,
@@ -21,6 +22,7 @@ import { CURRENCY_NAMES, formatCurrency } from '../utils/currency';
 import { formatTemperature } from '../utils/weatherCodes';
 
 export const SettingsPage: React.FC = () => {
+  const location = useLocation();
   const user = useUserStore((state) => state.user);
   const {
     preferences,
@@ -34,6 +36,14 @@ export const SettingsPage: React.FC = () => {
   const [savedNotice, setSavedNotice] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [modalTab, setModalTab] = useState<'profile' | 'password'>('profile');
+
+  useEffect(() => {
+    if (location.state && (location.state as { openEditProfile?: boolean }).openEditProfile) {
+      setModalTab('profile');
+      setIsEditModalOpen(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [location.state]);
 
   const triggerSavedNotice = () => {
     setSavedNotice(true);

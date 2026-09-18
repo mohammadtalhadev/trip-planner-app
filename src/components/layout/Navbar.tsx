@@ -25,7 +25,6 @@ import { useSavedPlacesStore } from '../../store/useSavedPlacesStore';
 import { useTripStore } from '../../store/useTripStore';
 import { useUserStore } from '../../store/useUserStore';
 import { POPULAR_DESTINATIONS } from '../../services/geoapify';
-import { EditProfileModal } from '../user/EditProfileModal';
 import { cn } from '../../utils/cn';
 
 interface NavbarProps {
@@ -53,8 +52,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
-  const [editProfileTab, setEditProfileTab] = useState<'profile' | 'password'>('profile');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -300,16 +297,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           )}
         >
           <span>Saved</span>
-          <span
-            className={cn(
-              'text-[10px] px-1.5 py-0.2 rounded-full font-bold',
-              isSavedActive
-                ? 'bg-white/25 text-white'
-                : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
-            )}
-          >
-            {savedPlaces.length > 0 ? savedPlaces.length : 1}
-          </span>
+          {savedPlaces.length > 0 && (
+            <span
+              className={cn(
+                'text-[10px] px-1.5 py-0.2 rounded-full font-bold',
+                isSavedActive
+                  ? 'bg-white/25 text-white'
+                  : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
+              )}
+            >
+              {savedPlaces.length}
+            </span>
+          )}
         </Link>
 
         {/* Settings */}
@@ -482,11 +481,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                   type="button"
                   onClick={() => {
                     setIsProfileOpen(false);
-                    setEditProfileTab('profile');
-                    setIsEditProfileOpen(true);
+                    navigate('/settings', { state: { openEditProfile: true } });
                   }}
-                  className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 text-stone-500 hover:text-stone-800 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors"
-                  title="Edit Profile"
+                  className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 text-stone-500 hover:text-stone-800 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors cursor-pointer"
+                  title="Edit Profile Settings"
                 >
                   <UserCog className="w-3.5 h-3.5 text-[#ff5a36]" />
                 </button>
@@ -494,17 +492,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
 
               {/* Navigation Quick Links */}
               <div className="space-y-0.5 text-xs font-medium text-stone-700 dark:text-stone-300">
-                <button
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                    setEditProfileTab('profile');
-                    setIsEditProfileOpen(true);
-                  }}
+                <Link
+                  to="/settings"
+                  state={{ openEditProfile: true }}
+                  onClick={() => setIsProfileOpen(false)}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-left transition-colors font-semibold text-[#ff5a36]"
                 >
                   <UserCog className="w-4 h-4" />
-                  <span>Edit Profile & Password</span>
-                </button>
+                  <span>Edit Profile & Settings</span>
+                </Link>
                 <button
                   onClick={() => {
                     setIsProfileOpen(false);
@@ -699,7 +695,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               )}
             >
               <Bookmark className="w-3.5 h-3.5" />
-              <span>Saved ({savedPlaces.length})</span>
+              <span>Saved{savedPlaces.length > 0 ? ` (${savedPlaces.length})` : ''}</span>
             </Link>
           </div>
 
@@ -748,13 +744,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           </button>
         </div>
       )}
-
-      {/* Edit Profile & Password Modal */}
-      <EditProfileModal
-        isOpen={isEditProfileOpen}
-        onClose={() => setIsEditProfileOpen(false)}
-        defaultTab={editProfileTab}
-      />
     </nav>
   );
 };

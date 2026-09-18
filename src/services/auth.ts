@@ -124,7 +124,7 @@ export async function registerUser(params: {
     const userPref = {
       currency: params.preferences.currency || 'USD',
       tempUnit: 'celsius',
-      theme: 'system',
+      theme: 'light',
       defaultTravelers: 2,
       travelStyle: params.preferences.pace || 'balanced',
     };

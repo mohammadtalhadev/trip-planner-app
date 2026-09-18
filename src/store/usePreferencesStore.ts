@@ -17,15 +17,14 @@ export interface PreferencesState {
 const DEFAULT_PREFERENCES: UserPreferences = {
   currency: 'USD',
   tempUnit: 'celsius',
-  theme: 'system',
+  theme: 'light',
   defaultTravelers: 2,
   travelStyle: 'balanced',
 };
 
 function resolveTheme(mode: ThemeMode): boolean {
   if (mode === 'dark') return true;
-  if (mode === 'light') return false;
-  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return false; // Default to light theme
 }
 
 const getPrefKey = (userId: string) => `tp_pref_${userId || 'guest'}`;
