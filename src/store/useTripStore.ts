@@ -297,8 +297,8 @@ export function loadStoredTrips(userId: string): Trip[] {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) return parsed;
     }
-    // Legacy migration for admin
-    if (userId === 'usr-admin') {
+    // Legacy migration for admin or default seed for guest/admin
+    if (userId === 'usr-admin' || userId === 'guest') {
       const legacy = localStorage.getItem('trip-planner-trips');
       if (legacy) {
         const parsed = JSON.parse(legacy);
@@ -308,7 +308,7 @@ export function loadStoredTrips(userId: string): Trip[] {
           return trips;
         }
       }
-      // If admin has nothing yet, seed with demo trips
+      // Seed with PDF reference demo trip
       localStorage.setItem(key, JSON.stringify(INITIAL_DEMO_TRIPS));
       return INITIAL_DEMO_TRIPS;
     }

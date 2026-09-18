@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Plus, MapPin } from 'lucide-react';
-import { useTripStore } from '../store/useTripStore';
+import { useTripStore, INITIAL_DEMO_TRIPS } from '../store/useTripStore';
 import { BudgetOverview } from '../components/budget/BudgetOverview';
 import { CategoryBreakdown } from '../components/budget/CategoryBreakdown';
 import { ExpenseList } from '../components/budget/ExpenseList';
@@ -10,7 +10,8 @@ import { Expense } from '../types/trip';
 
 export const BudgetPage: React.FC = () => {
   const { tripId } = useParams<{ tripId: string }>();
-  const trip = useTripStore((state) => state.trips.find((t) => t.id === tripId));
+  const trip = useTripStore((state) => state.trips.find((t) => t.id === tripId)) ||
+    INITIAL_DEMO_TRIPS.find((t) => t.id === tripId);
   const addExpense = useTripStore((state) => state.addExpense);
   const updateExpense = useTripStore((state) => state.updateExpense);
   const deleteExpense = useTripStore((state) => state.deleteExpense);

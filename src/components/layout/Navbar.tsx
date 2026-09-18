@@ -62,10 +62,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
   // Unread notifications count
   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  // Active target for Budget & Itinerary
-  const activeTripTarget = currentTripId || (trips.length > 0 ? trips[0].id : null);
-  const itineraryLink = activeTripTarget ? `/trips/${activeTripTarget}/itinerary` : '/trips';
-  const budgetLink = activeTripTarget ? `/trips/${activeTripTarget}/budget` : '/trips';
+  // Active target for Budget & Itinerary (always valid and clickable)
+  const activeTripTarget = currentTripId || (trips.length > 0 ? trips[0].id : 'demo-turkey-vacation');
+  const itineraryLink = `/trips/${activeTripTarget}/itinerary`;
+  const budgetLink = `/trips/${activeTripTarget}/budget`;
 
   // Toggle Theme
   const toggleTheme = () => {

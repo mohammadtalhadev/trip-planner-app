@@ -1,12 +1,13 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, MapPin } from 'lucide-react';
-import { useTripStore } from '../store/useTripStore';
+import { useTripStore, INITIAL_DEMO_TRIPS } from '../store/useTripStore';
 import { ItineraryBuilder } from '../components/itinerary/ItineraryBuilder';
 
 export const ItineraryPage: React.FC = () => {
   const { tripId } = useParams<{ tripId: string }>();
-  const trip = useTripStore((state) => state.trips.find((t) => t.id === tripId));
+  const trip = useTripStore((state) => state.trips.find((t) => t.id === tripId)) ||
+    INITIAL_DEMO_TRIPS.find((t) => t.id === tripId);
 
   if (!trip) {
     return (
