@@ -131,6 +131,9 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     reader.readAsDataURL(file);
   };
 
+  const isPasswordMismatch = confirmPassword.length > 0 && newPassword !== confirmPassword;
+  const isPasswordMatch = confirmPassword.length > 0 && newPassword.length >= 6 && newPassword === confirmPassword;
+
   // Handle Save Profile
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -179,7 +182,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     }
 
     if (newPassword !== confirmPassword) {
-      setPasswordError('New passwords do not match.');
+      setPasswordError('Passwords do not match. Please ensure both passwords match.');
       return;
     }
 
@@ -523,7 +526,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     type={showNewPass ? 'text' : 'password'}
                     required
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    onChange={(e) => {
+                      setNewPassword(e.target.value);
+                      if (passwordError) setPasswordError(null);
+                    }}
                     placeholder="At least 6 characters"
                     className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                   />
@@ -564,9 +570,18 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     type={showConfirmPass ? 'text' : 'password'}
                     required
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      if (passwordError) setPasswordError(null);
+                    }}
                     placeholder="Repeat new password"
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
+                    className={`w-full pl-10 pr-10 py-2.5 rounded-xl border text-sm text-slate-900 dark:text-white focus:outline-none transition-all ${
+                      isPasswordMismatch
+                        ? 'border-rose-500 bg-rose-50/40 dark:bg-rose-950/20 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500'
+                        : isPasswordMatch
+                        ? 'border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/20 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500'
+                        : 'border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500'
+                    }`}
                   />
                   <button
                     type="button"
@@ -576,7 +591,29 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     {showConfirmPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+
+                {/* Real-time Inline Feedback */}
+                {isPasswordMismatch && (
+                  <div className="flex items-center gap-1.5 text-xs text-rose-600 dark:text-rose-400 font-semibold pt-1 animate-in fade-in duration-150">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-500" />
+                    <span>Passwords do not match. Please ensure both passwords match.</span>
+                  </div>
+                )}
+                {isPasswordMatch && (
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold pt-1 animate-in fade-in duration-150">
+                    <Check className="w-3.5 h-3.5 shrink-0 text-emerald-500" />
+                    <span>Passwords match!</span>
+                  </div>
+                )}
               </div>
+
+              {/* Form-level Error Banner */}
+              {passwordError && (
+                <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-center gap-2 animate-in fade-in duration-150">
+                  <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
+                  <span>{passwordError}</span>
+                </div>
+              )}
 
               {/* SUBMIT BUTTON */}
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200/80 dark:border-slate-800">

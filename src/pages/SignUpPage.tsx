@@ -182,6 +182,8 @@ export const SignUpPage: React.FC = () => {
   };
 
   const strength = getPasswordStrength(password);
+  const isPasswordMismatch = confirmPassword.length > 0 && password !== confirmPassword;
+  const isPasswordMatch = confirmPassword.length > 0 && password.length >= 8 && password === confirmPassword;
 
   const toggleVibe = (vibeId: string) => {
     setSelectedVibes((prev) =>
@@ -210,7 +212,7 @@ export const SignUpPage: React.FC = () => {
     }
 
     if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match. Please re-enter your password.');
+      setErrorMessage('Passwords do not match. Please ensure both passwords match.');
       return;
     }
 
@@ -332,9 +334,20 @@ export const SignUpPage: React.FC = () => {
           <button
             type="button"
             onClick={() => {
-              if (fullName && email && password && password === confirmPassword) {
-                setStep(2);
+              if (!fullName.trim() || !email.trim() || !password) {
+                setErrorMessage('Please complete your account basics first.');
+                return;
               }
+              if (password.length < 8) {
+                setErrorMessage('Password must be at least 8 characters long.');
+                return;
+              }
+              if (password !== confirmPassword) {
+                setErrorMessage('Passwords do not match. Please ensure both passwords match.');
+                return;
+              }
+              setErrorMessage('');
+              setStep(2);
             }}
             className={`flex items-center gap-3 w-full sm:w-auto text-left transition-all ${
               step === 2
@@ -558,7 +571,10 @@ export const SignUpPage: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errorMessage) setErrorMessage('');
+                  }}
                   placeholder="••••••••••••"
                   className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#ff5a36] focus:ring-2 focus:ring-[#ff5a36]/20 transition-all font-medium"
                 />
@@ -606,9 +622,18 @@ export const SignUpPage: React.FC = () => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   required
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (errorMessage) setErrorMessage('');
+                  }}
                   placeholder="••••••••••••"
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#ff5a36] focus:ring-2 focus:ring-[#ff5a36]/20 transition-all font-medium"
+                  className={`w-full pl-10 pr-10 py-2.5 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none transition-all font-medium border ${
+                    isPasswordMismatch
+                      ? 'border-rose-500 bg-rose-50/40 dark:bg-rose-950/20 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+                      : isPasswordMatch
+                      ? 'border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/20 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20'
+                      : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 focus:border-[#ff5a36] focus:ring-2 focus:ring-[#ff5a36]/20'
+                  }`}
                 />
                 <button
                   type="button"
@@ -618,8 +643,30 @@ export const SignUpPage: React.FC = () => {
                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+
+              {/* Real-time Inline Feedback for Confirm Password */}
+              {isPasswordMismatch && (
+                <div className="flex items-center gap-1.5 text-xs text-rose-600 dark:text-rose-400 font-semibold pt-1 animate-in fade-in duration-150">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-500" />
+                  <span>Passwords do not match. Please ensure both passwords match.</span>
+                </div>
+              )}
+              {isPasswordMatch && (
+                <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold pt-1 animate-in fade-in duration-150">
+                  <Check className="w-3.5 h-3.5 shrink-0 text-emerald-500" />
+                  <span>Passwords match!</span>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* Form-level Error Banner for Instant Visibility */}
+          {errorMessage && (
+            <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center gap-3 text-xs text-rose-700 dark:text-rose-300 font-semibold animate-in fade-in duration-150">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
 
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
