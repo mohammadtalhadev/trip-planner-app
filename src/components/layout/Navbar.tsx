@@ -65,7 +65,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
   // Active target for Budget & Itinerary (always valid and clickable)
   const activeTripTarget = currentTripId || (trips.length > 0 ? trips[0].id : 'demo-turkey-vacation');
   const itineraryLink = `/trips/${activeTripTarget}/itinerary`;
-  const budgetLink = `/trips/${activeTripTarget}/budget`;
+  const budgetLink = !user.isLoggedIn ? '/budget' : `/trips/${activeTripTarget}/budget`;
 
   // Toggle Theme
   const toggleTheme = () => {
@@ -276,6 +276,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         {/* Budget */}
         <Link
           to={budgetLink}
+          title={!user.isLoggedIn ? 'Login to manage budget' : 'Budget'}
           className={cn(
             'text-xs px-4 py-1.5 rounded-full transition-all duration-150',
             isBudgetActive
@@ -673,6 +674,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
             <Link
               to={budgetLink}
               onClick={() => setIsMobileMenuOpen(false)}
+              title={!user.isLoggedIn ? 'Login to manage budget' : 'Budget'}
               className={cn(
                 'px-3.5 py-2.5 rounded-2xl text-xs font-semibold flex items-center gap-2 text-center justify-center transition-colors',
                 isBudgetActive
