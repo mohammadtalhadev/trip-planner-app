@@ -20,5 +20,5 @@ export function getInitialActiveUserId(): string {
   } catch (err) {
     console.warn('Error reading active user ID from localStorage:', err);
   }
-  return 'usr-admin';
+  return 'guest';
 }

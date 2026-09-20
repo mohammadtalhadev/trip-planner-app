@@ -38,7 +38,17 @@ interface UserState {
   clearNotifications: () => void;
 }
 
-const DEFAULT_USER: UserProfile = {
+export const GUEST_USER: UserProfile = {
+  id: 'guest',
+  name: 'Guest Explorer',
+  email: '',
+  avatar: '/avatar.png',
+  tier: 'Explorer',
+  isLoggedIn: false,
+  bio: 'Exploring destinations and testing itineraries in demo mode.',
+};
+
+export const DEFAULT_USER: UserProfile = {
   id: 'usr-admin',
   name: 'Trip Planner Admin',
   email: 'admin@tripplanner.com',
@@ -88,16 +98,18 @@ export const useUserStore = create<UserState>()(
       },
 
       login: () => {
-        set((state) => ({
-          user: { ...state.user, isLoggedIn: true },
-        }));
-        syncUserAcrossStores(get().user.id);
+        set({
+          user: DEFAULT_USER,
+          notifications: DEFAULT_NOTIFICATIONS,
+        });
+        syncUserAcrossStores('usr-admin');
       },
 
       logout: () => {
-        set((state) => ({
-          user: { ...state.user, isLoggedIn: false },
-        }));
+        set({
+          user: GUEST_USER,
+          notifications: [],
+        });
         syncUserAcrossStores('guest');
       },
 
@@ -153,7 +165,11 @@ export const useUserStore = create<UserState>()(
       name: 'trip-planner-user-profile',
       storage: createJSONStorage(() => localStorage),
       onRehydrateStorage: () => (state) => {
-        if (state?.user) {
+        if (state) {
+          if (!state.user || !state.user.isLoggedIn) {
+            state.user = GUEST_USER;
+            state.notifications = [];
+          }
           syncUserAcrossStores(state.user.isLoggedIn ? state.user.id : 'guest');
         }
       },

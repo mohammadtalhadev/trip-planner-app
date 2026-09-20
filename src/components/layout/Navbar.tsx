@@ -63,7 +63,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   // Active target for Budget & Itinerary (always valid and clickable)
-  const activeTripTarget = currentTripId || (trips.length > 0 ? trips[0].id : 'demo-turkey-vacation');
+  const activeTripTarget = !user.isLoggedIn
+    ? 'demo-turkey-vacation'
+    : currentTripId || (trips.length > 0 ? trips[0].id : 'demo-turkey-vacation');
   const itineraryLink = `/trips/${activeTripTarget}/itinerary`;
   const budgetLink = !user.isLoggedIn ? '/budget' : `/trips/${activeTripTarget}/budget`;
 
@@ -565,6 +567,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                 onClick={() => {
                   logout();
                   setIsProfileOpen(false);
+                  navigate('/', { replace: true });
                 }}
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/30 text-rose-600 dark:text-rose-400 text-xs font-medium transition-colors"
               >
@@ -744,6 +747,37 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
             <Plus className="w-4 h-4" />
             <span>Plan New Vacation</span>
           </button>
+
+          {user.isLoggedIn ? (
+            <button
+              onClick={() => {
+                logout();
+                setIsMobileMenuOpen(false);
+                navigate('/', { replace: true });
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2 text-rose-600 dark:text-rose-400 font-semibold text-xs rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Sign Out</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-2 pt-1">
+              <Link
+                to="/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex-1 py-2 text-center text-xs font-bold text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/signup"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex-1 py-2 text-center text-xs font-bold text-white bg-[#ff5a36] rounded-xl"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </nav>

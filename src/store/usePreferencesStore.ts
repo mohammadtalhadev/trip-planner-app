@@ -30,6 +30,18 @@ function resolveTheme(mode: ThemeMode): boolean {
 const getPrefKey = (userId: string) => `tp_pref_${userId || 'guest'}`;
 
 export function loadStoredPreferences(userId: string): UserPreferences {
+  // If guest, always return clean default preferences
+  if (!userId || userId === 'guest') {
+    const raw = localStorage.getItem(getPrefKey('guest'));
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') return { ...DEFAULT_PREFERENCES, ...parsed };
+      } catch {}
+    }
+    return DEFAULT_PREFERENCES;
+  }
+
   const key = getPrefKey(userId);
   try {
     const raw = localStorage.getItem(key);

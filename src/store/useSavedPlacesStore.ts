@@ -42,6 +42,11 @@ const INITIAL_ADMIN_SAVED_PLACES: SavedPlace[] = [
 const getSavedKey = (userId: string) => `tp_saved_${userId || 'guest'}`;
 
 export function loadStoredSavedPlaces(userId: string): SavedPlace[] {
+  // Guest / unauthenticated session has no saved places
+  if (!userId || userId === 'guest') {
+    return [];
+  }
+
   const key = getSavedKey(userId);
   try {
     const raw = localStorage.getItem(key);
@@ -71,6 +76,9 @@ export function loadStoredSavedPlaces(userId: string): SavedPlace[] {
 }
 
 function saveUserSavedPlaces(userId: string, places: SavedPlace[]) {
+  if (!userId || userId === 'guest') {
+    return;
+  }
   try {
     localStorage.setItem(getSavedKey(userId), JSON.stringify(places));
   } catch (err) {

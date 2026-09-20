@@ -290,15 +290,20 @@ export const INITIAL_DEMO_TRIPS: Trip[] = [
 const getTripsKey = (userId: string) => `tp_trips_${userId || 'guest'}`;
 
 export function loadStoredTrips(userId: string): Trip[] {
+  // Guest / unauthenticated demo session: Always return fresh reference demo trip without persisting changes
+  if (!userId || userId === 'guest') {
+    return JSON.parse(JSON.stringify(INITIAL_DEMO_TRIPS));
+  }
+
   const key = getTripsKey(userId);
   try {
     const raw = localStorage.getItem(key);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
     }
-    // Legacy migration for admin or default seed for guest/admin
-    if (userId === 'usr-admin' || userId === 'guest') {
+    // Seed default admin with reference trip if fresh
+    if (userId === 'usr-admin') {
       const legacy = localStorage.getItem('trip-planner-trips');
       if (legacy) {
         const parsed = JSON.parse(legacy);
@@ -308,9 +313,8 @@ export function loadStoredTrips(userId: string): Trip[] {
           return trips;
         }
       }
-      // Seed with PDF reference demo trip
       localStorage.setItem(key, JSON.stringify(INITIAL_DEMO_TRIPS));
-      return INITIAL_DEMO_TRIPS;
+      return JSON.parse(JSON.stringify(INITIAL_DEMO_TRIPS));
     }
   } catch (err) {
     console.warn('Failed to parse trips for user:', userId, err);
@@ -319,6 +323,10 @@ export function loadStoredTrips(userId: string): Trip[] {
 }
 
 function saveUserTrips(userId: string, trips: Trip[]) {
+  // Demo mode: guest changes (add/delete day, etc.) are in-memory demo only; DO NOT save them to localStorage!
+  if (!userId || userId === 'guest') {
+    return;
+  }
   try {
     localStorage.setItem(getTripsKey(userId), JSON.stringify(trips));
   } catch (err) {
