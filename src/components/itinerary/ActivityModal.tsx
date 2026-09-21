@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, MapPin, DollarSign, Tag } from 'lucide-react';
 import { Modal } from '../common/Modal';
+import { CustomSelect } from '../common/CustomSelect';
 import { Activity, ActivityCategory } from '../../types/trip';
 
 interface ActivityModalProps {
@@ -120,22 +121,22 @@ export const ActivityModal: React.FC<ActivityModalProps> = ({
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
               Category
             </label>
-            <div className="relative">
-              <Tag className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as ActivityCategory)}
-                className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
-              >
-                <option value="sightseeing">Sightseeing</option>
-                <option value="food">Food & Dining</option>
-                <option value="activity">Tour / Activity</option>
-                <option value="transport">Transportation</option>
-                <option value="lodging">Lodging</option>
-                <option value="shopping">Shopping</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
+            <CustomSelect
+              options={[
+                { value: 'sightseeing', label: 'Sightseeing' },
+                { value: 'food', label: 'Food & Dining' },
+                { value: 'activity', label: 'Tour / Activity' },
+                { value: 'transport', label: 'Transportation' },
+                { value: 'lodging', label: 'Lodging' },
+                { value: 'shopping', label: 'Shopping' },
+                { value: 'other', label: 'Other' },
+              ]}
+              value={category}
+              onChange={(val) => setCategory(val as ActivityCategory)}
+              triggerIcon={<Tag className="w-3.5 h-3.5 text-slate-400" />}
+              className="w-full"
+              size="md"
+            />
           </div>
         </div>
 

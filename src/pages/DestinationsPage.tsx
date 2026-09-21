@@ -4,6 +4,7 @@ import { Search, MapPin, Star, ChevronLeft, ChevronRight, Bookmark, BookmarkChec
 import { useSavedPlacesStore } from '../store/useSavedPlacesStore';
 import { usePagination } from '../hooks/usePagination';
 import { handleImageError, DEFAULT_FALLBACK_IMAGE } from '../utils/placeImages';
+import { CustomSelect } from '../components/common/CustomSelect';
 
 interface DestinationItem {
   id: string;
@@ -198,6 +199,20 @@ export const DestinationsPage: React.FC = () => {
     return Array.from(set).sort();
   }, []);
 
+  const countryOptions = useMemo(
+    () => [
+      { value: 'all', label: 'All Regions' },
+      ...countries.map((c) => ({ value: c.toLowerCase(), label: c })),
+    ],
+    [countries]
+  );
+
+  const sortOptions = [
+    { value: 'rating', label: 'Top Rated' },
+    { value: 'city', label: 'City (A-Z)' },
+    { value: 'country', label: 'Country (A-Z)' },
+  ];
+
   return (
     <div className="space-y-8 py-4">
       {/* Header */}
@@ -230,33 +245,22 @@ export const DestinationsPage: React.FC = () => {
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Country Selector */}
-          <div className="relative">
-            <select
-              value={countryFilter}
-              onChange={(e) => updateParams({ country: e.target.value, page: 1 })}
-              className="px-3 py-2 rounded-xl border border-stone-200/80 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-1 focus:ring-stone-400"
-            >
-              <option value="all">All Regions</option>
-              {countries.map((country) => (
-                <option key={country} value={country.toLowerCase()}>
-                  {country}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CustomSelect
+            options={countryOptions}
+            value={countryFilter}
+            onChange={(val) => updateParams({ country: val, page: 1 })}
+            className="w-36 sm:w-44"
+            size="md"
+          />
 
           {/* Sort Selector */}
-          <div className="relative">
-            <select
-              value={sortBy}
-              onChange={(e) => updateParams({ sort: e.target.value, page: 1 })}
-              className="px-3 py-2 rounded-xl border border-stone-200/80 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-1 focus:ring-stone-400"
-            >
-              <option value="rating">Top Rated</option>
-              <option value="city">City (A-Z)</option>
-              <option value="country">Country (A-Z)</option>
-            </select>
-          </div>
+          <CustomSelect
+            options={sortOptions}
+            value={sortBy}
+            onChange={(val) => updateParams({ sort: val, page: 1 })}
+            className="w-36 sm:w-40"
+            size="md"
+          />
         </div>
       </div>
 

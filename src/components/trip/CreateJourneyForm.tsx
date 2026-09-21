@@ -24,6 +24,7 @@ import { calculateTripDays, addDaysToDate, formatDate } from '../../utils/date';
 import { toEnglishPlaceName } from '../../utils/englishPlaces';
 import { getRealPlaceImage, DEFAULT_FALLBACK_IMAGE } from '../../utils/placeImages';
 import { Activity, Expense, ItineraryDay } from '../../types/trip';
+import { CustomSelect } from '../common/CustomSelect';
 
 interface DestinationHub {
   id: string;
@@ -1087,19 +1088,22 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                 </div>
 
                 {/* Currency Switcher */}
-                <select
+                <CustomSelect
+                  options={[
+                    { value: 'USD', label: 'USD ($)' },
+                    { value: 'EUR', label: 'EUR (€)' },
+                    { value: 'GBP', label: 'GBP (£)' },
+                    { value: 'JPY', label: 'JPY (¥)' },
+                    { value: 'CAD', label: 'CAD (CA$)' },
+                    { value: 'AUD', label: 'AUD (AU$)' },
+                    { value: 'INR', label: 'INR (₹)' },
+                  ]}
                   value={currency}
-                  onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-                  className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 focus:outline-none"
-                >
-                  <option value="USD">USD ($)</option>
-                  <option value="EUR">EUR (€)</option>
-                  <option value="GBP">GBP (£)</option>
-                  <option value="JPY">JPY (¥)</option>
-                  <option value="CAD">CAD (CA$)</option>
-                  <option value="AUD">AUD (AU$)</option>
-                  <option value="INR">INR (₹)</option>
-                </select>
+                  onChange={(val) => setCurrency(val as CurrencyCode)}
+                  className="w-32"
+                  size="sm"
+                  align="right"
+                />
               </div>
 
               {/* Main Amount Display */}

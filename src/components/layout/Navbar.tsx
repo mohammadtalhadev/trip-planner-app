@@ -332,6 +332,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
 
       {/* RIGHT SECTION: Notification Bell with Blue Dot, User Avatar with Coral Ring, & Start Planning CTA */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Display Environment (Theme Mode) Quick Toggle Button */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className={cn(
+            'w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-200 relative group cursor-pointer',
+            preferences.theme === 'dark'
+              ? 'bg-slate-800 text-amber-400 hover:bg-slate-700 hover:text-amber-300 ring-1 ring-slate-700/80 shadow-xs'
+              : 'bg-[#f1f5f9] text-slate-700 hover:bg-slate-200/80 hover:text-slate-900 ring-1 ring-slate-200/70 shadow-2xs'
+          )}
+          aria-label={preferences.theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          title={preferences.theme === 'dark' ? 'Display Environment: Dark (Switch to Light Mode)' : 'Display Environment: Light (Switch to Dark Mode)'}
+        >
+          {preferences.theme === 'dark' ? (
+            <Sun className="w-4 h-4 transition-transform duration-300 group-hover:rotate-45" />
+          ) : (
+            <Moon className="w-4 h-4 transition-transform duration-300 group-hover:-rotate-12" />
+          )}
+        </button>
+
         {/* Notification Bell */}
         <div ref={notificationsRef} className="relative">
           <button

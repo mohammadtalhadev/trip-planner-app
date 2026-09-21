@@ -8,6 +8,7 @@ import { Expense, ExpenseCategory, ItineraryDay } from '../../types/trip';
 import { formatCurrency } from '../../utils/currency';
 import { formatDateShort } from '../../utils/date';
 import { Badge } from '../common/Badge';
+import { CustomSelect } from '../common/CustomSelect';
 
 interface ExpenseRowProps {
   expense: Expense;
@@ -148,6 +149,32 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
     return filteredAndSorted.reduce((sum, e) => sum + e.amount, 0);
   }, [filteredAndSorted]);
 
+  const categoryOptions = [
+    { value: 'all', label: 'All Categories' },
+    { value: 'Accommodation', label: 'Accommodation' },
+    { value: 'Food', label: 'Food & Dining' },
+    { value: 'Transportation', label: 'Transportation' },
+    { value: 'Activities', label: 'Activities' },
+    { value: 'Shopping', label: 'Shopping' },
+    { value: 'Miscellaneous', label: 'Miscellaneous' },
+  ];
+
+  const dayOptions = useMemo(
+    () => [
+      { value: 'all', label: 'All Days' },
+      { value: 'general', label: 'General (No day)' },
+      ...days.map((d) => ({ value: d.id, label: `Day ${d.dayNumber}` })),
+    ],
+    [days]
+  );
+
+  const sortOptions = [
+    { value: 'date-desc', label: 'Newest Date' },
+    { value: 'date-asc', label: 'Oldest Date' },
+    { value: 'amount-desc', label: 'Highest Amount' },
+    { value: 'amount-asc', label: 'Lowest Amount' },
+  ];
+
   return (
     <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-frost space-y-5">
       {/* Header & Controls */}
@@ -164,46 +191,31 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
         {/* Filter / Sort Controls */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Category Filter */}
-          <select
+          <CustomSelect
+            options={categoryOptions}
             value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-xs font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-500"
-          >
-            <option value="all">All Categories</option>
-            <option value="Accommodation">Accommodation</option>
-            <option value="Food">Food</option>
-            <option value="Transportation">Transportation</option>
-            <option value="Activities">Activities</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Miscellaneous">Miscellaneous</option>
-          </select>
+            onChange={(val) => setFilterCategory(val)}
+            className="w-36 sm:w-40"
+            size="sm"
+          />
 
           {/* Day Filter */}
-          <select
+          <CustomSelect
+            options={dayOptions}
             value={filterDay}
-            onChange={(e) => setFilterDay(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-xs font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-500"
-          >
-            <option value="all">All Days</option>
-            <option value="general">General (No day)</option>
-            {days.map((d) => (
-              <option key={d.id} value={d.id}>
-                Day {d.dayNumber}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => setFilterDay(val)}
+            className="w-32 sm:w-36"
+            size="sm"
+          />
 
           {/* Sort Selector */}
-          <select
+          <CustomSelect
+            options={sortOptions}
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-xs font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-500"
-          >
-            <option value="date-desc">Newest Date</option>
-            <option value="date-asc">Oldest Date</option>
-            <option value="amount-desc">Highest Amount</option>
-            <option value="amount-asc">Lowest Amount</option>
-          </select>
+            onChange={(val) => setSortBy(val as any)}
+            className="w-36 sm:w-40"
+            size="sm"
+          />
         </div>
       </div>
 

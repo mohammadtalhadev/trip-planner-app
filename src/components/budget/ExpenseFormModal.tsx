@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DollarSign, Calendar, Tag } from 'lucide-react';
 import { Modal } from '../common/Modal';
+import { CustomSelect } from '../common/CustomSelect';
 import { Expense, ExpenseCategory, ItineraryDay } from '../../types/trip';
 
 interface ExpenseFormModalProps {
@@ -132,21 +133,21 @@ export const ExpenseFormModal: React.FC<ExpenseFormModalProps> = ({
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
               Category
             </label>
-            <div className="relative">
-              <Tag className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
-                className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
-              >
-                <option value="Accommodation">Accommodation</option>
-                <option value="Food">Food</option>
-                <option value="Transportation">Transportation</option>
-                <option value="Activities">Activities</option>
-                <option value="Shopping">Shopping</option>
-                <option value="Miscellaneous">Miscellaneous</option>
-              </select>
-            </div>
+            <CustomSelect
+              options={[
+                { value: 'Accommodation', label: 'Accommodation' },
+                { value: 'Food', label: 'Food & Dining' },
+                { value: 'Transportation', label: 'Transportation' },
+                { value: 'Activities', label: 'Activities' },
+                { value: 'Shopping', label: 'Shopping' },
+                { value: 'Miscellaneous', label: 'Miscellaneous' },
+              ]}
+              value={category}
+              onChange={(val) => setCategory(val as ExpenseCategory)}
+              triggerIcon={<Tag className="w-3.5 h-3.5 text-slate-400" />}
+              className="w-full"
+              size="md"
+            />
           </div>
         </div>
 
@@ -171,18 +172,19 @@ export const ExpenseFormModal: React.FC<ExpenseFormModalProps> = ({
             <label className="block text-[11px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-1.5">
               Linked Day
             </label>
-            <select
+            <CustomSelect
+              options={[
+                { value: '', label: 'General Trip Expense' },
+                ...days.map((day) => ({
+                  value: day.id,
+                  label: `Day ${day.dayNumber} (${day.date})`,
+                })),
+              ]}
               value={dayId}
-              onChange={(e) => setDayId(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
-            >
-              <option value="">General Trip Expense</option>
-              {days.map((day) => (
-                <option key={day.id} value={day.id}>
-                  Day {day.dayNumber} ({day.date})
-                </option>
-              ))}
-            </select>
+              onChange={(val) => setDayId(val)}
+              className="w-full"
+              size="md"
+            />
           </div>
         </div>
 
