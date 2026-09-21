@@ -67,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
     ? 'demo-turkey-vacation'
     : currentTripId || (trips.length > 0 ? trips[0].id : 'demo-turkey-vacation');
   const itineraryLink = `/trips/${activeTripTarget}/itinerary`;
-  const budgetLink = !user.isLoggedIn ? '/budget' : `/trips/${activeTripTarget}/budget`;
+  const budgetLink = `/trips/${activeTripTarget}/budget`;
 
   // Toggle Theme
   const toggleTheme = () => {
@@ -278,7 +278,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         {/* Budget */}
         <Link
           to={budgetLink}
-          title={!user.isLoggedIn ? 'Login to manage budget' : 'Budget'}
+          title="Budget"
           className={cn(
             'text-xs px-4 py-1.5 rounded-full transition-all duration-150',
             isBudgetActive
@@ -289,30 +289,32 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           Budget
         </Link>
 
-        {/* Saved */}
-        <Link
-          to="/saved"
-          className={cn(
-            'text-xs px-4 py-1.5 rounded-full transition-all duration-150 flex items-center gap-1.5',
-            isSavedActive
-              ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
-              : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
-          )}
-        >
-          <span>Saved</span>
-          {savedPlaces.length > 0 && (
-            <span
-              className={cn(
-                'text-[10px] px-1.5 py-0.2 rounded-full font-bold',
-                isSavedActive
-                  ? 'bg-white/25 text-white'
-                  : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
-              )}
-            >
-              {savedPlaces.length}
-            </span>
-          )}
-        </Link>
+        {/* Saved (only shown for logged-in users) */}
+        {user.isLoggedIn && (
+          <Link
+            to="/saved"
+            className={cn(
+              'text-xs px-4 py-1.5 rounded-full transition-all duration-150 flex items-center gap-1.5',
+              isSavedActive
+                ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
+                : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
+            )}
+          >
+            <span>Saved</span>
+            {savedPlaces.length > 0 && (
+              <span
+                className={cn(
+                  'text-[10px] px-1.5 py-0.2 rounded-full font-bold',
+                  isSavedActive
+                    ? 'bg-white/25 text-white'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
+                )}
+              >
+                {savedPlaces.length}
+              </span>
+            )}
+          </Link>
+        )}
 
         {/* Settings */}
         <Link
@@ -677,7 +679,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
             <Link
               to={budgetLink}
               onClick={() => setIsMobileMenuOpen(false)}
-              title={!user.isLoggedIn ? 'Login to manage budget' : 'Budget'}
+              title="Budget"
               className={cn(
                 'px-3.5 py-2.5 rounded-2xl text-xs font-semibold flex items-center gap-2 text-center justify-center transition-colors',
                 isBudgetActive
@@ -689,19 +691,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               <span>Budget</span>
             </Link>
 
-            <Link
-              to="/saved"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={cn(
-                'px-3.5 py-2.5 rounded-2xl text-xs font-semibold flex items-center gap-2 text-center justify-center transition-colors',
-                isSavedActive
-                  ? 'bg-[#ff5a36] text-white shadow-xs'
-                  : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
-              )}
-            >
-              <Bookmark className="w-3.5 h-3.5" />
-              <span>Saved{savedPlaces.length > 0 ? ` (${savedPlaces.length})` : ''}</span>
-            </Link>
+            {user.isLoggedIn && (
+              <Link
+                to="/saved"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={cn(
+                  'px-3.5 py-2.5 rounded-2xl text-xs font-semibold flex items-center gap-2 text-center justify-center transition-colors',
+                  isSavedActive
+                    ? 'bg-[#ff5a36] text-white shadow-xs'
+                    : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
+                )}
+              >
+                <Bookmark className="w-3.5 h-3.5" />
+                <span>Saved{savedPlaces.length > 0 ? ` (${savedPlaces.length})` : ''}</span>
+              </Link>
+            )}
           </div>
 
           <div className="pt-1 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between px-1">

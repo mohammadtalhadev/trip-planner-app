@@ -1,12 +1,20 @@
 import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Bookmark, Trash2, MapPin, Star, ExternalLink } from 'lucide-react';
 import { useSavedPlacesStore } from '../store/useSavedPlacesStore';
+import { useUserStore } from '../store/useUserStore';
 import { EmptyState } from '../components/common/EmptyState';
 import { toEnglishPlaceName } from '../utils/englishPlaces';
 import { handleImageError, DEFAULT_FALLBACK_IMAGE } from '../utils/placeImages';
 
 export const SavedPlacesPage: React.FC = () => {
+  const user = useUserStore((state) => state.user);
+
+  // Gated route: Saved places is only accessible to logged-in users
+  if (!user.isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+
   const savedPlaces = useSavedPlacesStore((state) => state.savedPlaces);
   const removeSavedPlace = useSavedPlacesStore((state) => state.removeSavedPlace);
   const clearAllSavedPlaces = useSavedPlacesStore((state) => state.clearAllSavedPlaces);

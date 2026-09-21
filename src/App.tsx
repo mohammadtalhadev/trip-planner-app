@@ -84,7 +84,7 @@ export const App: React.FC = () => {
             <Route path="trips/:tripId/itinerary" element={<ItineraryPage />} />
             <Route path="trips/:tripId/budget" element={<BudgetPage />} />
             <Route path="itinerary" element={<Navigate to="/trips/demo-turkey-vacation/itinerary" replace />} />
-            <Route path="budget" element={<BudgetPage />} />
+            <Route path="budget" element={<Navigate to="/trips/demo-turkey-vacation/budget" replace />} />
             <Route path="saved" element={<SavedPlacesPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="login" element={<LoginPage />} />
