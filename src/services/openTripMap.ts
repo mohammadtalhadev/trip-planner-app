@@ -1,5 +1,6 @@
 import { AttractionPlace } from '../types/api';
 
+const GEOAPIFY_KEY = import.meta.env.VITE_GEOAPIFY_KEY;
 const OPENTRIPMAP_KEY = import.meta.env.VITE_OPENTRIPMAP_KEY;
 
 // Fallback curated attractions for popular destinations
@@ -125,6 +126,13 @@ const CITY_FALLBACK_ATTRACTIONS: Record<string, AttractionPlace[]> = {
   ],
 };
 
+const CATEGORY_SAMPLE_IMAGES: Record<string, string> = {
+  attraction: 'https://images.unsplash.com/photo-1477959858617-67f30bc75b82?auto=format&fit=crop&w=800&q=80',
+  restaurant: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
+  hotel: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+  culture: 'https://images.unsplash.com/photo-1565099824688-e93eb20fe622?auto=format&fit=crop&w=800&q=80',
+};
+
 export async function fetchAttractions(
   lat: number,
   lon: number,
@@ -133,73 +141,130 @@ export async function fetchAttractions(
 ): Promise<AttractionPlace[]> {
   const cityKey = cityName ? cityName.trim().toLowerCase() : '';
 
-  // 1. If OpenTripMap API key is provided, query OpenTripMap
-  if (OPENTRIPMAP_KEY && OPENTRIPMAP_KEY.trim() !== '' && OPENTRIPMAP_KEY !== 'your_opentripmap_key_here') {
+  // 1. Primary Alternative: Geoapify Places API v2 (powers attractions with user's Geoapify key!)
+  if (GEOAPIFY_KEY && GEOAPIFY_KEY.trim() !== '' && GEOAPIFY_KEY !== 'your_geoapify_key_here') {
     try {
-      const url = `https://api.opentripmap.com/0.1/en/places/radius?radius=12000&lon=${lon}&lat=${lat}&rate=2&format=json&apikey=${OPENTRIPMAP_KEY}`;
+      const categories = 'tourism.sights,tourism.attraction,entertainment.museum,catering.restaurant,accommodation.hotel';
+      const geoapifyPlacesUrl = `https://api.geoapify.com/v2/places?categories=${categories}&filter=circle:${lon},${lat},15000&bias=proximity:${lon},${lat}&limit=20&apiKey=${GEOAPIFY_KEY}`;
 
-      const response = await fetch(url, { signal });
-      if (!response.ok) {
-        throw new Error(`OpenTripMap API error: ${response.status} ${response.statusText}`);
-      }
+      const response = await fetch(geoapifyPlacesUrl, { signal });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.features && Array.isArray(data.features) && data.features.length > 0) {
+          const validPlaces = data.features
+            .filter((f: any) => f.properties?.name && f.properties.name.trim().length > 1)
+            .map((f: any) => {
+              const p = f.properties;
+              const cats = Array.isArray(p.categories) ? p.categories.join(' ') : (p.categories || '');
 
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        const filtered = data
-          .filter((p: any) => p.name && p.name.trim().length > 0)
-          .slice(0, 15)
-          .map((item: any) => {
-            let cat: 'attraction' | 'restaurant' | 'hotel' | 'culture' = 'attraction';
-            const kinds = (item.kinds || '').toLowerCase();
-            if (kinds.includes('food') || kinds.includes('restaurant') || kinds.includes('cafe')) {
-              cat = 'restaurant';
-            } else if (kinds.includes('hotel') || kinds.includes('hostel') || kinds.includes('accommodation')) {
-              cat = 'hotel';
-            } else if (kinds.includes('museum') || kinds.includes('theatre') || kinds.includes('art')) {
-              cat = 'culture';
-            }
+              let cat: 'attraction' | 'restaurant' | 'hotel' | 'culture' = 'attraction';
+              if (cats.includes('catering') || cats.includes('restaurant') || cats.includes('cafe')) {
+                cat = 'restaurant';
+              } else if (cats.includes('accommodation') || cats.includes('hotel')) {
+                cat = 'hotel';
+              } else if (cats.includes('museum') || cats.includes('entertainment') || cats.includes('historic')) {
+                cat = 'culture';
+              }
 
-            return {
-              xid: item.xid || `${item.point?.lat}-${item.point?.lon}`,
-              name: item.name,
-              kinds: item.kinds || 'historic,interesting_places',
-              point: {
-                lon: item.point?.lon ?? lon,
-                lat: item.point?.lat ?? lat,
-              },
-              rate: item.rate ?? 3,
-              preview: item.preview?.source ? { source: item.preview.source } : undefined,
-              wikipedia: item.wikipedia,
-              category: cat,
-            };
-          });
+              // Check if Wikimedia Commons photo is available
+              const wikiMediaFile = p.wiki_and_media?.wikimedia_commons || p.datasource?.raw?.wikimedia_commons;
+              const previewImg = wikiMediaFile
+                ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(wikiMediaFile.replace('File:', ''))}?width=600`
+                : CATEGORY_SAMPLE_IMAGES[cat];
 
-        if (filtered.length > 0) {
-          return filtered;
+              return {
+                xid: p.place_id || `geo-place-${p.lat}-${p.lon}`,
+                name: p.name,
+                kinds: cats,
+                point: {
+                  lon: p.lon ?? lon,
+                  lat: p.lat ?? lat,
+                },
+                rate: 3,
+                preview: { source: previewImg },
+                category: cat,
+                wikipedia: p.wiki_and_media?.wikipedia,
+              };
+            });
+
+          if (validPlaces.length > 0) {
+            return validPlaces.slice(0, 18);
+          }
         }
       }
     } catch (err: any) {
-      if (err.name === 'AbortError') {
-        throw err;
-      }
-      console.warn('OpenTripMap request failed, using city fallback attractions', err);
+      if (err.name === 'AbortError') throw err;
+      console.warn('Geoapify Places API query failed, trying alternatives', err);
     }
   }
 
-  // 2. Fallback to curated city highlights if matched
+  // 2. Secondary Alternative: Free Wikipedia Geosearch (No API Key Required!)
+  try {
+    const wikiGeoUrl = `https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gscoord=${lat}|${lon}&gsradius=10000&gslimit=12&format=json&origin=*`;
+    const wikiResponse = await fetch(wikiGeoUrl, { signal });
+    if (wikiResponse.ok) {
+      const wikiData = await wikiResponse.json();
+      if (wikiData.query?.geosearch && Array.isArray(wikiData.query.geosearch) && wikiData.query.geosearch.length > 0) {
+        return wikiData.query.geosearch.map((item: any) => ({
+          xid: `wiki-geo-${item.pageid}`,
+          name: item.title,
+          kinds: 'historic,sightseeing,wikipedia',
+          point: { lon: item.lon, lat: item.lat },
+          rate: 3,
+          preview: { source: CATEGORY_SAMPLE_IMAGES.attraction },
+          wikipedia: `https://en.wikipedia.org/?curid=${item.pageid}`,
+          category: 'attraction',
+        }));
+      }
+    }
+  } catch (err: any) {
+    if (err.name === 'AbortError') throw err;
+    console.warn('Wikipedia Geosearch failed, checking OpenTripMap', err);
+  }
+
+  // 3. OpenTripMap (if key provided)
+  if (OPENTRIPMAP_KEY && OPENTRIPMAP_KEY.trim() !== '' && OPENTRIPMAP_KEY !== 'your_opentripmap_key_here') {
+    try {
+      const url = `https://api.opentripmap.com/0.1/en/places/radius?radius=12000&lon=${lon}&lat=${lat}&rate=2&format=json&apikey=${OPENTRIPMAP_KEY}`;
+      const response = await fetch(url, { signal });
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          const filtered = data
+            .filter((p: any) => p.name && p.name.trim().length > 0)
+            .slice(0, 15)
+            .map((item: any) => ({
+              xid: item.xid || `${item.point?.lat}-${item.point?.lon}`,
+              name: item.name,
+              kinds: item.kinds || 'historic,interesting_places',
+              point: { lon: item.point?.lon ?? lon, lat: item.point?.lat ?? lat },
+              rate: item.rate ?? 3,
+              preview: item.preview?.source ? { source: item.preview.source } : undefined,
+              wikipedia: item.wikipedia,
+              category: (item.kinds?.includes('food') ? 'restaurant' : 'attraction') as any,
+            }));
+          if (filtered.length > 0) return filtered;
+        }
+      }
+    } catch (err: any) {
+      if (err.name === 'AbortError') throw err;
+    }
+  }
+
+  // 4. Curated city highlights fallback
   if (cityKey && CITY_FALLBACK_ATTRACTIONS[cityKey]) {
     return CITY_FALLBACK_ATTRACTIONS[cityKey];
   }
 
-  // 3. Fallback: generate high quality generic place points around coordinates
-  const genericHighlights: AttractionPlace[] = [
+  // 5. High-quality generic landmarks near coordinates
+  return [
     {
       xid: `attr-${lat.toFixed(2)}-1`,
       name: `${cityName || 'City'} Historic Center`,
       kinds: 'historic,architecture,cultural',
       point: { lon: lon + 0.005, lat: lat + 0.003 },
       rate: 3,
-      preview: { source: 'https://images.unsplash.com/photo-1477959858617-67f30bc75b82?auto=format&fit=crop&w=800&q=80' },
+      preview: { source: CATEGORY_SAMPLE_IMAGES.attraction },
       category: 'attraction',
     },
     {
@@ -208,7 +273,7 @@ export async function fetchAttractions(
       kinds: 'markets,shopping,culture',
       point: { lon: lon - 0.004, lat: lat + 0.002 },
       rate: 3,
-      preview: { source: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80' },
+      preview: { source: CATEGORY_SAMPLE_IMAGES.attraction },
       category: 'attraction',
     },
     {
@@ -217,8 +282,8 @@ export async function fetchAttractions(
       kinds: 'viewpoints,natural,landmarks',
       point: { lon: lon + 0.008, lat: lat - 0.005 },
       rate: 3,
-      preview: { source: 'https://images.unsplash.com/photo-1486299267070-83823f5448dd?auto=format&fit=crop&w=800&q=80' },
-      category: 'attraction',
+      preview: { source: CATEGORY_SAMPLE_IMAGES.culture },
+      category: 'culture',
     },
     {
       xid: `attr-${lat.toFixed(2)}-4`,
@@ -226,10 +291,8 @@ export async function fetchAttractions(
       kinds: 'foods,restaurants,cafes',
       point: { lon: lon - 0.002, lat: lat - 0.004 },
       rate: 3,
-      preview: { source: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80' },
+      preview: { source: CATEGORY_SAMPLE_IMAGES.restaurant },
       category: 'restaurant',
     },
   ];
-
-  return genericHighlights;
 }
