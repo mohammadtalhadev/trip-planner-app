@@ -1,0 +1,224 @@
+import React, { useState, useEffect } from 'react';
+import { DollarSign, Calendar, Tag, FileText } from 'lucide-react';
+import { Modal } from '../common/Modal';
+import { Expense, ExpenseCategory, ItineraryDay } from '../../types/trip';
+
+interface ExpenseFormModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  days: ItineraryDay[];
+  tripCurrency: string;
+  expenseToEdit?: Expense | null;
+  onSave: (expenseData: Omit<Expense, 'id'>) => void;
+}
+
+export const ExpenseFormModal: React.FC<ExpenseFormModalProps> = ({
+  isOpen,
+  onClose,
+  days,
+  tripCurrency,
+  expenseToEdit,
+  onSave,
+}) => {
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState('');
+  const [category, setCategory] = useState<ExpenseCategory>('Food');
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [dayId, setDayId] = useState<string>('');
+  const [notes, setNotes] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (expenseToEdit) {
+      setDescription(expenseToEdit.description);
+      setAmount(String(expenseToEdit.amount));
+      setCategory(expenseToEdit.category);
+      setDate(expenseToEdit.date || new Date().toISOString().split('T')[0]);
+      setDayId(expenseToEdit.dayId || '');
+      setNotes(expenseToEdit.notes || '');
+    } else {
+      setDescription('');
+      setAmount('');
+      setCategory('Food');
+      setDate(days[0]?.date || new Date().toISOString().split('T')[0]);
+      setDayId(days[0]?.id || '');
+      setNotes('');
+    }
+    setError(null);
+  }, [expenseToEdit, isOpen, days]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!description.trim()) {
+      setError('Please enter an expense description.');
+      return;
+    }
+    const parsedAmount = parseFloat(amount);
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      setError('Please enter a valid expense amount.');
+      return;
+    }
+
+    onSave({
+      description: description.trim(),
+      amount: parsedAmount,
+      currency: tripCurrency,
+      category,
+      date,
+      dayId: dayId || undefined,
+      notes: notes.trim() || undefined,
+    });
+
+    onClose();
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={expenseToEdit ? 'Edit Expense' : 'Add New Expense'}
+      maxWidth="md"
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-xl text-xs text-red-600 dark:text-red-400">
+            {error}
+          </div>
+        )}
+
+        {/* Description */}
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+            Description *
+          </label>
+          <input
+            type="text"
+            required
+            placeholder="e.g. Hotel Reservation, Group Dinner, Train tickets..."
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+              setError(null);
+            }}
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Amount & Category */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+              Amount ({tripCurrency}) *
+            </label>
+            <div className="relative">
+              <DollarSign className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <input
+                type="number"
+                step="0.01"
+                min="0.01"
+                required
+                placeholder="45.00"
+                value={amount}
+                onChange={(e) => {
+                  setAmount(e.target.value);
+                  setError(null);
+                }}
+                className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+              Category
+            </label>
+            <div className="relative">
+              <Tag className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
+                className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="Accommodation">Accommodation</option>
+                <option value="Food">Food</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Activities">Activities</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Miscellaneous">Miscellaneous</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Date & Associated Day */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+              Date
+            </label>
+            <div className="relative">
+              <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+              Associated Day
+            </label>
+            <select
+              value={dayId}
+              onChange={(e) => setDayId(e.target.value)}
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Trip General (Not linked)</option>
+              {days.map((day) => (
+                <option key={day.id} value={day.id}>
+                  Day {day.dayNumber} ({day.date})
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Notes */}
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+            Notes (Optional)
+          </label>
+          <div className="relative">
+            <textarea
+              rows={2}
+              placeholder="e.g. Paid by cash, splitting with Sarah, receipt attached..."
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-colors"
+          >
+            {expenseToEdit ? 'Save Changes' : 'Add Expense'}
+          </button>
+        </div>
+      </form>
+    </Modal>
+  );
+};
