@@ -5,12 +5,12 @@ import {
   Map,
   Bookmark,
   Settings,
-  PlusCircle,
+  Plus,
   Sun,
   Moon,
   Menu,
   X,
-  Globe2,
+  Globe,
 } from 'lucide-react';
 import { usePreferencesStore } from '../../store/usePreferencesStore';
 import { useSavedPlacesStore } from '../../store/useSavedPlacesStore';
@@ -33,37 +33,37 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
 
   const navLinks = [
     { to: '/', label: 'Discover', icon: Compass },
-    { to: '/destinations', label: 'Destinations', icon: Globe2 },
-    { to: '/trips', label: 'My Trips', icon: Map },
+    { to: '/destinations', label: 'Explore', icon: Globe },
+    { to: '/trips', label: 'Itineraries', icon: Map },
     {
       to: '/saved',
-      label: 'Saved',
+      label: 'Bookmarks',
       icon: Bookmark,
       badge: savedPlaces.length > 0 ? savedPlaces.length : null,
     },
-    { to: '/settings', label: 'Settings', icon: Settings },
+    { to: '/settings', label: 'Preferences', icon: Settings },
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+    <header className="sticky top-0 z-40 w-full bg-[#fafaf9]/85 dark:bg-[#0c0e12]/85 backdrop-blur-md border-b border-stone-200/70 dark:border-stone-800/60 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-            <Compass className="w-6 h-6 animate-[spin_12s_linear_infinite]" />
+        {/* Logo / Editorial Brand */}
+        <Link to="/" className="flex items-center gap-3 shrink-0 group">
+          <div className="w-9 h-9 rounded-xl bg-stone-900 dark:bg-stone-100 flex items-center justify-center text-white dark:text-stone-900 transition-transform duration-200 group-hover:scale-105 shadow-sm">
+            <Compass className="w-5 h-5 stroke-[2.2]" />
           </div>
-          <div>
-            <span className="font-black text-xl tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <div className="flex flex-col">
+            <span className="font-serif text-xl font-bold tracking-tight text-stone-900 dark:text-white leading-none">
               TripPlanner
             </span>
-            <span className="hidden sm:inline-block text-[10px] ml-1.5 font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-              Pro
+            <span className="text-[10px] tracking-wider uppercase font-medium text-stone-400 dark:text-stone-500 font-sans mt-0.5">
+              Bespoke Journeys
             </span>
           </div>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        {/* Center Minimalist Navigation Links */}
+        <nav className="hidden md:flex items-center gap-1 bg-stone-100/70 dark:bg-stone-900/60 p-1 rounded-2xl border border-stone-200/60 dark:border-stone-800/50">
           {navLinks.map((link) => {
             const Icon = link.icon;
             return (
@@ -72,17 +72,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                 to={link.to}
                 className={({ isActive }) =>
                   cn(
-                    'flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all relative',
+                    'flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all relative',
                     isActive
-                      ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 font-semibold'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
+                      ? 'bg-white dark:bg-stone-800 text-stone-900 dark:text-white font-semibold shadow-sm'
+                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
                   )
                 }
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5" />
                 <span>{link.label}</span>
                 {link.badge !== null && (
-                  <span className="px-1.5 py-0.2 text-[11px] font-bold rounded-full bg-blue-600 text-white">
+                  <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-stone-900 dark:bg-white text-white dark:text-stone-900">
                     {link.badge}
                   </span>
                 )}
@@ -92,40 +92,48 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         </nav>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2">
-          {/* Quick New Trip Button */}
-          <button
-            onClick={() => {
-              if (onOpenCreateTrip) {
-                onOpenCreateTrip();
-              } else {
-                navigate('/trips/new');
-              }
-            }}
-            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold rounded-xl shadow-sm shadow-blue-500/20 transition-all hover:scale-[1.02]"
+        <div className="flex items-center gap-2.5">
+          {/* Currency indicator pill */}
+          <Link
+            to="/settings"
+            className="hidden sm:inline-flex items-center px-2.5 py-1.5 rounded-xl text-[11px] font-semibold text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800/60 transition-colors border border-transparent hover:border-stone-200 dark:hover:border-stone-700"
+            title="Active Currency"
           >
-            <PlusCircle className="w-4 h-4" />
-            <span>New Trip</span>
-          </button>
+            <span>{preferences.currency}</span>
+            <span className="mx-1 text-stone-300 dark:text-stone-600">•</span>
+            <span>{preferences.tempUnit === 'celsius' ? '°C' : '°F'}</span>
+          </Link>
 
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl border border-stone-200/80 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
             aria-label="Toggle theme"
             title="Toggle theme"
           >
             {preferences.theme === 'dark' ? (
               <Sun className="w-4 h-4 text-amber-400" />
             ) : (
-              <Moon className="w-4 h-4 text-slate-600" />
+              <Moon className="w-4 h-4 text-stone-600" />
             )}
+          </button>
+
+          {/* New Trip Button */}
+          <button
+            onClick={() => {
+              if (onOpenCreateTrip) onOpenCreateTrip();
+              else navigate('/trips/new');
+            }}
+            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-900 text-xs font-semibold rounded-xl shadow-sm transition-all hover:scale-[1.01]"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Plan Trip</span>
           </button>
 
           {/* Mobile menu toggle */}
           <button
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-            className="md:hidden p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="md:hidden p-2 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
             aria-label="Open menu"
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -135,7 +143,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
 
       {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden px-4 pt-2 pb-5 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
+        <div className="md:hidden px-4 pt-2 pb-5 border-t border-stone-200 dark:border-stone-800 bg-[#fafaf9] dark:bg-[#0c0e12] space-y-1">
           {navLinks.map((link) => {
             const Icon = link.icon;
             return (
@@ -145,19 +153,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={({ isActive }) =>
                   cn(
-                    'flex items-center justify-between px-4 py-3 rounded-xl text-base font-medium transition-colors',
+                    'flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 font-bold'
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      ? 'bg-stone-200/60 dark:bg-stone-800 text-stone-900 dark:text-white font-bold'
+                      : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
                   )
                 }
               >
                 <div className="flex items-center gap-3">
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-4 h-4" />
                   <span>{link.label}</span>
                 </div>
                 {link.badge !== null && (
-                  <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-blue-600 text-white">
+                  <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-stone-900 dark:bg-white text-white dark:text-stone-900">
                     {link.badge}
                   </span>
                 )}
@@ -171,10 +179,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                 if (onOpenCreateTrip) onOpenCreateTrip();
                 else navigate('/trips/new');
               }}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-xl"
+              className="w-full flex items-center justify-center gap-2 py-2.5 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-semibold text-xs rounded-xl"
             >
-              <PlusCircle className="w-5 h-5" />
-              <span>Create New Trip</span>
+              <Plus className="w-4 h-4" />
+              <span>Create New Vacation Itinerary</span>
             </button>
           </div>
         </div>

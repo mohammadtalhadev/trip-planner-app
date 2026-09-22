@@ -200,29 +200,29 @@ export const DestinationsPage: React.FC = () => {
   return (
     <div className="space-y-8 py-4">
       {/* Header */}
-      <div>
-        <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-          Global Directory
+      <div className="border-b border-stone-200/80 dark:border-stone-800 pb-5">
+        <span className="text-[11px] font-mono uppercase tracking-widest text-stone-500 dark:text-stone-400">
+          Global Atlas
         </span>
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mt-1">
-          Explore Destinations
+        <h1 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight text-stone-900 dark:text-stone-50 mt-1">
+          Curated Destinations
         </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Browse through popular world cities, inspect real-time weather and tourist attractions.
+        <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 max-w-xl leading-relaxed">
+          Explore world capitals and cultural centers, complete with live meteorology, historical context, and notable landmarks.
         </p>
       </div>
 
       {/* Filter and Search Bar (Preserved in URL State) */}
-      <div className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-3 bg-white dark:bg-stone-900/60 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle flex flex-col md:flex-row md:items-center justify-between gap-3">
         {/* Search text filter */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3" />
           <input
             type="text"
-            placeholder="Filter destinations by name or description..."
+            placeholder="Search by city, country, or cultural notes..."
             value={searchQuery}
             onChange={(e) => updateParams({ search: e.target.value, page: 1 })}
-            className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 rounded-xl border border-transparent bg-stone-50 dark:bg-stone-800/60 text-stone-900 dark:text-stone-100 text-xs focus:outline-none focus:ring-1 focus:ring-stone-400 placeholder:text-stone-400"
           />
         </div>
 
@@ -233,9 +233,9 @@ export const DestinationsPage: React.FC = () => {
             <select
               value={countryFilter}
               onChange={(e) => updateParams({ country: e.target.value, page: 1 })}
-              className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none"
+              className="px-3 py-2 rounded-xl border border-stone-200/80 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-1 focus:ring-stone-400"
             >
-              <option value="all">All Countries</option>
+              <option value="all">All Regions</option>
               {countries.map((country) => (
                 <option key={country} value={country.toLowerCase()}>
                   {country}
@@ -249,10 +249,10 @@ export const DestinationsPage: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => updateParams({ sort: e.target.value, page: 1 })}
-              className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none"
+              className="px-3 py-2 rounded-xl border border-stone-200/80 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-1 focus:ring-stone-400"
             >
               <option value="rating">Top Rated</option>
-              <option value="city">City Name (A-Z)</option>
+              <option value="city">City (A-Z)</option>
               <option value="country">Country (A-Z)</option>
             </select>
           </div>
@@ -261,14 +261,14 @@ export const DestinationsPage: React.FC = () => {
 
       {/* Destinations Cards Grid */}
       {paginatedItems.length === 0 ? (
-        <div className="p-12 text-center bg-white dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-800 rounded-3xl space-y-2">
-          <p className="font-bold text-slate-700 dark:text-slate-300">No destinations found matching your filters</p>
-          <p className="text-xs text-slate-500">Try adjusting your search terms or country filter.</p>
+        <div className="p-12 text-center bg-white dark:bg-stone-900/40 border border-dashed border-stone-200 dark:border-stone-800 rounded-2xl space-y-2">
+          <p className="font-serif font-bold text-base text-stone-700 dark:text-stone-300">No destinations found matching your criteria</p>
+          <p className="text-xs text-stone-500">Try adjusting your search terms or regional filter.</p>
           <button
             onClick={() => updateParams({ search: '', country: 'all', page: 1 })}
-            className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold"
+            className="mt-3 px-4 py-2 bg-stone-900 dark:bg-stone-100 text-stone-50 dark:text-stone-900 rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm"
           >
-            Clear Filters
+            Reset Filters
           </button>
         </div>
       ) : (
@@ -280,20 +280,20 @@ export const DestinationsPage: React.FC = () => {
             return (
               <div
                 key={dest.id}
-                className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl overflow-hidden shadow-subtle hover:shadow-card transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  <div className="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                  <div className="relative h-52 w-full overflow-hidden bg-stone-100 dark:bg-stone-800">
                     <img
                       src={dest.image}
                       alt={dest.city}
                       loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent" />
 
-                    <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/60 backdrop-blur-md text-white text-xs font-semibold">
-                      <MapPin className="w-3.5 h-3.5 text-blue-400" />
+                    <div className="absolute top-3.5 left-3.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-950/60 backdrop-blur-md text-stone-200 text-xs font-medium border border-white/10">
+                      <MapPin className="w-3 h-3 text-brand-300" />
                       <span>{dest.country}</span>
                     </div>
 
@@ -310,23 +310,23 @@ export const DestinationsPage: React.FC = () => {
                           coordinates: { lat: dest.lat, lon: dest.lon },
                         })
                       }
-                      className={`absolute top-4 right-4 p-2 rounded-xl backdrop-blur-md transition-all ${
+                      className={`absolute top-3.5 right-3.5 p-2 rounded-xl backdrop-blur-md transition-all ${
                         isSaved
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-slate-900/60 text-white hover:bg-slate-900'
+                          ? 'bg-brand-600 text-white shadow-sm'
+                          : 'bg-stone-950/50 text-stone-200 hover:text-white border border-white/10'
                       }`}
-                      title={isSaved ? 'Remove from saved' : 'Save place'}
+                      title={isSaved ? 'Remove from collection' : 'Save destination'}
                     >
                       {isSaved ? (
-                        <BookmarkCheck className="w-4 h-4 fill-white text-white" />
+                        <BookmarkCheck className="w-3.5 h-3.5 fill-white text-white" />
                       ) : (
-                        <Bookmark className="w-4 h-4" />
+                        <Bookmark className="w-3.5 h-3.5" />
                       )}
                     </button>
 
                     <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white">
-                      <h3 className="text-xl font-bold">{dest.city}</h3>
-                      <div className="flex items-center gap-1 text-xs font-bold text-amber-300">
+                      <h3 className="text-xl font-serif font-bold tracking-tight">{dest.city}</h3>
+                      <div className="flex items-center gap-1 text-xs font-mono font-semibold text-amber-300">
                         <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                         <span>{dest.rating}</span>
                       </div>
@@ -334,7 +334,7 @@ export const DestinationsPage: React.FC = () => {
                   </div>
 
                   <div className="p-5">
-                    <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-stone-600 dark:text-stone-400 line-clamp-2 leading-relaxed font-sans">
                       {dest.description}
                     </p>
                   </div>
@@ -345,9 +345,9 @@ export const DestinationsPage: React.FC = () => {
                     to={`/destinations/${slug}?city=${encodeURIComponent(
                       dest.city
                     )}&country=${encodeURIComponent(dest.country)}&lat=${dest.lat}&lon=${dest.lon}`}
-                    className="w-full py-2.5 px-4 flex items-center justify-center gap-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white text-xs font-bold text-slate-700 dark:text-slate-300 transition-all duration-200"
+                    className="w-full py-2.5 px-4 flex items-center justify-center gap-2 rounded-xl bg-stone-100 hover:bg-stone-900 hover:text-stone-50 dark:bg-stone-800 dark:hover:bg-stone-100 dark:hover:text-stone-900 text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 transition-all duration-200"
                   >
-                    <span>View Destination Dashboard</span>
+                    <span>View Destination Guide</span>
                   </Link>
                 </div>
               </div>
@@ -358,11 +358,11 @@ export const DestinationsPage: React.FC = () => {
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 pt-6">
+        <div className="flex items-center justify-center gap-1.5 pt-6">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={!hasPrevPage}
-            className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            className="p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -374,10 +374,10 @@ export const DestinationsPage: React.FC = () => {
               <button
                 key={pageNum}
                 onClick={() => handlePageChange(pageNum)}
-                className={`w-10 h-10 rounded-xl text-xs font-bold transition-all ${
+                className={`w-9 h-9 rounded-xl text-xs font-mono font-bold transition-all ${
                   isActive
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                    : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    ? 'bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 shadow-sm'
+                    : 'bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800'
                 }`}
               >
                 {pageNum}
@@ -388,7 +388,7 @@ export const DestinationsPage: React.FC = () => {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={!hasNextPage}
-            className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            className="p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

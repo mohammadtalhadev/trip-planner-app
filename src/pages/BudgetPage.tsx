@@ -58,44 +58,44 @@ export const BudgetPage: React.FC = () => {
   return (
     <div className="space-y-6 py-4">
       {/* Header & Subnav */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 border-b border-stone-200/80 dark:border-stone-800 pb-5">
+        <div className="flex items-center gap-3.5">
           <Link
             to={`/trips/${trip.id}`}
-            className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
             title="Back to Dashboard"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <div className="flex items-center gap-2 text-xs text-slate-400">
+            <div className="flex items-center gap-2 text-xs font-mono text-stone-400">
               <span>{trip.name}</span>
               <span>•</span>
-              <span className="flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-blue-500" />
+              <span className="flex items-center gap-1 text-stone-500">
+                <MapPin className="w-3 h-3 text-brand-600" />
                 {trip.destination}
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-              Budget & Expenses
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-stone-900 dark:text-stone-100 mt-0.5">
+              Budget & Expense Ledger
             </h1>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <Link
             to={`/trips/${trip.id}`}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
           >
             Dashboard
           </Link>
           <Link
             to={`/trips/${trip.id}/itinerary`}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
           >
             Itinerary
           </Link>
-          <span className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-sm">
+          <span className="px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 shadow-sm">
             Budget
           </span>
           <button
@@ -103,9 +103,9 @@ export const BudgetPage: React.FC = () => {
               setExpenseToEdit(null);
               setIsExpenseModalOpen(true);
             }}
-            className="ml-2 inline-flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold rounded-xl shadow-sm transition-colors"
+            className="ml-2 inline-flex items-center gap-1.5 px-4 py-1.5 bg-stone-900 hover:bg-stone-800 text-stone-50 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 text-xs font-bold uppercase tracking-wider rounded-xl shadow-sm transition-all hover:scale-[1.01]"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>Add Expense</span>
           </button>
         </div>

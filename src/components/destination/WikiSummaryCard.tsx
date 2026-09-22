@@ -17,11 +17,10 @@ export const WikiSummaryCard: React.FC<WikiSummaryCardProps> = ({
 }) => {
   if (wiki.status === 'loading') {
     return (
-      <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-3">
+      <div className="p-6 bg-white dark:bg-[#15181e] border border-stone-200/80 dark:border-stone-800 rounded-3xl shadow-subtle space-y-3">
         <Skeleton className="h-5 w-40" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-5/6" />
-        <Skeleton className="h-4 w-4/6" />
       </div>
     );
   }
@@ -39,20 +38,13 @@ export const WikiSummaryCard: React.FC<WikiSummaryCardProps> = ({
   const { title, extract, description, pageUrl } = wiki.data;
 
   return (
-    <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+    <div className="p-6 bg-white dark:bg-[#15181e] border border-stone-200/80 dark:border-stone-800 rounded-3xl shadow-subtle space-y-3.5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400">
-            <BookOpen className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-              Wikipedia Information
-            </span>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              About {title}
-            </h3>
-          </div>
+          <BookOpen className="w-4 h-4 text-stone-500" />
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+            Historical Digest
+          </span>
         </div>
 
         {pageUrl && (
@@ -60,21 +52,25 @@ export const WikiSummaryCard: React.FC<WikiSummaryCardProps> = ({
             href={pageUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-stone-600 dark:text-stone-300 hover:underline"
           >
-            <span>Read more</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <span>Wikipedia Article</span>
+            <ExternalLink className="w-3 h-3" />
           </a>
         )}
       </div>
 
+      <h3 className="font-serif text-lg font-bold text-stone-900 dark:text-white">
+        About {title}
+      </h3>
+
       {description && (
-        <p className="text-xs font-semibold text-purple-600 dark:text-purple-300 italic">
+        <p className="text-xs font-serif italic text-stone-500">
           {description}
         </p>
       )}
 
-      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+      <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed font-sans">
         {extract}
       </p>
     </div>

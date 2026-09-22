@@ -38,7 +38,7 @@ export const Modal: React.FC<ModalProps> = ({
   }[maxWidth];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/70 backdrop-blur-md animate-in fade-in duration-200">
       <div
         className="fixed inset-0"
         onClick={onClose}
@@ -46,20 +46,20 @@ export const Modal: React.FC<ModalProps> = ({
       />
       <div
         className={cn(
-          'relative w-full bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden z-10 animate-in zoom-in-95 duration-200',
+          'relative w-full bg-white dark:bg-stone-900 rounded-2xl shadow-float border border-stone-200/80 dark:border-stone-800 overflow-hidden z-10 animate-in zoom-in-95 duration-200',
           maxWidthClasses
         )}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-stone-100 dark:border-stone-800">
+          <h3 className="text-lg font-serif font-bold text-stone-900 dark:text-stone-100">
             {title}
           </h3>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
             aria-label="Close modal"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
         <div className="p-6 max-h-[80vh] overflow-y-auto">

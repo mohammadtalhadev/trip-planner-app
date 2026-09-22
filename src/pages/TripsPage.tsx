@@ -38,38 +38,38 @@ export const TripsPage: React.FC = () => {
   return (
     <div className="space-y-8 py-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 border-b border-stone-200/80 dark:border-stone-800 pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-            Trip Management
+          <span className="text-[11px] font-mono uppercase tracking-widest text-stone-500 dark:text-stone-400">
+            Journeys & Itineraries
           </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mt-1">
-            My Travel Itineraries
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight text-stone-900 dark:text-stone-50 mt-1">
+            Travel Portfolio
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Manage your scheduled vacations, multi-day itineraries, and travel budgets.
+          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1.5 max-w-xl leading-relaxed">
+            Manage your scheduled journeys, custom multi-day agendas, and itemized travel expenses.
           </p>
         </div>
 
         <button
           onClick={() => setIsCreateOpen(true)}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-2xl shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02] shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-stone-900 hover:bg-stone-800 active:bg-stone-950 text-stone-50 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 text-xs font-bold uppercase tracking-wider rounded-xl shadow-sm transition-all hover:scale-[1.01] shrink-0"
         >
           <Plus className="w-4 h-4" />
-          <span>Create New Trip</span>
+          <span>Plan New Journey</span>
         </button>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-3 bg-white dark:bg-stone-900/60 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3" />
           <input
             type="text"
-            placeholder="Search trips by name or destination..."
+            placeholder="Search journeys by destination or title..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 rounded-xl border border-transparent bg-stone-50 dark:bg-stone-800/60 text-stone-900 dark:text-stone-100 text-xs focus:outline-none focus:ring-1 focus:ring-stone-400 placeholder:text-stone-400"
           />
         </div>
 
@@ -78,13 +78,13 @@ export const TripsPage: React.FC = () => {
             <button
               key={tab}
               onClick={() => setFilterTab(tab)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
                 filterTab === tab
-                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  ? 'bg-stone-900 dark:bg-stone-100 text-stone-50 dark:text-stone-900 shadow-sm'
+                  : 'bg-transparent text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
               }`}
             >
-              {tab === 'all' ? 'All Trips' : tab}
+              {tab === 'all' ? 'All Journeys' : tab}
             </button>
           ))}
         </div>

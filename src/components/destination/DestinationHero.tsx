@@ -42,64 +42,64 @@ export const DestinationHero: React.FC<DestinationHeroProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[360px] sm:h-[420px] rounded-3xl overflow-hidden shadow-xl mb-8 group">
+    <div className="relative w-full h-[380px] sm:h-[440px] rounded-3xl overflow-hidden shadow-card mb-8 group border border-stone-200/60 dark:border-stone-800">
       {/* Background Image */}
       <img
         src={heroImage}
         alt={cityName}
-        className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+        className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-1000 ease-out"
       />
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/20" />
+      {/* Atmospheric Vignette */}
+      <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/30 to-stone-950/15" />
 
-      {/* Top Floating Badges */}
+      {/* Top Floating Controls */}
       <div className="absolute top-6 left-6 right-6 flex items-center justify-between">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/60 backdrop-blur-md text-white text-xs font-semibold border border-white/10">
-          <Navigation className="w-3.5 h-3.5 text-blue-400" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-950/60 backdrop-blur-md text-white/90 text-xs font-mono border border-white/10">
+          <Navigation className="w-3 h-3 text-stone-300" />
           <span>{lat.toFixed(2)}° N, {lon.toFixed(2)}° E</span>
         </div>
 
         <button
           onClick={handleToggleSave}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md text-xs font-bold transition-all shadow-md ${
+          className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full backdrop-blur-md text-xs font-semibold transition-all ${
             isSaved
-              ? 'bg-blue-600 text-white shadow-blue-500/30'
-              : 'bg-white/20 hover:bg-white/30 text-white border border-white/20'
+              ? 'bg-white text-stone-900 shadow-sm'
+              : 'bg-stone-950/60 hover:bg-stone-950/80 text-white border border-white/15'
           }`}
         >
           {isSaved ? (
             <>
-              <BookmarkCheck className="w-4 h-4 fill-white text-white" />
-              <span>Saved in Bookmarks</span>
+              <BookmarkCheck className="w-3.5 h-3.5 fill-stone-900 text-stone-900" />
+              <span>Bookmarked</span>
             </>
           ) : (
             <>
-              <Bookmark className="w-4 h-4" />
-              <span>Bookmark Place</span>
+              <Bookmark className="w-3.5 h-3.5" />
+              <span>Bookmark</span>
             </>
           )}
         </button>
       </div>
 
-      {/* Bottom Content Banner */}
+      {/* Editorial Title Banner */}
       <div className="absolute bottom-8 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 text-blue-400 font-bold uppercase tracking-wider text-xs mb-2">
-            <MapPin className="w-4 h-4" />
+          <div className="inline-flex items-center gap-1.5 text-stone-300 uppercase tracking-widest text-[11px] font-semibold mb-2">
+            <MapPin className="w-3.5 h-3.5 text-stone-300" />
             <span>{countryName || 'Destination'}</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-none drop-shadow-md">
+          <h1 className="font-serif text-4xl sm:text-6xl font-bold text-white tracking-tight leading-none drop-shadow-sm">
             {cityName}
           </h1>
         </div>
 
         <button
           onClick={onPlanTrip}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-2xl shadow-xl shadow-blue-600/30 transition-all hover:scale-[1.03] shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-white hover:bg-stone-100 text-stone-900 text-xs font-bold uppercase tracking-wider rounded-2xl shadow-float transition-all hover:scale-[1.02] shrink-0"
         >
-          <Sparkles className="w-5 h-5 text-amber-300" />
-          <span>Plan a Trip to {cityName}</span>
+          <Sparkles className="w-4 h-4 text-stone-900" />
+          <span>Plan Itinerary in {cityName}</span>
         </button>
       </div>
     </div>

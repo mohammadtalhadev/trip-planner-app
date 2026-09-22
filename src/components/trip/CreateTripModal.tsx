@@ -87,51 +87,51 @@ export const CreateTripModal: React.FC<CreateTripModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Plan a New Trip" maxWidth="lg">
+    <Modal isOpen={isOpen} onClose={onClose} title="Inaugurate a New Journey" maxWidth="lg">
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-xl text-xs text-red-600 dark:text-red-400">
+          <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 rounded-xl text-xs text-rose-600 dark:text-rose-400">
             {error}
           </div>
         )}
 
         {/* Trip Name */}
         <div>
-          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-            Trip Name *
+          <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-1.5">
+            Journey Title *
           </label>
           <div className="relative">
             <input
               type="text"
               required
-              placeholder="e.g. Turkey Vacation, Summer in Tokyo..."
+              placeholder="e.g. Aegean Coastal Voyage, Autumn in Kyoto..."
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
                 setError(null);
               }}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs focus:outline-none focus:ring-1 focus:ring-stone-400"
             />
           </div>
         </div>
 
         {/* Destination */}
         <div>
-          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-            Destination City *
+          <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-1.5">
+            Primary Destination City *
           </label>
           <div className="relative">
-            <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <MapPin className="w-3.5 h-3.5 text-stone-400 absolute left-3.5 top-3" />
             <input
               type="text"
               required
-              placeholder="e.g. Istanbul, Paris, Tokyo, London..."
+              placeholder="e.g. Istanbul, Paris, Tokyo, Florence..."
               value={destination}
               onChange={(e) => {
                 setDestination(e.target.value);
                 setError(null);
               }}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs focus:outline-none focus:ring-1 focus:ring-stone-400"
             />
           </div>
         </div>
@@ -139,30 +139,30 @@ export const CreateTripModal: React.FC<CreateTripModalProps> = ({
         {/* Date Range */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-              Start Date
+            <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-1.5">
+              Commence Date
             </label>
             <div className="relative">
-              <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <Calendar className="w-3.5 h-3.5 text-stone-400 absolute left-3.5 top-3" />
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs focus:outline-none focus:ring-1 focus:ring-stone-400"
               />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-              End Date
+            <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-1.5">
+              Conclusion Date
             </label>
             <div className="relative">
-              <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <Calendar className="w-3.5 h-3.5 text-stone-400 absolute left-3.5 top-3" />
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs focus:outline-none focus:ring-1 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -171,27 +171,27 @@ export const CreateTripModal: React.FC<CreateTripModalProps> = ({
         {/* Travelers & Budget */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-              Travelers
+            <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-1.5">
+              Party Size
             </label>
             <div className="relative">
-              <Users className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <Users className="w-3.5 h-3.5 text-stone-400 absolute left-3.5 top-3" />
               <input
                 type="number"
                 min="1"
                 max="20"
                 value={travelersCount}
                 onChange={(e) => setTravelersCount(parseInt(e.target.value) || 1)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-stone-400"
               />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-              Total Budget ({CURRENCY_SYMBOLS[currency]})
+            <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-1.5">
+              Target Budget ({CURRENCY_SYMBOLS[currency]})
             </label>
             <div className="relative">
-              <DollarSign className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <DollarSign className="w-3.5 h-3.5 text-stone-400 absolute left-3.5 top-3" />
               <input
                 type="number"
                 min="0"
@@ -199,7 +199,7 @@ export const CreateTripModal: React.FC<CreateTripModalProps> = ({
                 placeholder="2500"
                 value={budget}
                 onChange={(e) => setBudget(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -208,13 +208,13 @@ export const CreateTripModal: React.FC<CreateTripModalProps> = ({
         {/* Currency & Cover Photo */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-              Currency
+            <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-1.5">
+              Financial Currency
             </label>
             <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-stone-400"
             >
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
@@ -226,37 +226,37 @@ export const CreateTripModal: React.FC<CreateTripModalProps> = ({
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-1.5">
               Cover Image URL
             </label>
             <div className="relative">
-              <ImageIcon className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <ImageIcon className="w-3.5 h-3.5 text-stone-400 absolute left-3.5 top-3" />
               <input
                 type="url"
                 value={coverImage}
                 onChange={(e) => setCoverImage(e.target.value)}
                 placeholder="https://images.unsplash.com/..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs focus:outline-none focus:ring-1 focus:ring-stone-400"
               />
             </div>
           </div>
         </div>
 
         {/* Submit */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-stone-100 dark:border-stone-800">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 rounded-xl"
+            className="px-4 py-2 text-xs font-semibold text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 rounded-xl"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold rounded-xl shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-900 hover:bg-stone-800 text-stone-50 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 text-xs font-bold uppercase tracking-wider rounded-xl shadow-sm transition-all hover:scale-[1.01]"
           >
-            <Sparkles className="w-4 h-4" />
-            Create Trip & Build Itinerary
+            <Sparkles className="w-3.5 h-3.5" />
+            Inaugurate Journey
           </button>
         </div>
       </form>

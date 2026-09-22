@@ -36,21 +36,21 @@ export const TripCard: React.FC<TripCardProps> = memo(({ trip, onDelete }) => {
     'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80';
 
   return (
-    <div className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+    <div className="group bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl overflow-hidden shadow-subtle hover:shadow-card transition-all duration-300 flex flex-col justify-between">
       <div>
         {/* Cover Photo */}
-        <div className="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+        <div className="relative h-52 w-full overflow-hidden bg-stone-100 dark:bg-stone-800">
           <img
             src={defaultCover}
             alt={trip.destination}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/25 to-transparent" />
 
           {/* Destination Badge */}
-          <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/70 backdrop-blur-md text-white text-xs font-semibold">
-            <MapPin className="w-3.5 h-3.5 text-blue-400" />
+          <div className="absolute top-3.5 left-3.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-950/60 backdrop-blur-md text-stone-200 text-xs font-medium border border-white/10">
+            <MapPin className="w-3 h-3 text-brand-300" />
             <span>{trip.destination}</span>
           </div>
 
@@ -63,26 +63,26 @@ export const TripCard: React.FC<TripCardProps> = memo(({ trip, onDelete }) => {
                 onDelete(trip.id);
               }
             }}
-            className="absolute top-4 right-4 p-2 rounded-xl bg-slate-900/60 hover:bg-red-600 text-white backdrop-blur-md transition-colors"
+            className="absolute top-3.5 right-3.5 p-2 rounded-xl bg-stone-950/50 hover:bg-rose-600/90 text-stone-300 hover:text-white backdrop-blur-md transition-colors"
             title="Delete trip"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-3.5 h-3.5" />
           </button>
 
           {/* Trip Name on Image */}
           <div className="absolute bottom-4 left-4 right-4">
-            <h3 className="text-xl font-black text-white truncate drop-shadow">
+            <h3 className="text-xl font-serif font-bold text-white tracking-tight truncate drop-shadow-sm">
               {trip.name}
             </h3>
-            <div className="flex items-center gap-3 text-xs text-slate-300 mt-1">
+            <div className="flex items-center gap-2.5 text-xs text-stone-300 mt-1 font-mono">
               <span className="flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" />
+                <Calendar className="w-3 h-3 text-stone-400" />
                 {formatDateShort(trip.startDate)} - {formatDateShort(trip.endDate)}
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Users className="w-3.5 h-3.5" />
-                {trip.travelers?.length || 1} travelers
+                <Users className="w-3 h-3 text-stone-400" />
+                {trip.travelers?.length || 1} {trip.travelers?.length === 1 ? 'traveler' : 'travelers'}
               </span>
             </div>
           </div>
@@ -92,35 +92,35 @@ export const TripCard: React.FC<TripCardProps> = memo(({ trip, onDelete }) => {
         <div className="p-5 space-y-4">
           {/* Progress Bar */}
           <div>
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
-              <span className="flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />
+            <div className="flex items-center justify-between text-xs text-stone-600 dark:text-stone-400 mb-1.5 font-medium">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
                 Activities ({stats.completedActivities}/{stats.totalActivities})
               </span>
-              <span>{stats.completionPercent}%</span>
+              <span className="font-mono text-stone-500">{stats.completionPercent}%</span>
             </div>
-            <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                className="h-full bg-stone-800 dark:bg-stone-300 rounded-full transition-all duration-500"
                 style={{ width: `${stats.completionPercent}%` }}
               />
             </div>
           </div>
 
           {/* Budget Info */}
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 text-xs">
+          <div className="flex items-center justify-between p-3 rounded-xl bg-stone-50/80 dark:bg-stone-800/40 border border-stone-200/60 dark:border-stone-800 text-xs">
             <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-emerald-500" />
+              <DollarSign className="w-3.5 h-3.5 text-stone-400" />
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Spent</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">
+                <span className="text-stone-400 block text-[10px] uppercase tracking-wider font-semibold">Spent</span>
+                <span className="font-mono font-semibold text-stone-800 dark:text-stone-200">
                   {formatCurrency(stats.totalSpent, trip.currency)}
                 </span>
               </div>
             </div>
             <div className="text-right">
-              <span className="text-slate-400 block text-[10px] uppercase font-bold">Budget</span>
-              <span className="font-bold text-slate-800 dark:text-slate-200">
+              <span className="text-stone-400 block text-[10px] uppercase tracking-wider font-semibold">Budget</span>
+              <span className="font-mono font-semibold text-stone-800 dark:text-stone-200">
                 {formatCurrency(trip.budget, trip.currency)}
               </span>
             </div>
@@ -129,16 +129,16 @@ export const TripCard: React.FC<TripCardProps> = memo(({ trip, onDelete }) => {
       </div>
 
       {/* Footer Navigation Buttons */}
-      <div className="p-5 pt-0 grid grid-cols-2 gap-2">
+      <div className="p-5 pt-0 grid grid-cols-2 gap-2.5">
         <Link
           to={`/trips/${trip.id}/itinerary`}
-          className="py-2.5 px-3 text-center rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 transition-colors"
+          className="py-2.5 px-3 text-center rounded-xl bg-stone-100 hover:bg-stone-200/80 dark:bg-stone-800 dark:hover:bg-stone-700/80 text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 transition-colors"
         >
           Itinerary
         </Link>
         <Link
           to={`/trips/${trip.id}`}
-          className="py-2.5 px-3 flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
+          className="py-2.5 px-3 flex items-center justify-center gap-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 active:bg-stone-950 text-stone-50 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 text-xs font-bold uppercase tracking-wider shadow-sm transition-all hover:scale-[1.01]"
         >
           <span>Dashboard</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -149,3 +149,4 @@ export const TripCard: React.FC<TripCardProps> = memo(({ trip, onDelete }) => {
 });
 
 TripCard.displayName = 'TripCard';
+

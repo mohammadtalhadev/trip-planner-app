@@ -39,17 +39,17 @@ export const MoveActivityModal: React.FC<MoveActivityModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Move Activity to Another Day"
+      title="Relocate Activity"
       maxWidth="sm"
     >
       <div className="space-y-4">
-        <p className="text-sm text-slate-600 dark:text-slate-400">
-          Move <strong className="text-slate-900 dark:text-white">"{activity.title}"</strong> to which day?
+        <p className="text-xs text-stone-600 dark:text-stone-400 font-sans">
+          Reassign <strong className="text-stone-900 dark:text-stone-100 font-semibold font-serif">"{activity.title}"</strong> to which journey date?
         </p>
 
         {otherDays.length === 0 ? (
-          <p className="text-xs text-amber-600 dark:text-amber-400">
-            No other days exist in this trip. Add a day first to move activities.
+          <p className="text-xs text-amber-700 dark:text-amber-400">
+            No alternate days scheduled in this journey. Add a day first to move activities.
           </p>
         ) : (
           <div className="space-y-2">
@@ -58,30 +58,32 @@ export const MoveActivityModal: React.FC<MoveActivityModalProps> = ({
                 key={day.id}
                 type="button"
                 onClick={() => setTargetDayId(day.id)}
-                className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-colors ${
+                className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all ${
                   targetDayId === day.id
-                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 font-bold'
-                    : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200'
+                    ? 'border-stone-900 bg-stone-900 text-stone-50 dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900 font-bold shadow-sm'
+                    : 'border-stone-200/80 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-800/60 text-stone-800 dark:text-stone-200'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Calendar className="w-4 h-4 text-slate-400" />
-                  <span>Day {day.dayNumber}</span>
-                  <span className="text-xs text-slate-500 font-normal">({formatDateShort(day.date)})</span>
+                  <Calendar className="w-3.5 h-3.5 text-stone-400" />
+                  <span className="text-xs font-mono uppercase tracking-wider">Day {day.dayNumber}</span>
+                  <span className={`text-[11px] font-mono ${targetDayId === day.id ? 'text-stone-300 dark:text-stone-600' : 'text-stone-400'}`}>
+                    ({formatDateShort(day.date)})
+                  </span>
                 </div>
-                <span className="text-xs text-slate-400 font-normal">
-                  {day.activities.length} activities
+                <span className={`text-xs font-mono ${targetDayId === day.id ? 'text-stone-300 dark:text-stone-600' : 'text-stone-400'}`}>
+                  {day.activities.length} {day.activities.length === 1 ? 'event' : 'events'}
                 </span>
               </button>
             ))}
           </div>
         )}
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-stone-100 dark:border-stone-800">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+            className="px-4 py-2 text-xs font-semibold text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 rounded-xl"
           >
             Cancel
           </button>
@@ -89,10 +91,10 @@ export const MoveActivityModal: React.FC<MoveActivityModalProps> = ({
             type="button"
             disabled={!targetDayId || otherDays.length === 0}
             onClick={handleConfirm}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl shadow-sm transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-900 hover:bg-stone-800 text-stone-50 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 disabled:opacity-40 text-xs font-bold uppercase tracking-wider rounded-xl shadow-sm transition-all hover:scale-[1.01]"
           >
-            <span>Confirm Move</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>Confirm Relocation</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>

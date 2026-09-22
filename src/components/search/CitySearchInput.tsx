@@ -15,7 +15,7 @@ interface CitySearchInputProps {
 }
 
 export const CitySearchInput: React.FC<CitySearchInputProps> = ({
-  placeholder = 'Search destinations (e.g. Paris, Tokyo, Istanbul, New York)...',
+  placeholder = 'Search destination (e.g. Paris, Tokyo, Istanbul, Rome)...',
   initialValue = '',
   onSelectCity,
   className,
@@ -52,7 +52,6 @@ export const CitySearchInput: React.FC<CitySearchInputProps> = ({
     if (onSelectCity) {
       onSelectCity(city);
     } else {
-      // Default behavior: navigate to destination details page
       const slug = encodeURIComponent(city.city.toLowerCase().replace(/\s+/g, '-'));
       navigate(`/destinations/${slug}?city=${encodeURIComponent(city.city)}&country=${encodeURIComponent(city.country)}&lat=${city.lat}&lon=${city.lon}`);
     }
@@ -84,17 +83,17 @@ export const CitySearchInput: React.FC<CitySearchInputProps> = ({
     <div ref={containerRef} className={cn('relative w-full', className)}>
       <div
         className={cn(
-          'relative flex items-center bg-white dark:bg-slate-900 border rounded-2xl transition-all shadow-sm',
+          'relative flex items-center bg-stone-50/80 dark:bg-stone-900/70 border rounded-xl sm:rounded-2xl transition-all duration-200',
           isFocused
-            ? 'border-blue-500 ring-4 ring-blue-500/10 shadow-md'
-            : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+            ? 'border-stone-900 dark:border-white ring-2 ring-stone-900/5 dark:ring-white/5 bg-white dark:bg-stone-900 shadow-sm'
+            : 'border-stone-200/90 dark:border-stone-800 hover:border-stone-300 dark:hover:border-stone-700'
         )}
       >
-        <div className="pl-4 text-slate-400 dark:text-slate-500">
+        <div className="pl-4 text-stone-400 dark:text-stone-500">
           {isSearching ? (
-            <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+            <Loader2 className="w-4 h-4 animate-spin text-stone-900 dark:text-white" />
           ) : (
-            <Search className="w-5 h-5" />
+            <Search className="w-4 h-4 stroke-[2.2]" />
           )}
         </div>
 
@@ -111,7 +110,7 @@ export const CitySearchInput: React.FC<CitySearchInputProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           autoFocus={autoFocus}
-          className="w-full py-3.5 pl-3 pr-10 text-sm md:text-base bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
+          className="w-full py-3 pl-3 pr-10 text-xs sm:text-sm bg-transparent text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none font-medium"
         />
 
         {query && (
@@ -121,10 +120,10 @@ export const CitySearchInput: React.FC<CitySearchInputProps> = ({
               clearSearch();
               inputRef.current?.focus();
             }}
-            className="absolute right-3 p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="absolute right-3 p-1 rounded-md text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-200/60 dark:hover:bg-stone-800 transition-colors"
             aria-label="Clear search"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         )}
       </div>

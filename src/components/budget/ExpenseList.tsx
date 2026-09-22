@@ -149,14 +149,14 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
   }, [filteredAndSorted]);
 
   return (
-    <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-5">
+    <div className="p-6 bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle space-y-5">
       {/* Header & Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-100 dark:border-stone-800 pb-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400 dark:text-stone-500">
             Ledger
           </span>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+          <h3 className="text-base font-serif font-bold text-stone-900 dark:text-stone-100 mt-0.5">
             Expense Records ({filteredAndSorted.length})
           </h3>
         </div>
@@ -167,7 +167,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none"
+            className="px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-1 focus:ring-stone-400"
           >
             <option value="all">All Categories</option>
             <option value="Accommodation">Accommodation</option>
@@ -182,7 +182,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
           <select
             value={filterDay}
             onChange={(e) => setFilterDay(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none"
+            className="px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-1 focus:ring-stone-400"
           >
             <option value="all">All Days</option>
             <option value="general">General (No day)</option>
@@ -197,7 +197,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none"
+            className="px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-1 focus:ring-stone-400"
           >
             <option value="date-desc">Newest Date</option>
             <option value="date-asc">Oldest Date</option>
@@ -209,16 +209,16 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
 
       {/* Expenses Table */}
       {filteredAndSorted.length === 0 ? (
-        <div className="py-12 text-center text-slate-400 text-xs">
-          <Receipt className="w-8 h-8 mx-auto mb-2 text-slate-300 dark:text-slate-600" />
-          <p className="font-semibold text-slate-600 dark:text-slate-400">No matching expenses recorded</p>
-          <p className="mt-0.5">Change filters or add a new expense above.</p>
+        <div className="py-14 text-center text-stone-400 text-xs">
+          <Receipt className="w-8 h-8 mx-auto mb-2 text-stone-300 dark:text-stone-600" />
+          <p className="font-serif font-bold text-sm text-stone-700 dark:text-stone-300">No matching transactions logged</p>
+          <p className="mt-1 text-stone-400">Adjust the filters or record an expense above.</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-100 dark:border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              <tr className="border-b border-stone-100 dark:border-stone-800 text-[10px] font-mono font-bold text-stone-400 uppercase tracking-widest">
                 <th className="py-2.5 px-4">Description</th>
                 <th className="py-2.5 px-4">Category</th>
                 <th className="py-2.5 px-4">Date</th>
@@ -227,7 +227,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
                 <th className="py-2.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+            <tbody className="divide-y divide-stone-100 dark:divide-stone-800/60 font-sans">
               {filteredAndSorted.map((expense) => (
                 <ExpenseRow
                   key={expense.id}
@@ -240,11 +240,11 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
               ))}
             </tbody>
             <tfoot>
-              <tr className="border-t-2 border-slate-200 dark:border-slate-700 font-bold text-sm">
-                <td colSpan={4} className="py-3 px-4 text-slate-700 dark:text-slate-300">
-                  Filtered Subtotal
+              <tr className="border-t border-stone-200 dark:border-stone-700 font-mono font-bold text-xs">
+                <td colSpan={4} className="py-3 px-4 text-stone-600 dark:text-stone-400 uppercase tracking-wider">
+                  Filtered Ledger Total
                 </td>
-                <td className="py-3 px-4 text-right text-blue-600 dark:text-blue-400">
+                <td className="py-3 px-4 text-right text-stone-900 dark:text-stone-100">
                   {formatCurrency(filteredTotal, currency)}
                 </td>
                 <td />
