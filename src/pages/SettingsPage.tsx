@@ -91,17 +91,17 @@ export const SettingsPage: React.FC = () => {
 
       <div className="space-y-6">
         {/* Account Profile & Security Section */}
-        <section className="p-6 bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle space-y-5">
+        <section className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-frost space-y-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400">
+              <div className="p-2 rounded-2xl bg-orange-50 dark:bg-orange-950/60 text-[#c2410c] dark:text-[#fb923c] border border-orange-100 dark:border-orange-900/40">
                 <User className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base font-serif font-bold text-stone-900 dark:text-stone-100">
+                <h3 className="text-base font-serif font-bold text-slate-900 dark:text-slate-100">
                   Account Profile & Security
                 </h3>
-                <p className="text-xs text-stone-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Manage your traveler identity, contact email, avatar image, and credentials.
                 </p>
               </div>
@@ -113,7 +113,7 @@ export const SettingsPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50/60 dark:bg-stone-800/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div
                 className="relative group cursor-pointer"
@@ -137,19 +137,19 @@ export const SettingsPage: React.FC = () => {
 
               <div>
                 <div className="flex items-center gap-2">
-                  <h4 className="text-base font-bold text-stone-900 dark:text-white">
+                  <h4 className="text-base font-bold text-slate-900 dark:text-white">
                     {user.name}
                   </h4>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300">
                     {user.tier}
                   </span>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-                  <Mail className="w-3.5 h-3.5 text-stone-400" />
+                <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  <Mail className="w-3.5 h-3.5 text-slate-400" />
                   <span>{user.email}</span>
                 </div>
                 {user.bio && (
-                  <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 max-w-md line-clamp-1 italic">
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 max-w-md line-clamp-1 italic">
                     "{user.bio}"
                   </p>
                 )}
@@ -163,7 +163,7 @@ export const SettingsPage: React.FC = () => {
                   setModalTab('profile');
                   setIsEditModalOpen(true);
                 }}
-                className="flex-1 sm:flex-none px-4 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-xs font-bold text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-700 shadow-xs transition-colors"
+                className="flex-1 sm:flex-none px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-xs transition-colors"
               >
                 Edit Profile
               </button>
@@ -174,7 +174,7 @@ export const SettingsPage: React.FC = () => {
                   setModalTab('password');
                   setIsEditModalOpen(true);
                 }}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white dark:bg-stone-100 dark:text-stone-900 text-xs font-bold shadow-xs transition-colors"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#c2410c] hover:bg-[#b91c1c] active:bg-[#9a3412] text-white text-xs font-bold shadow-md shadow-orange-600/20 transition-all hover:scale-[1.01]"
               >
                 <KeyRound className="w-3.5 h-3.5" />
                 <span>Change Password</span>
@@ -184,16 +184,16 @@ export const SettingsPage: React.FC = () => {
         </section>
 
         {/* Appearance / Theme */}
-        <section className="p-6 bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle space-y-4">
+        <section className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-frost space-y-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
+            <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
               <Sun className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-serif font-bold text-stone-900 dark:text-stone-100">
+              <h3 className="text-base font-serif font-bold text-slate-900 dark:text-slate-100">
                 Display Environment
               </h3>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-slate-500">
                 Choose between tactile warm paper mode or architectural dark tone.
               </p>
             </div>
@@ -211,10 +211,10 @@ export const SettingsPage: React.FC = () => {
                 <button
                   key={option.id}
                   onClick={() => handleThemeChange(option.id as ThemeMode)}
-                  className={`p-4 rounded-xl border text-center flex flex-col items-center gap-2 transition-all ${
+                  className={`p-4 rounded-2xl border text-center flex flex-col items-center gap-2 transition-all ${
                     isSelected
-                      ? 'border-stone-900 bg-stone-900 text-stone-50 dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900 font-bold shadow-sm'
-                      : 'border-stone-200/80 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-800/60'
+                      ? 'border-[#c2410c] bg-[#c2410c] text-white font-bold shadow-md shadow-orange-600/20'
+                      : 'border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -226,16 +226,16 @@ export const SettingsPage: React.FC = () => {
         </section>
 
         {/* Currency & Units */}
-        <section className="p-6 bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle space-y-5">
+        <section className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-frost space-y-5">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
+            <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
               <DollarSign className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-serif font-bold text-stone-900 dark:text-stone-100">
+              <h3 className="text-base font-serif font-bold text-slate-900 dark:text-slate-100">
                 Financial Currency & Units
               </h3>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-slate-500">
                 Controls price formatting in itineraries, budgets, and weather forecasts.
               </p>
             </div>
@@ -244,7 +244,7 @@ export const SettingsPage: React.FC = () => {
           <div className="space-y-4 pt-1">
             {/* Currency Selector */}
             <div>
-              <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-2">
+              <label className="block text-[11px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-2">
                 Preferred Currency
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -254,19 +254,19 @@ export const SettingsPage: React.FC = () => {
                     <button
                       key={c}
                       onClick={() => handleCurrencyChange(c)}
-                      className={`p-3 rounded-xl border text-left flex items-center justify-between transition-all ${
+                      className={`p-3 rounded-2xl border text-left flex items-center justify-between transition-all ${
                         isSelected
-                          ? 'border-stone-900 bg-stone-900 text-stone-50 dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900 font-bold shadow-sm'
-                          : 'border-stone-200/80 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800/60'
+                          ? 'border-[#c2410c] bg-[#c2410c] text-white font-bold shadow-md shadow-orange-600/20'
+                          : 'border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'
                       }`}
                     >
                       <div>
                         <span className="text-xs font-mono font-bold block">{c}</span>
-                        <span className={`text-[10px] truncate block ${isSelected ? 'text-stone-300 dark:text-stone-600' : 'text-stone-400'}`}>
+                        <span className={`text-[10px] truncate block ${isSelected ? 'text-orange-100' : 'text-slate-400'}`}>
                           {CURRENCY_NAMES[c].split(' ')[0]}
                         </span>
                       </div>
-                      <span className={`text-sm font-mono font-bold ${isSelected ? 'text-stone-200 dark:text-stone-800' : 'text-stone-400'}`}>
+                      <span className={`text-sm font-mono font-bold ${isSelected ? 'text-orange-100' : 'text-slate-400'}`}>
                         {formatCurrency(100, c).charAt(0)}
                       </span>
                     </button>
@@ -277,26 +277,26 @@ export const SettingsPage: React.FC = () => {
 
             {/* Temperature Unit */}
             <div>
-              <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-2">
+              <label className="block text-[11px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-2">
                 Temperature Unit
               </label>
               <div className="grid grid-cols-2 gap-3 max-w-xs">
                 <button
                   onClick={() => handleTempUnitChange('celsius')}
-                  className={`p-3 rounded-xl border text-center font-mono font-bold text-xs transition-all ${
+                  className={`p-3 rounded-2xl border text-center font-mono font-bold text-xs transition-all ${
                     preferences.tempUnit === 'celsius'
-                      ? 'border-stone-900 bg-stone-900 text-stone-50 dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900 shadow-sm'
-                      : 'border-stone-200/80 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-800/60'
+                      ? 'border-[#c2410c] bg-[#c2410c] text-white shadow-md shadow-orange-600/20'
+                      : 'border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60'
                   }`}
                 >
                   Celsius (°C)
                 </button>
                 <button
                   onClick={() => handleTempUnitChange('fahrenheit')}
-                  className={`p-3 rounded-xl border text-center font-mono font-bold text-xs transition-all ${
+                  className={`p-3 rounded-2xl border text-center font-mono font-bold text-xs transition-all ${
                     preferences.tempUnit === 'fahrenheit'
-                      ? 'border-stone-900 bg-stone-900 text-stone-50 dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900 shadow-sm'
-                      : 'border-stone-200/80 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-800/60'
+                      ? 'border-[#c2410c] bg-[#c2410c] text-white shadow-md shadow-orange-600/20'
+                      : 'border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60'
                   }`}
                 >
                   Fahrenheit (°F)
@@ -305,9 +305,9 @@ export const SettingsPage: React.FC = () => {
             </div>
 
             {/* Live Preview Card */}
-            <div className="p-3.5 rounded-xl bg-stone-50/80 dark:bg-stone-800/40 border border-stone-200/60 dark:border-stone-800 flex items-center justify-between text-xs">
-              <span className="text-stone-500 font-mono text-[11px]">Format Preview:</span>
-              <div className="flex items-center gap-4 font-mono font-bold text-stone-800 dark:text-stone-200">
+            <div className="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span className="text-slate-500 font-mono text-[11px]">Format Preview:</span>
+              <div className="flex items-center gap-4 font-mono font-bold text-slate-800 dark:text-slate-200">
                 <span>Budget: {formatCurrency(2500, preferences.currency)}</span>
                 <span>•</span>
                 <span>Weather: {formatTemperature(22, preferences.tempUnit)}</span>
@@ -317,16 +317,16 @@ export const SettingsPage: React.FC = () => {
         </section>
 
         {/* Travel Defaults */}
-        <section className="p-6 bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle space-y-5">
+        <section className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-frost space-y-5">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
+            <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
               <Users className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-serif font-bold text-stone-900 dark:text-stone-100">
+              <h3 className="text-base font-serif font-bold text-slate-900 dark:text-slate-100">
                 Itinerary Defaults
               </h3>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-slate-500">
                 Configure baseline traveler party size and preferred vacation pacing.
               </p>
             </div>
@@ -335,7 +335,7 @@ export const SettingsPage: React.FC = () => {
           <div className="space-y-4 pt-1">
             {/* Default Travelers */}
             <div>
-              <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-2">
+              <label className="block text-[11px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-2">
                 Default Party Size
               </label>
               <div className="flex items-center gap-3">
@@ -348,9 +348,9 @@ export const SettingsPage: React.FC = () => {
                     setDefaultTravelers(parseInt(e.target.value, 10) || 1);
                     triggerSavedNotice();
                   }}
-                  className="w-24 px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 font-mono text-sm font-bold text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-1 focus:ring-stone-400"
+                  className="w-24 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-mono text-sm font-bold text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                 />
-                <span className="text-xs text-stone-500">
+                <span className="text-xs text-slate-500">
                   Default number of travelers when inaugurating a journey.
                 </span>
               </div>
@@ -358,7 +358,7 @@ export const SettingsPage: React.FC = () => {
 
             {/* Travel Style */}
             <div>
-              <label className="block text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest mb-2">
+              <label className="block text-[11px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-2">
                 Travel Style & Pace
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -371,17 +371,17 @@ export const SettingsPage: React.FC = () => {
                         setTravelStyle(style.id);
                         triggerSavedNotice();
                       }}
-                      className={`p-3.5 rounded-xl border text-left transition-all ${
+                      className={`p-3.5 rounded-2xl border text-left transition-all ${
                         isSelected
-                          ? 'border-stone-900 bg-stone-900 text-stone-50 dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900 shadow-sm'
-                          : 'border-stone-200/80 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-800/60'
+                          ? 'border-[#c2410c] bg-[#c2410c] text-white shadow-md shadow-orange-600/20'
+                          : 'border-slate-200/80 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60'
                       }`}
                     >
                       <div className="flex items-center justify-between text-xs font-serif font-bold">
                         <span>{style.title}</span>
-                        {isSelected && <Sparkles className="w-3.5 h-3.5 text-stone-300 dark:text-stone-700" />}
+                        {isSelected && <Sparkles className="w-3.5 h-3.5 text-amber-300" />}
                       </div>
-                      <p className={`text-[11px] mt-0.5 leading-relaxed ${isSelected ? 'text-stone-300 dark:text-stone-600' : 'text-stone-500 dark:text-stone-400'}`}>
+                      <p className={`text-[11px] mt-0.5 leading-relaxed ${isSelected ? 'text-orange-100' : 'text-slate-500 dark:text-slate-400'}`}>
                         {style.description}
                       </p>
                     </button>

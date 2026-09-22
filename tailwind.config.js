@@ -1,3 +1,5 @@
+import colors from 'tailwindcss/colors';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -12,6 +14,14 @@ export default {
         sans: ['Outfit', '"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
+        // Enforce consistent cool slate palette site-wide, eliminating warm brownish tones
+        stone: colors.slate,
+        sand: colors.slate,
+        primary: {
+          DEFAULT: '#c2410c',
+          hover: '#b91c1c',
+          active: '#9a3412',
+        },
         brand: {
           50: '#fff7ed',
           100: '#ffedd5',
@@ -20,10 +30,10 @@ export default {
           400: '#fb923c',
           500: '#f97316',
           600: '#c2410c', // Terracotta crimson from Light Frost design
-          700: '#9a3412',
-          800: '#7c2d12',
-          900: '#431407',
-          950: '#2c0b02',
+          700: '#b91c1c',
+          800: '#9a3412',
+          900: '#7c2d12',
+          950: '#431407',
         },
         frost: {
           50: '#f8fafd',
@@ -36,19 +46,6 @@ export default {
           700: '#0284c7',
           800: '#0369a1',
           900: '#075985',
-        },
-        sand: {
-          50: '#fafaf9',
-          100: '#f5f5f4',
-          200: '#e7e5e4',
-          300: '#d6d3d1',
-          400: '#a8a29e',
-          500: '#78716c',
-          600: '#57534e',
-          700: '#44403c',
-          800: '#292524',
-          900: '#1c1917',
-          950: '#0c0a09',
         },
       },
       boxShadow: {

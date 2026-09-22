@@ -53,10 +53,10 @@ export const ActivityCard: React.FC<ActivityCardProps> = memo(
         onDragStart={(e) => onDragStart(e, index)}
         onDragOver={(e) => onDragOver(e, index)}
         onDrop={(e) => onDrop(e, index)}
-        className={`group relative bg-white dark:bg-[#15181e] border rounded-2xl p-4 transition-all duration-200 shadow-subtle hover:shadow-card ${
+        className={`group relative bg-white dark:bg-slate-900 border rounded-2xl p-4 transition-all duration-200 shadow-frost hover:shadow-card ${
           activity.completed
-            ? 'border-stone-200/60 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-900/30 opacity-75'
-            : 'border-stone-200/90 dark:border-stone-800'
+            ? 'border-slate-200/60 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 opacity-75'
+            : 'border-slate-200/90 dark:border-slate-800'
         }`}
       >
         <div className="flex items-start justify-between gap-3">
@@ -64,7 +64,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = memo(
           <div className="flex items-start gap-3 min-w-0 flex-1">
             {/* Drag handle */}
             <div
-              className="cursor-grab active:cursor-grabbing text-stone-300 dark:text-stone-600 hover:text-stone-500 pt-1 shrink-0 hidden sm:block"
+              className="cursor-grab active:cursor-grabbing text-slate-300 dark:text-slate-600 hover:text-slate-500 pt-1 shrink-0 hidden sm:block"
               title="Drag to reorder in day"
             >
               <GripVertical className="w-4 h-4" />
@@ -73,11 +73,11 @@ export const ActivityCard: React.FC<ActivityCardProps> = memo(
             {/* Completion checkbox */}
             <button
               onClick={() => onToggleComplete(activity.id)}
-              className="mt-0.5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors shrink-0"
+              className="mt-0.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors shrink-0"
               title={activity.completed ? 'Mark as incomplete' : 'Mark as done'}
             >
               {activity.completed ? (
-                <CheckCircle2 className="w-5 h-5 text-stone-900 dark:text-white" />
+                <CheckCircle2 className="w-5 h-5 text-[#c2410c] dark:text-[#fb923c]" />
               ) : (
                 <Circle className="w-5 h-5" />
               )}
@@ -158,7 +158,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = memo(
 
             <button
               onClick={() => onEdit(activity)}
-              className="p-1.5 rounded-lg text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-[#c2410c] dark:hover:text-[#fb923c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               title="Edit event"
             >
               <Edit2 className="w-3.5 h-3.5" />

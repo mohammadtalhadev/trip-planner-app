@@ -56,7 +56,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = memo(
           <div className="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => onEdit(expense)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-[#c2410c] dark:hover:text-[#fb923c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               title="Edit expense"
             >
               <Edit2 className="w-3.5 h-3.5" />
@@ -149,14 +149,14 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
   }, [filteredAndSorted]);
 
   return (
-    <div className="p-6 bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle space-y-5">
+    <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-frost space-y-5">
       {/* Header & Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-100 dark:border-stone-800 pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400 dark:text-stone-500">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500">
             Ledger
           </span>
-          <h3 className="text-base font-serif font-bold text-stone-900 dark:text-stone-100 mt-0.5">
+          <h3 className="text-base font-serif font-bold text-slate-900 dark:text-slate-100 mt-0.5">
             Expense Records ({filteredAndSorted.length})
           </h3>
         </div>
@@ -167,7 +167,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-1 focus:ring-stone-400"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-xs font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-500"
           >
             <option value="all">All Categories</option>
             <option value="Accommodation">Accommodation</option>
@@ -182,7 +182,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
           <select
             value={filterDay}
             onChange={(e) => setFilterDay(e.target.value)}
-            className="px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-1 focus:ring-stone-400"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-xs font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-500"
           >
             <option value="all">All Days</option>
             <option value="general">General (No day)</option>
@@ -197,7 +197,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-1 focus:ring-stone-400"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-xs font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-500"
           >
             <option value="date-desc">Newest Date</option>
             <option value="date-asc">Oldest Date</option>

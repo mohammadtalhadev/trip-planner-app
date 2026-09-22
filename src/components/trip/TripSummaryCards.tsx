@@ -162,7 +162,7 @@ export const TripSummaryCards: React.FC<TripSummaryCardsProps> = ({ trip }) => {
                   ) : null}
                   <span
                     className={`w-2 h-2 rounded-full ${
-                      act.completed ? 'bg-stone-400' : 'bg-brand-600'
+                      act.completed ? 'bg-slate-400' : 'bg-[#c2410c]'
                     }`}
                   />
                 </div>

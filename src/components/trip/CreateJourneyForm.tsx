@@ -740,7 +740,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                     setDraftSavedAt('just now');
                   }}
                   placeholder="e.g. Autumnal Drift: Kyoto & Hakone"
-                  className="w-full px-4 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-white/90 dark:bg-slate-800/90 text-slate-900 dark:text-white text-base sm:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-sm transition-all"
+                  className="w-full px-4 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-white/90 dark:bg-slate-800/90 text-slate-900 dark:text-white text-base sm:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 shadow-sm transition-all"
                 />
               </div>
 
@@ -754,7 +754,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                     key={idea.title}
                     type="button"
                     onClick={() => handleApplyQuickIdea(idea)}
-                    className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/80 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all shadow-xs"
+                    className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/80 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-[#c2410c] hover:text-[#c2410c] dark:hover:text-[#fb923c] transition-all shadow-xs"
                   >
                     {idea.title.split(':')[0]}
                   </button>
@@ -774,7 +774,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
               >
                 {/* Active Hub Chips */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400">
+                  <div className="p-1.5 rounded-lg bg-orange-50 dark:bg-orange-950/60 text-[#c2410c] dark:text-[#fb923c]">
                     <Globe2 className="w-4 h-4" />
                   </div>
 
@@ -812,7 +812,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                     className="w-full pl-8 pr-4 py-2 bg-transparent text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none"
                   />
                   {isSearchingHubs && (
-                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin absolute right-2" />
+                    <div className="w-4 h-4 border-2 border-[#c2410c] border-t-transparent rounded-full animate-spin absolute right-2" />
                   )}
                 </div>
 
@@ -840,7 +840,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                             </div>
                           </div>
                         </div>
-                        <span className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60">
+                        <span className="text-[10px] text-[#c2410c] dark:text-[#fb923c] font-semibold px-2 py-0.5 rounded-full bg-orange-50 dark:bg-orange-950/60">
                           + Add Hub
                         </span>
                       </button>
@@ -990,9 +990,9 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                             : isStart
                             ? 'bg-[#c2410c] dark:bg-[#ea580c] text-white font-black shadow-md shadow-orange-500/30 ring-2 ring-orange-500/20'
                             : isEnd
-                            ? 'bg-blue-600 dark:bg-blue-500 text-white font-black shadow-md shadow-blue-500/30 ring-2 ring-blue-500/20'
+                            ? 'bg-[#c2410c] dark:bg-[#ea580c] text-white font-black shadow-md shadow-orange-500/30 ring-2 ring-orange-500/20'
                             : inRange
-                            ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold'
+                            ? 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 font-bold'
                             : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700'
                         }`}
                       >
@@ -1004,7 +1004,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
               </div>
             </div>
 
-            {/* 4. PARTY CONFIGURATION */}
+            {/* 4. PARTY SIZE PRESETS */}
             <div className="space-y-3">
               <label className="text-[11px] font-mono font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
                 PARTY CONFIGURATION
@@ -1024,7 +1024,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                     onClick={() => handleSelectPreset(preset.id as any)}
                     className={`py-2 rounded-xl text-xs font-bold transition-all ${
                       partyPreset === preset.id
-                        ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-sm'
+                        ? 'bg-[#c2410c] dark:bg-[#ea580c] text-white shadow-md shadow-orange-600/20'
                         : 'bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
                     }`}
                   >
@@ -1036,7 +1036,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
               {/* Stepper Card */}
               <div className="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-white/90 dark:bg-slate-800/90 shadow-sm flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400">
+                  <div className="p-2.5 rounded-xl bg-orange-50 dark:bg-orange-950/50 text-[#c2410c] dark:text-[#fb923c]">
                     <Users className="w-4 h-4" />
                   </div>
                   <div>
@@ -1079,7 +1079,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
             <div className="p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/90 shadow-frost space-y-6">
               {/* Header */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                <div className="flex items-center gap-2 text-[#c2410c] dark:text-[#fb923c]">
                   <DollarSign className="w-4 h-4" />
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
                     Target Budget
@@ -1113,7 +1113,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                 </div>
 
                 <div className="text-right">
-                  <div className="text-xl sm:text-2xl font-black text-blue-600 dark:text-blue-400">
+                  <div className="text-xl sm:text-2xl font-black text-[#c2410c] dark:text-[#fb923c]">
                     {CURRENCY_SYMBOLS[currency]}
                     {perDayBudget}
                   </div>
@@ -1149,17 +1149,17 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                 <div className="h-3 w-full rounded-full overflow-hidden flex bg-slate-100 dark:bg-slate-800">
                   <div
                     style={{ width: `${spendAllocation.stays * 100}%` }}
-                    className="bg-[#6366f1] h-full"
+                    className="bg-[#c2410c] h-full"
                     title="Stays 44%"
                   />
                   <div
                     style={{ width: `${spendAllocation.dining * 100}%` }}
-                    className="bg-[#06b6d4] h-full"
+                    className="bg-[#0284c7] h-full"
                     title="Dining 28%"
                   />
                   <div
                     style={{ width: `${spendAllocation.transit * 100}%` }}
-                    className="bg-[#f97316] h-full"
+                    className="bg-[#38bdf8] h-full"
                     title="Transit 18%"
                   />
                   <div
@@ -1172,15 +1172,15 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                 {/* Legend */}
                 <div className="grid grid-cols-2 gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#6366f1]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#c2410c]" />
                     <span>Stays 44%</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#06b6d4]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#0284c7]" />
                     <span>Dining 28%</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#f97316]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8]" />
                     <span>Transit 18%</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1207,7 +1207,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                       onClick={() => handleToggleVibe(vibe)}
                       className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
                         isSelected
-                          ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-2 border-blue-500/80 shadow-xs'
+                          ? 'bg-orange-50 dark:bg-orange-950/60 text-[#c2410c] dark:text-[#fb923c] border-2 border-[#c2410c] shadow-xs'
                           : 'bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                       }`}
                     >

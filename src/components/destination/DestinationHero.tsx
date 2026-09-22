@@ -98,9 +98,9 @@ export const DestinationHero: React.FC<DestinationHeroProps> = ({
 
         <button
           onClick={onPlanTrip}
-          className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-white hover:bg-stone-100 text-stone-900 text-xs font-bold uppercase tracking-wider rounded-2xl shadow-float transition-all hover:scale-[1.02] shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#c2410c] hover:bg-[#b91c1c] active:bg-[#9a3412] text-white text-xs font-bold uppercase tracking-wider rounded-2xl shadow-lg shadow-orange-950/40 transition-all hover:scale-[1.02] shrink-0"
         >
-          <Sparkles className="w-4 h-4 text-stone-900" />
+          <Sparkles className="w-4 h-4 text-amber-300" />
           <span>Plan Itinerary in {cityName}</span>
         </button>
       </div>

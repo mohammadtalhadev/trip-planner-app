@@ -9,7 +9,7 @@ export const Layout: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
+    <div className="flex flex-col min-h-screen bg-[#f6f8fd] dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100 transition-colors duration-200">
       {/* Floating Header Capsule */}
       <header className="sticky top-3.5 z-40 w-full px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <Navbar onOpenCreateTrip={() => setIsCreateModalOpen(true)} />

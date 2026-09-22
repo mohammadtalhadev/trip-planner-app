@@ -217,7 +217,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
         {/* MODAL HEADER */}
         <div className="flex items-center justify-between p-6 border-b border-slate-200/80 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400">
+            <div className="p-2.5 rounded-2xl bg-orange-50 dark:bg-orange-950/60 text-[#c2410c] dark:text-[#fb923c] border border-orange-100 dark:border-orange-900/40">
               <User className="w-5 h-5" />
             </div>
             <div>
@@ -246,7 +246,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             onClick={() => setActiveTab('profile')}
             className={`pb-3 px-3 text-xs font-bold transition-all relative flex items-center gap-2 ${
               activeTab === 'profile'
-                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
+                ? 'text-[#c2410c] dark:text-[#fb923c] border-b-2 border-[#c2410c] dark:border-[#fb923c]'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
@@ -259,7 +259,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             onClick={() => setActiveTab('password')}
             className={`pb-3 px-3 text-xs font-bold transition-all relative flex items-center gap-2 ${
               activeTab === 'password'
-                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
+                ? 'text-[#c2410c] dark:text-[#fb923c] border-b-2 border-[#c2410c] dark:border-[#fb923c]'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
@@ -328,7 +328,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                         onClick={() => fileInputRef.current?.click()}
                         className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors shadow-xs"
                       >
-                        <Upload className="w-3.5 h-3.5 text-blue-500" />
+                        <Upload className="w-3.5 h-3.5 text-sky-500" />
                         <span>Upload from device</span>
                       </button>
 
@@ -351,7 +351,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                             if (e.target.value.trim()) setAvatar(e.target.value.trim());
                           }}
                           placeholder="https://example.com/photo.jpg"
-                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                         />
                       </div>
                     )}
@@ -374,7 +374,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                               }}
                               className={`relative p-0.5 rounded-full transition-all ${
                                 isSelected
-                                  ? 'ring-2 ring-blue-500 scale-105'
+                                  ? 'ring-2 ring-[#c2410c] scale-105'
                                   : 'opacity-70 hover:opacity-100'
                               }`}
                               title={preset.label}
@@ -407,7 +407,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Sophia Vance"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                     />
                   </div>
                 </div>
@@ -424,7 +424,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="e.g. sophia.vance@tripplanner.io"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                     />
                   </div>
                 </div>
@@ -440,7 +440,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   placeholder="Share your travel interests, favorite cities, or vacation goals..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                 />
               </div>
 
@@ -481,8 +481,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 </div>
               )}
 
-              <div className="p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-blue-50/40 dark:bg-blue-950/20 flex items-start gap-3">
-                <Shield className="w-4 h-4 text-blue-500 mt-0.5" />
+              <div className="p-4 rounded-2xl border border-sky-200/80 dark:border-sky-900/40 bg-sky-50/40 dark:bg-sky-950/20 flex items-start gap-3">
+                <Shield className="w-4 h-4 text-sky-500 mt-0.5" />
                 <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   Choose a robust password to safeguard your journeys, offline sync keys, and saved itineraries.
                 </p>
@@ -500,7 +500,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="Enter existing password"
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                   />
                   <button
                     type="button"
@@ -525,7 +525,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="At least 6 characters"
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                   />
                   <button
                     type="button"
@@ -566,7 +566,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Repeat new password"
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                   />
                   <button
                     type="button"

@@ -49,17 +49,17 @@ export const WeatherCard: React.FC<WeatherCardProps> = ({ weather, onRetry }) =>
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-[#15181e] border border-stone-200/80 dark:border-stone-800 rounded-3xl shadow-subtle space-y-5">
+    <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-frost space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
             Meteorological Forecast
           </span>
-          <h3 className="font-serif text-lg font-bold text-stone-900 dark:text-white">
+          <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white">
             Current Weather
           </h3>
         </div>
-        <div className="w-10 h-10 rounded-2xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-700 dark:text-stone-300">
+        <div className="w-10 h-10 rounded-2xl bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900/40 flex items-center justify-center text-sky-600 dark:text-sky-400">
           {renderWeatherIcon(currentCondition.icon, 'w-5 h-5')}
         </div>
       </div>

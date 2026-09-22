@@ -31,7 +31,7 @@ export const TripDashboardPage: React.FC = () => {
         <p className="text-sm text-slate-500">The requested trip itinerary does not exist or has been removed.</p>
         <Link
           to="/trips"
-          className="inline-flex px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl"
+          className="inline-flex px-5 py-2.5 bg-[#c2410c] hover:bg-[#b91c1c] text-white text-xs font-bold rounded-xl shadow-md shadow-orange-600/20"
         >
           Return to Trips
         </Link>
@@ -125,7 +125,7 @@ export const TripDashboardPage: React.FC = () => {
       <div className="flex items-center gap-1 border-b border-stone-200/80 dark:border-stone-800 pb-2">
         <Link
           to={`/trips/${trip.id}`}
-          className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 shadow-sm"
+          className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider bg-[#c2410c] text-white shadow-sm"
         >
           Dashboard Overview
         </Link>

@@ -44,12 +44,12 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
   });
 
   return (
-    <div className="p-6 bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle space-y-5">
-      <div className="border-b border-stone-100 dark:border-stone-800 pb-3">
-        <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400 dark:text-stone-500">
+    <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-frost space-y-5">
+      <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+        <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500">
           Distribution
         </span>
-        <h3 className="text-base font-serif font-bold text-stone-900 dark:text-stone-100 mt-0.5">
+        <h3 className="text-base font-serif font-bold text-slate-900 dark:text-slate-100 mt-0.5">
           Spending by Category
         </h3>
       </div>

@@ -294,8 +294,8 @@ export const DestinationsPage: React.FC = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent" />
 
-                    <div className="absolute top-3.5 left-3.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-950/60 backdrop-blur-md text-stone-200 text-xs font-medium border border-white/10">
-                      <MapPin className="w-3 h-3 text-brand-300" />
+                    <div className="absolute top-3.5 left-3.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-950/60 backdrop-blur-md text-slate-200 text-xs font-medium border border-white/10">
+                      <MapPin className="w-3 h-3 text-sky-400" />
                       <span>{dest.country}</span>
                     </div>
 
@@ -314,8 +314,8 @@ export const DestinationsPage: React.FC = () => {
                       }
                       className={`absolute top-3.5 right-3.5 p-2 rounded-xl backdrop-blur-md transition-all ${
                         isSaved
-                          ? 'bg-brand-600 text-white shadow-sm'
-                          : 'bg-stone-950/50 text-stone-200 hover:text-white border border-white/10'
+                          ? 'bg-[#c2410c] text-white shadow-sm'
+                          : 'bg-slate-950/50 text-slate-200 hover:text-white border border-white/10'
                       }`}
                       title={isSaved ? 'Remove from collection' : 'Save destination'}
                     >
@@ -347,7 +347,7 @@ export const DestinationsPage: React.FC = () => {
                     to={`/destinations/${slug}?city=${encodeURIComponent(
                       dest.city
                     )}&country=${encodeURIComponent(dest.country)}&lat=${dest.lat}&lon=${dest.lon}`}
-                    className="w-full py-2.5 px-4 flex items-center justify-center gap-2 rounded-xl bg-stone-100 hover:bg-stone-900 hover:text-stone-50 dark:bg-stone-800 dark:hover:bg-stone-100 dark:hover:text-stone-900 text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 transition-all duration-200"
+                    className="w-full py-2.5 px-4 flex items-center justify-center gap-2 rounded-xl bg-slate-100 hover:bg-[#c2410c] hover:text-white dark:bg-slate-800 dark:hover:bg-[#c2410c] dark:hover:text-white text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 transition-all duration-200"
                   >
                     <span>View Destination Guide</span>
                   </Link>
@@ -364,7 +364,7 @@ export const DestinationsPage: React.FC = () => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={!hasPrevPage}
-            className="p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -378,8 +378,8 @@ export const DestinationsPage: React.FC = () => {
                 onClick={() => handlePageChange(pageNum)}
                 className={`w-9 h-9 rounded-xl text-xs font-mono font-bold transition-all ${
                   isActive
-                    ? 'bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 shadow-sm'
-                    : 'bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800'
+                    ? 'bg-[#c2410c] text-white shadow-sm'
+                    : 'bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
                 }`}
               >
                 {pageNum}

@@ -92,35 +92,35 @@ export const TripCard: React.FC<TripCardProps> = memo(({ trip, onDelete }) => {
         <div className="p-5 space-y-4">
           {/* Progress Bar */}
           <div>
-            <div className="flex items-center justify-between text-xs text-stone-600 dark:text-stone-400 mb-1.5 font-medium">
+            <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-1.5 font-medium">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
                 Activities ({stats.completedActivities}/{stats.totalActivities})
               </span>
-              <span className="font-mono text-stone-500">{stats.completionPercent}%</span>
+              <span className="font-mono text-slate-500">{stats.completionPercent}%</span>
             </div>
-            <div className="w-full h-1.5 bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-stone-800 dark:bg-stone-300 rounded-full transition-all duration-500"
+                className="h-full bg-[#c2410c] dark:bg-[#ea580c] rounded-full transition-all duration-500"
                 style={{ width: `${stats.completionPercent}%` }}
               />
             </div>
           </div>
 
           {/* Budget Info */}
-          <div className="flex items-center justify-between p-3 rounded-xl bg-stone-50/80 dark:bg-stone-800/40 border border-stone-200/60 dark:border-stone-800 text-xs">
+          <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 text-xs">
             <div className="flex items-center gap-2">
-              <DollarSign className="w-3.5 h-3.5 text-stone-400" />
+              <DollarSign className="w-3.5 h-3.5 text-slate-400" />
               <div>
-                <span className="text-stone-400 block text-[10px] uppercase tracking-wider font-semibold">Spent</span>
-                <span className="font-mono font-semibold text-stone-800 dark:text-stone-200">
+                <span className="text-slate-400 block text-[10px] uppercase tracking-wider font-semibold">Spent</span>
+                <span className="font-mono font-semibold text-slate-800 dark:text-slate-200">
                   {formatCurrency(stats.totalSpent, trip.currency)}
                 </span>
               </div>
             </div>
             <div className="text-right">
-              <span className="text-stone-400 block text-[10px] uppercase tracking-wider font-semibold">Budget</span>
-              <span className="font-mono font-semibold text-stone-800 dark:text-stone-200">
+              <span className="text-slate-400 block text-[10px] uppercase tracking-wider font-semibold">Budget</span>
+              <span className="font-mono font-semibold text-slate-800 dark:text-slate-200">
                 {formatCurrency(trip.budget, trip.currency)}
               </span>
             </div>
@@ -132,13 +132,13 @@ export const TripCard: React.FC<TripCardProps> = memo(({ trip, onDelete }) => {
       <div className="p-5 pt-0 grid grid-cols-2 gap-2.5">
         <Link
           to={`/trips/${trip.id}/itinerary`}
-          className="py-2.5 px-3 text-center rounded-xl bg-stone-100 hover:bg-stone-200/80 dark:bg-stone-800 dark:hover:bg-stone-700/80 text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 transition-colors"
+          className="py-2.5 px-3 text-center rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-800 dark:hover:bg-slate-700/80 text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 transition-colors"
         >
           Itinerary
         </Link>
         <Link
           to={`/trips/${trip.id}`}
-          className="py-2.5 px-3 flex items-center justify-center gap-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 active:bg-stone-950 text-stone-50 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 text-xs font-bold uppercase tracking-wider shadow-sm transition-all hover:scale-[1.01]"
+          className="py-2.5 px-3 flex items-center justify-center gap-1.5 rounded-xl bg-[#c2410c] hover:bg-[#b91c1c] active:bg-[#9a3412] text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-all hover:scale-[1.01]"
         >
           <span>Dashboard</span>
           <ArrowRight className="w-3.5 h-3.5" />

@@ -15,12 +15,12 @@ export const Badge: React.FC<BadgeProps> = ({
   className,
 }) => {
   const variantStyles = {
-    primary: 'bg-stone-100 text-stone-800 dark:bg-stone-800 dark:text-stone-200 border-stone-200 dark:border-stone-700',
+    primary: 'bg-orange-50 text-[#c2410c] dark:bg-orange-950/50 dark:text-[#fb923c] border-orange-200/80 dark:border-orange-900',
     success: 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-900',
     warning: 'bg-amber-50 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300 border-amber-200/80 dark:border-amber-900',
-    info: 'bg-teal-50 text-teal-800 dark:bg-teal-950/50 dark:text-teal-300 border-teal-200/80 dark:border-teal-900',
-    purple: 'bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300 border-stone-200 dark:border-stone-700',
-    neutral: 'bg-stone-100/80 text-stone-700 dark:bg-stone-800/80 dark:text-stone-300 border-stone-200/80 dark:border-stone-800',
+    info: 'bg-sky-50 text-sky-800 dark:bg-sky-950/50 dark:text-sky-300 border-sky-200/80 dark:border-sky-900',
+    purple: 'bg-indigo-50 text-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300 border-indigo-200/80 dark:border-indigo-900',
+    neutral: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200/80 dark:border-slate-800',
   }[variant];
 
   const sizeStyles = {

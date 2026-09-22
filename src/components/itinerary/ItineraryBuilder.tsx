@@ -146,11 +146,11 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
 
   if (!activeDay) {
     return (
-      <div className="text-center py-16 bg-white dark:bg-stone-900/40 border border-stone-200/80 dark:border-stone-800 rounded-2xl p-8">
-        <p className="text-stone-500 text-sm font-medium">No days scheduled in this journey yet.</p>
+      <div className="text-center py-16 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-frost p-8">
+        <p className="text-slate-500 text-sm font-medium">No days scheduled in this journey yet.</p>
         <button
           onClick={() => addDay(trip.id)}
-          className="mt-4 px-5 py-2.5 bg-stone-900 hover:bg-stone-800 text-stone-50 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 rounded-xl text-xs font-bold uppercase tracking-wider transition-all"
+          className="mt-4 px-5 py-2.5 bg-[#c2410c] hover:bg-[#b91c1c] active:bg-[#9a3412] text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-md shadow-orange-600/20 transition-all hover:scale-[1.02]"
         >
           Add Day 1
         </button>
@@ -169,19 +169,19 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
       />
 
       {/* Active Day Header Bar */}
-      <div className="p-6 bg-white dark:bg-stone-900/60 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle space-y-4">
+      <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-frost space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-serif font-bold tracking-tight text-stone-900 dark:text-stone-50">
+              <h2 className="text-2xl font-serif font-bold tracking-tight text-slate-900 dark:text-slate-50">
                 Day {activeDay.dayNumber}
               </h2>
-              <span className="text-xs font-mono font-medium text-stone-400 dark:text-stone-500">
+              <span className="text-xs font-mono font-medium text-slate-400 dark:text-slate-500">
                 / {formatDate(activeDay.date)}
               </span>
             </div>
             {activeDay.title && (
-              <p className="text-xs font-semibold text-brand-700 dark:text-brand-400 mt-1 uppercase tracking-wider">
+              <p className="text-xs font-semibold text-[#c2410c] dark:text-[#fb923c] mt-1 uppercase tracking-wider">
                 {activeDay.title}
               </p>
             )}
@@ -193,7 +193,7 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
                 setActivityToEdit(null);
                 setIsActivityModalOpen(true);
               }}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-stone-900 hover:bg-stone-800 active:bg-stone-950 text-stone-50 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 text-xs font-bold tracking-wider uppercase rounded-xl shadow-sm transition-all hover:scale-[1.02]"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#c2410c] hover:bg-[#b91c1c] active:bg-[#9a3412] text-white text-xs font-bold tracking-wider uppercase rounded-xl shadow-md shadow-orange-600/20 transition-all hover:scale-[1.02]"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Activity</span>
@@ -206,7 +206,7 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
                     removeDay(trip.id, activeDay.id);
                   }
                 }}
-                className="p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50/50 dark:hover:bg-rose-950/20 transition-colors"
+                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50/50 dark:hover:bg-rose-950/20 transition-colors"
                 title="Remove this day"
               >
                 <Trash2 className="w-4 h-4" />
@@ -216,7 +216,7 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
         </div>
 
         {/* Day Notes */}
-        <div className="pt-3 border-t border-stone-100 dark:border-stone-800">
+        <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
           {isNotesEditing ? (
             <div className="space-y-2.5">
               <textarea
@@ -224,27 +224,27 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
                 value={notesDraft}
                 onChange={(e) => setNotesDraft(e.target.value)}
                 placeholder="Add special notes, reminders, or tickets for this day..."
-                className="w-full p-3.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/50 dark:bg-stone-800/50 text-stone-900 dark:text-stone-100 text-xs focus:outline-none focus:ring-1 focus:ring-stone-400"
+                className="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
               />
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsNotesEditing(false)}
-                  className="px-3 py-1.5 text-xs text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 font-medium"
+                  className="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleSaveNotes}
-                  className="px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 rounded-lg shadow-sm"
+                  className="px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider bg-[#c2410c] hover:bg-[#b91c1c] text-white rounded-lg shadow-sm shadow-orange-600/20"
                 >
                   Save Notes
                 </button>
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-between text-xs text-stone-500 dark:text-stone-400">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
               <p className="italic font-serif leading-relaxed">
                 {activeDay.notes || 'No notes added for this day. Click to add daily directions, confirmations, or packing notes.'}
               </p>
@@ -253,7 +253,7 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
                   setNotesDraft(activeDay.notes || '');
                   setIsNotesEditing(true);
                 }}
-                className="inline-flex items-center gap-1.5 font-semibold text-brand-700 dark:text-brand-400 hover:underline shrink-0 ml-3 text-xs"
+                className="inline-flex items-center gap-1.5 font-semibold text-[#c2410c] dark:text-[#fb923c] hover:underline shrink-0 ml-3 text-xs"
               >
                 <FileEdit className="w-3.5 h-3.5" />
                 <span>{activeDay.notes ? 'Edit notes' : 'Add notes'}</span>
@@ -270,10 +270,10 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedCategory === cat.id
-                  ? 'bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 shadow-sm'
-                  : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 border border-stone-200/80 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-800/60'
+                  ? 'bg-[#c2410c] text-white shadow-sm shadow-orange-600/20'
+                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200/80 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60'
               }`}
             >
               {cat.label}
@@ -288,14 +288,14 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
 
       {/* Activities List */}
       {filteredActivities.length === 0 ? (
-        <div className="p-12 text-center bg-white dark:bg-stone-900/40 border border-dashed border-stone-200 dark:border-stone-800 rounded-2xl space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-500 mx-auto">
+        <div className="p-12 text-center bg-white dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-800 rounded-3xl shadow-frost space-y-3">
+          <div className="w-10 h-10 rounded-2xl bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900/40 flex items-center justify-center text-sky-600 dark:text-sky-400 mx-auto">
             <Compass className="w-5 h-5" />
           </div>
-          <h3 className="font-serif font-bold text-base text-stone-800 dark:text-stone-200">
+          <h3 className="font-serif font-bold text-base text-slate-800 dark:text-slate-200">
             No activities scheduled for Day {activeDay.dayNumber}
           </h3>
-          <p className="text-xs text-stone-500 max-w-sm mx-auto leading-relaxed">
+          <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
             Curate your day by adding architectural visits, dining reservations, guided walks, or scenic train rides.
           </p>
           <button
@@ -303,7 +303,7 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
               setActivityToEdit(null);
               setIsActivityModalOpen(true);
             }}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-stone-900 dark:bg-stone-100 text-stone-50 dark:text-stone-900 text-xs font-bold uppercase tracking-wider rounded-xl shadow-sm hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#c2410c] hover:bg-[#b91c1c] active:bg-[#9a3412] text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-orange-600/20 transition-all hover:scale-[1.01]"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add First Activity</span>

@@ -39,7 +39,7 @@ export const BudgetPage: React.FC = () => {
         <p className="text-sm text-slate-500">The requested trip does not exist.</p>
         <Link
           to="/trips"
-          className="inline-flex px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl"
+          className="inline-flex px-5 py-2.5 bg-[#c2410c] hover:bg-[#b91c1c] text-white text-xs font-bold rounded-xl shadow-md shadow-orange-600/20"
         >
           Return to Trips
         </Link>
@@ -95,7 +95,7 @@ export const BudgetPage: React.FC = () => {
           >
             Itinerary
           </Link>
-          <span className="px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 shadow-sm">
+          <span className="px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-[#c2410c] text-white shadow-sm">
             Budget
           </span>
           <button
@@ -103,7 +103,7 @@ export const BudgetPage: React.FC = () => {
               setExpenseToEdit(null);
               setIsExpenseModalOpen(true);
             }}
-            className="ml-2 inline-flex items-center gap-1.5 px-4 py-1.5 bg-stone-900 hover:bg-stone-800 text-stone-50 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 text-xs font-bold uppercase tracking-wider rounded-xl shadow-sm transition-all hover:scale-[1.01]"
+            className="ml-2 inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#c2410c] hover:bg-[#b91c1c] active:bg-[#9a3412] text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-orange-600/20 transition-all hover:scale-[1.01]"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Expense</span>
