@@ -128,13 +128,7 @@ export const Footer: React.FC = () => {
                 multi-currency ledgers, and curated local gems into crystal harmony.
               </p>
 
-              {/* Status Pill */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 text-[11px] font-mono text-slate-700 dark:text-slate-300">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-xs" />
-                <span className="font-medium">All Systems Operational</span>
-                <span className="text-slate-300 dark:text-slate-600">•</span>
-                <span className="text-slate-500 dark:text-slate-400">Route Sync v2.4 Active</span>
-              </div>
+
 
               {/* Social / Utility Buttons */}
               <div className="flex items-center gap-2.5 pt-1">
@@ -230,10 +224,9 @@ export const Footer: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <div className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    <span>API Status: 100% Operational</span>
-                  </div>
+                  <Link to="/settings" className="hover:text-[#c2410c] dark:hover:text-[#ea580c] transition-colors">
+                    Developer API & Guides
+                  </Link>
                 </li>
                 <li>
                   <Link to="/settings" className="hover:text-[#c2410c] dark:hover:text-[#ea580c] transition-colors">

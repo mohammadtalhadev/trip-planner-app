@@ -15,6 +15,8 @@ import {
   DollarSign,
   LogOut,
   LogIn,
+  User,
+  ArrowRight,
 } from 'lucide-react';
 import { usePreferencesStore } from '../../store/usePreferencesStore';
 import { useSavedPlacesStore } from '../../store/useSavedPlacesStore';
@@ -441,11 +443,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           ) : (
             <button
               type="button"
-              onClick={login}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0ea5e9] hover:bg-sky-600 text-white text-xs font-semibold shadow-sm transition-all"
+              onClick={() => {
+                setIsProfileOpen((prev) => !prev);
+                setIsNotificationsOpen(false);
+              }}
+              className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 flex items-center justify-center text-slate-700 dark:text-slate-200 transition-colors"
+              aria-label="Account sign in"
+              title="Account & Sign In"
             >
-              <LogIn className="w-3.5 h-3.5" />
-              <span>Sign In</span>
+              <User className="w-4 h-4" />
             </button>
           )}
 
@@ -545,18 +551,48 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               </button>
             </div>
           )}
+
+          {/* Quick Sign In Popover (When Logged Out) */}
+          {isProfileOpen && !user.isLoggedIn && (
+            <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xl p-4 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-950/70 text-[#c2410c] dark:text-[#ea580c] flex items-center justify-center shrink-0">
+                  <User className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-stone-900 dark:text-white">
+                    Sign In to TripPlanner
+                  </h4>
+                  <p className="text-[10px] text-stone-400">
+                    Access private ledgers & DP
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  login();
+                  setIsProfileOpen(false);
+                }}
+                className="w-full py-2 px-3 rounded-xl bg-[#c2410c] hover:bg-[#b91c1c] text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Sign In as Sophia</span>
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Plan Trip CTA button in terracotta */}
+        {/* Start Planning Free CTA button in terracotta */}
         <button
           onClick={() => {
             if (onOpenCreateTrip) onOpenCreateTrip();
             else navigate('/trips/new');
           }}
-          className="hidden xl:inline-flex items-center gap-1.5 px-4 py-2 bg-[#c2410c] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-full shadow-sm shadow-orange-500/20 transition-all hover:scale-[1.02]"
+          className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 bg-[#c2410c] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-full shadow-sm shadow-orange-500/20 transition-all hover:scale-[1.02]"
         >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Plan Trip</span>
+          <span>Start Planning Free</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </button>
 
         {/* Mobile Hamburger Menu Toggle */}
