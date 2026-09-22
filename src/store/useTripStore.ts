@@ -9,7 +9,7 @@ interface TripStoreState {
 
   // Trip Actions
   createTrip: (
-    data: Omit<Trip, 'id' | 'createdAt' | 'updatedAt' | 'days'>
+    data: Omit<Trip, 'id' | 'createdAt' | 'updatedAt' | 'days'> & { days?: ItineraryDay[] }
   ) => Trip;
   updateTrip: (id: string, updates: Partial<Trip>) => void;
   deleteTrip: (id: string) => void;
@@ -291,14 +291,17 @@ export const useTripStore = create<TripStoreState>()(
 
       createTrip: (data) => {
         const totalDays = calculateTripDays(data.startDate, data.endDate);
-        const days: ItineraryDay[] = Array.from({ length: totalDays }, (_, idx) => ({
-          id: `day-${Date.now()}-${idx + 1}`,
-          dayNumber: idx + 1,
-          date: addDaysToDate(data.startDate, idx),
-          title: `Day ${idx + 1}`,
-          activities: [],
-          expenses: [],
-        }));
+        const days: ItineraryDay[] =
+          data.days && data.days.length > 0
+            ? data.days
+            : Array.from({ length: totalDays }, (_, idx) => ({
+                id: `day-${Date.now()}-${idx + 1}`,
+                dayNumber: idx + 1,
+                date: addDaysToDate(data.startDate, idx),
+                title: `Day ${idx + 1}`,
+                activities: [],
+                expenses: [],
+              }));
 
         const newTrip: Trip = {
           ...data,
