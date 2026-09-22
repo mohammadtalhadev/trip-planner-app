@@ -96,3 +96,17 @@ select option {
   background-color: #1c1917;
   color: #f5f5f4;
 }
+
+/* Print export formatting */
+@media print {
+  nav, footer, .no-print, button:not(.print-show) {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .shadow-frost, .shadow-card, .shadow-subtle {
+    box-shadow: none !important;
+  }
+}

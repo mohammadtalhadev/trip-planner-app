@@ -9,10 +9,12 @@ import {
   Snowflake,
   CloudSun,
   Cloud,
+  Plus,
 } from 'lucide-react';
 import { fetchWeather } from '../../services/weather';
 import { fetchRealtimePlaceRating } from '../../services/ratings';
 import { getWeatherCondition } from '../../utils/weatherCodes';
+import { AddToTripModal } from '../destination/AddToTripModal';
 
 interface DestinationCardData {
   id: string;
@@ -125,6 +127,7 @@ const INITIAL_FEATURED: DestinationCardData[] = [
 
 export const FeaturedDestinations: React.FC = () => {
   const [destinations, setDestinations] = useState<DestinationCardData[]>(INITIAL_FEATURED);
+  const [selectedDestForTrip, setSelectedDestForTrip] = useState<DestinationCardData | null>(null);
 
   // Fetch live meteorological & live analytics ratings asynchronously
   useEffect(() => {
@@ -299,33 +302,63 @@ export const FeaturedDestinations: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Card Footer: Budget + Explore CTA */}
-                <div className="pt-2 border-t border-white/20 flex items-center justify-between">
-                  <div>
+                {/* Card Footer: Budget + Dual Action CTAs */}
+                <div className="pt-2 border-t border-white/20 flex items-center justify-between gap-1.5">
+                  <div className="min-w-0">
                     <span className="text-[9px] uppercase tracking-wider text-white/70 block font-medium">
                       Est. Budget
                     </span>
-                    <div className="text-sm sm:text-base font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                    <div className="text-xs sm:text-sm font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] truncate">
                       {item.budget}{' '}
-                      <span className="text-[11px] text-white/80 font-normal">
+                      <span className="text-[10px] text-white/80 font-normal">
                         {item.budgetPeriod}
                       </span>
                     </div>
                   </div>
 
-                  <Link
-                    to={detailUrl}
-                    className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-white/95 hover:bg-white text-slate-900 font-semibold text-xs shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all group/btn"
-                  >
-                    <span>Explore</span>
-                    <ArrowRight className="w-3 h-3 transition-transform duration-200 group-hover/btn:translate-x-1" />
-                  </Link>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDestForTrip(item)}
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-md border border-white/40 text-white font-semibold text-xs shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                      title={`Add ${item.city} to trip`}
+                    >
+                      <Plus className="w-3 h-3" />
+                      <span className="hidden xs:inline">Add to Trip</span>
+                      <span className="xs:hidden">Trip</span>
+                    </button>
+                    <Link
+                      to={detailUrl}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/95 hover:bg-white text-slate-900 font-semibold text-xs shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all group/btn"
+                    >
+                      <span>Explore</span>
+                      <ArrowRight className="w-3 h-3 transition-transform duration-200 group-hover/btn:translate-x-1" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* Add To Trip Modal */}
+      <AddToTripModal
+        isOpen={!!selectedDestForTrip}
+        onClose={() => setSelectedDestForTrip(null)}
+        destination={
+          selectedDestForTrip
+            ? {
+                city: selectedDestForTrip.city,
+                country: selectedDestForTrip.country,
+                image: selectedDestForTrip.image,
+                lat: selectedDestForTrip.lat,
+                lon: selectedDestForTrip.lon,
+              }
+            : null
+        }
+      />
     </section>
   );
 };
+

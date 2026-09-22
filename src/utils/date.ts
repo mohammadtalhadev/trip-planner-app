@@ -54,3 +54,29 @@ export function getRelativeDayDescription(dateString: string): string {
 
   return formatDate(dateString);
 }
+
+export function formatDayOfWeek(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString;
+
+  return new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+  }).format(date);
+}
+
+export function formatTime12Hour(timeString?: string): string {
+  if (!timeString) return '10:00 AM';
+  const parts = timeString.split(':');
+  if (parts.length < 2) return timeString;
+  const hour = parseInt(parts[0], 10);
+  const minutes = parts[1];
+  if (isNaN(hour)) return timeString;
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const hour12 = hour % 12 || 12;
+  const hourPadded = hour12 < 10 ? `0${hour12}` : `${hour12}`;
+  return `${hourPadded}:${minutes} ${ampm}`;
+}
+

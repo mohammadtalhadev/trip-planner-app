@@ -1,10 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Search, MapPin, Star, ChevronLeft, ChevronRight, Bookmark, BookmarkCheck } from 'lucide-react';
+import {
+  Search,
+  MapPin,
+  Star,
+  ChevronLeft,
+  ChevronRight,
+  Bookmark,
+  BookmarkCheck,
+  PlusCircle,
+  ArrowUpRight,
+} from 'lucide-react';
 import { useSavedPlacesStore } from '../store/useSavedPlacesStore';
 import { usePagination } from '../hooks/usePagination';
 import { handleImageError, DEFAULT_FALLBACK_IMAGE } from '../utils/placeImages';
 import { CustomSelect } from '../components/common/CustomSelect';
+import { AddToTripModal } from '../components/destination/AddToTripModal';
 
 interface DestinationItem {
   id: string;
@@ -131,6 +142,7 @@ export const DestinationsPage: React.FC = () => {
 
   const savedPlaces = useSavedPlacesStore((state) => state.savedPlaces);
   const toggleSavePlace = useSavedPlacesStore((state) => state.toggleSavePlace);
+  const [destForTripModal, setDestForTripModal] = useState<DestinationItem | null>(null);
 
   // Helper to update search params while preserving existing keys
   const updateParams = (newParams: Record<string, string | number>) => {
@@ -346,14 +358,24 @@ export const DestinationsPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="p-5 pt-0">
+                <div className="p-5 pt-0 flex flex-col sm:flex-row items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setDestForTripModal(dest)}
+                    className="w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-orange-50 hover:bg-orange-100 dark:bg-orange-950/40 dark:hover:bg-orange-900/50 text-[#c2410c] dark:text-[#fb923c] font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-2xs hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+                  >
+                    <PlusCircle className="w-4 h-4" />
+                    <span>Add to Trip</span>
+                  </button>
                   <Link
                     to={`/destinations/${slug}?city=${encodeURIComponent(
                       dest.city
                     )}&country=${encodeURIComponent(dest.country)}&lat=${dest.lat}&lon=${dest.lon}`}
-                    className="w-full py-2.5 px-4 flex items-center justify-center gap-2 rounded-xl bg-slate-100 hover:bg-[#c2410c] hover:text-white dark:bg-slate-800 dark:hover:bg-[#c2410c] dark:hover:text-white text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 transition-all duration-200"
+                    className="w-full sm:w-auto py-2.5 px-3.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700/60 text-stone-700 dark:text-stone-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shrink-0"
+                    title={`Explore ${dest.city}`}
                   >
-                    <span>View Destination Guide</span>
+                    <span>Explore {dest.city}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-stone-400" />
                   </Link>
                 </div>
               </div>
@@ -400,6 +422,25 @@ export const DestinationsPage: React.FC = () => {
           </button>
         </div>
       )}
+
+      {/* Add To Trip Modal */}
+      <AddToTripModal
+        isOpen={!!destForTripModal}
+        onClose={() => setDestForTripModal(null)}
+        destination={
+          destForTripModal
+            ? {
+                city: destForTripModal.city,
+                country: destForTripModal.country,
+                image: destForTripModal.image,
+                lat: destForTripModal.lat,
+                lon: destForTripModal.lon,
+                description: destForTripModal.description,
+              }
+            : null
+        }
+      />
     </div>
   );
 };
+
