@@ -151,27 +151,32 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
   const isSettingsActive = location.pathname.startsWith('/settings');
 
   return (
-    <nav className="w-full bg-white dark:bg-stone-900 rounded-full border border-stone-200/90 dark:border-stone-800 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.07)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.35)] px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4 relative transition-colors duration-200">
+    <nav className="w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-full border border-slate-200/80 dark:border-slate-800 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4 relative transition-colors duration-200">
       {/* LEFT SECTION: Logo & Header Search Bar */}
       <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
-        {/* Logo matching exact Figma design */}
+        {/* Logo matching Light Frost design */}
         <Link
           to="/"
           className="flex items-center gap-2.5 group shrink-0"
           title="TripPlanner Home"
         >
-          <div className="w-8 h-8 rounded-xl bg-stone-950 dark:bg-stone-100 flex items-center justify-center text-white dark:text-stone-950 shadow-sm transition-transform duration-200 group-hover:scale-105">
+          <div className="w-8 h-8 rounded-xl bg-[#c2410c] flex items-center justify-center text-white shadow-sm shadow-orange-500/25 transition-transform duration-200 group-hover:scale-105">
             {/* Sparkling 4-point star icon */}
             <svg
-              className="w-4 h-4 text-sky-400 dark:text-sky-500 fill-current"
+              className="w-4 h-4 fill-current"
               viewBox="0 0 24 24"
             >
               <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" />
             </svg>
           </div>
-          <span className="font-sans font-bold text-base sm:text-lg tracking-tight text-stone-900 dark:text-white leading-none hidden xs:inline-block">
-            TripPlanner
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-sans font-bold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white leading-none hidden xs:inline-block">
+              TripPlanner
+            </span>
+            <span className="hidden sm:inline-block text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-orange-100 dark:bg-orange-950/70 text-[#c2410c] dark:text-[#ea580c] uppercase font-mono tracking-wider">
+              AI v2.4
+            </span>
+          </div>
         </Link>
 
         {/* Integrated Search Bar with ⌘K shortcut */}
@@ -329,13 +334,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               setIsNotificationsOpen((prev) => !prev);
               setIsProfileOpen(false);
             }}
-            className="p-2 rounded-full text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors relative"
+            className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 flex items-center justify-center transition-colors relative"
             aria-label="View notifications"
             title="Notifications"
           >
-            <Bell className="w-5 h-5" />
+            <Bell className="w-4 h-4 text-slate-700 dark:text-slate-200" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-[#0ea5e9] ring-2 ring-white dark:ring-stone-900 shadow-xs" />
+              <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#0ea5e9] border-2 border-white dark:border-slate-900 shadow-xs" />
             )}
           </button>
 
@@ -421,11 +426,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               className="flex items-center focus:outline-none group"
               aria-label="Open user profile menu"
             >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden ring-2 ring-sky-400/50 group-hover:ring-sky-500 transition-all shadow-sm">
+              <div className="w-9 h-9 rounded-full ring-2 ring-[#38bdf8] p-0.5 overflow-hidden transition-all shadow-sm">
                 <img
-                  src={user.avatar}
+                  src={user.avatar || '/avatar.png'}
                   alt={user.name}
-                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
+                  }}
+                  className="w-full h-full object-cover rounded-full"
                 />
               </div>
             </button>
@@ -537,6 +546,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
             </div>
           )}
         </div>
+
+        {/* Plan Trip CTA button in terracotta */}
+        <button
+          onClick={() => {
+            if (onOpenCreateTrip) onOpenCreateTrip();
+            else navigate('/trips/new');
+          }}
+          className="hidden xl:inline-flex items-center gap-1.5 px-4 py-2 bg-[#c2410c] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-full shadow-sm shadow-orange-500/20 transition-all hover:scale-[1.02]"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          <span>Plan Trip</span>
+        </button>
 
         {/* Mobile Hamburger Menu Toggle */}
         <button

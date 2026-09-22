@@ -32,7 +32,7 @@ const DEFAULT_USER: UserProfile = {
   id: 'usr-4412',
   name: 'Sophia Vance',
   email: 'sophia.vance@tripplanner.io',
-  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+  avatar: '/avatar.png',
   tier: 'Pro Traveler',
   isLoggedIn: true,
 };

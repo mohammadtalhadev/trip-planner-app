@@ -3,6 +3,7 @@ import { Camera } from 'lucide-react';
 import { AsyncSection, PexelsPhoto } from '../../types/api';
 import { Skeleton } from '../common/Skeleton';
 import { ErrorCard } from '../common/ErrorCard';
+import { handleImageError, DEFAULT_FALLBACK_IMAGE } from '../../utils/placeImages';
 
 interface PhotoGalleryProps {
   photos: AsyncSection<PexelsPhoto[]>;
@@ -65,6 +66,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
               src={photo.src.medium || photo.src.large}
               alt={photo.alt}
               loading="lazy"
+              onError={(e) => handleImageError(e, DEFAULT_FALLBACK_IMAGE)}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-3 flex flex-col justify-end">

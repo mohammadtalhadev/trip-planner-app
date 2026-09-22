@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { Search, MapPin, Star, ChevronLeft, ChevronRight, Bookmark, BookmarkCheck } from 'lucide-react';
 import { useSavedPlacesStore } from '../store/useSavedPlacesStore';
 import { usePagination } from '../hooks/usePagination';
+import { handleImageError, DEFAULT_FALLBACK_IMAGE } from '../utils/placeImages';
 
 interface DestinationItem {
   id: string;
@@ -288,6 +289,7 @@ export const DestinationsPage: React.FC = () => {
                       src={dest.image}
                       alt={dest.city}
                       loading="lazy"
+                      onError={(e) => handleImageError(e, DEFAULT_FALLBACK_IMAGE)}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent" />

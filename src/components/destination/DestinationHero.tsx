@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapPin, Navigation, Sparkles, Bookmark, BookmarkCheck } from 'lucide-react';
 import { useSavedPlacesStore } from '../../store/useSavedPlacesStore';
+import { handleImageError, DEFAULT_FALLBACK_IMAGE } from '../../utils/placeImages';
 
 interface DestinationHeroProps {
   cityName: string;
@@ -47,6 +48,7 @@ export const DestinationHero: React.FC<DestinationHeroProps> = ({
       <img
         src={heroImage}
         alt={cityName}
+        onError={(e) => handleImageError(e, DEFAULT_FALLBACK_IMAGE)}
         className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-1000 ease-out"
       />
 

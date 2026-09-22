@@ -4,6 +4,8 @@ import { AsyncSection, AttractionPlace } from '../../types/api';
 import { useSavedPlacesStore } from '../../store/useSavedPlacesStore';
 import { CardSkeleton } from '../common/Skeleton';
 import { ErrorCard } from '../common/ErrorCard';
+import { toEnglishPlaceName } from '../../utils/englishPlaces';
+import { getRealPlaceImage, handleImageError, DEFAULT_FALLBACK_IMAGE } from '../../utils/placeImages';
 
 interface PlaceCardProps {
   place: AttractionPlace;
@@ -17,9 +19,13 @@ interface PlaceCardProps {
 // Memoized individual place card
 const PlaceCard: React.FC<PlaceCardProps> = memo(
   ({ place, cityName, countryName, isSaved, onToggleSave, onAddToTrip }) => {
-    const defaultImage =
-      place.preview?.source ||
-      'https://images.unsplash.com/photo-1477959858617-67f30bc75b82?auto=format&fit=crop&w=800&q=80';
+    const englishName = toEnglishPlaceName(place.name, cityName, place.category);
+    const placeImage = getRealPlaceImage(
+      englishName,
+      place.category,
+      cityName,
+      place.preview?.source
+    );
 
     return (
       <div className="group bg-white dark:bg-[#15181e] border border-stone-200/80 dark:border-stone-800 rounded-2xl overflow-hidden shadow-subtle hover:shadow-card transition-all duration-300 flex flex-col justify-between">
@@ -27,9 +33,10 @@ const PlaceCard: React.FC<PlaceCardProps> = memo(
           {/* Image & Tags */}
           <div className="relative aspect-[16/10] w-full overflow-hidden bg-stone-100 dark:bg-stone-800">
             <img
-              src={defaultImage}
-              alt={place.name}
+              src={placeImage}
+              alt={englishName}
               loading="lazy"
+              onError={(e) => handleImageError(e, DEFAULT_FALLBACK_IMAGE)}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-transparent to-transparent" />
@@ -68,7 +75,7 @@ const PlaceCard: React.FC<PlaceCardProps> = memo(
           {/* Details */}
           <div className="p-4 space-y-1.5">
             <h4 className="font-serif font-bold text-stone-900 dark:text-white text-sm line-clamp-1 group-hover:text-stone-600 dark:group-hover:text-stone-300 transition-colors">
-              {place.name}
+              {englishName}
             </h4>
             <div className="flex items-center gap-1.5 text-xs text-stone-400">
               <MapPin className="w-3 h-3 shrink-0" />
@@ -135,13 +142,15 @@ export const PlacesList: React.FC<PlacesListProps> = ({
   ];
 
   const handleToggleSave = (place: AttractionPlace) => {
+    const englishName = toEnglishPlaceName(place.name, cityName, place.category);
+    const resolvedImage = getRealPlaceImage(englishName, place.category, cityName, place.preview?.source);
     toggleSavePlace({
       id: place.xid,
-      name: place.name,
+      name: englishName,
       category: (place.category as any) || 'attraction',
       cityName,
       country: countryName,
-      imageUrl: place.preview?.source,
+      imageUrl: resolvedImage,
       rating: place.rate,
       coordinates: {
         lat: place.point.lat,

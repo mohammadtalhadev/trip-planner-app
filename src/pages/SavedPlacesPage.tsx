@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Bookmark, Trash2, MapPin, Star, ExternalLink } from 'lucide-react';
 import { useSavedPlacesStore } from '../store/useSavedPlacesStore';
 import { EmptyState } from '../components/common/EmptyState';
+import { toEnglishPlaceName } from '../utils/englishPlaces';
+import { handleImageError, DEFAULT_FALLBACK_IMAGE } from '../utils/placeImages';
 
 export const SavedPlacesPage: React.FC = () => {
   const savedPlaces = useSavedPlacesStore((state) => state.savedPlaces);
@@ -100,6 +102,7 @@ export const SavedPlacesPage: React.FC = () => {
               place.country || ''
             )}&lat=${place.coordinates?.lat || 48.85}&lon=${place.coordinates?.lon || 2.35}`;
 
+            const englishName = toEnglishPlaceName(place.name, place.cityName, place.category);
             return (
               <div
                 key={place.id}
@@ -109,7 +112,9 @@ export const SavedPlacesPage: React.FC = () => {
                   <div className="relative h-48 w-full overflow-hidden bg-stone-100 dark:bg-stone-800">
                     <img
                       src={defaultImg}
-                      alt={place.name}
+                      alt={englishName}
+                      loading="lazy"
+                      onError={(e) => handleImageError(e, DEFAULT_FALLBACK_IMAGE)}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent" />
@@ -129,7 +134,7 @@ export const SavedPlacesPage: React.FC = () => {
                     </button>
 
                     <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white">
-                      <h3 className="text-base font-serif font-bold truncate drop-shadow-sm">{place.name}</h3>
+                      <h3 className="text-base font-serif font-bold truncate drop-shadow-sm">{englishName}</h3>
                       {place.rating && (
                         <div className="flex items-center gap-1 text-xs font-mono font-semibold text-amber-300">
                           <Star className="w-3 h-3 fill-amber-400 text-amber-400" />

@@ -4,15 +4,19 @@
 
 @layer base {
   :root {
-    --bg-page: #fafaf9;
+    --bg-page: #f6f8fd;
     --bg-card: #ffffff;
-    --border-card: #e7e5e4;
+    --border-card: #e2e8f0;
+    --accent-terracotta: #c2410c;
+    --accent-frost: #0ea5e9;
   }
 
   .dark {
-    --bg-page: #0c0e12;
-    --bg-card: #15181e;
-    --border-card: #272a30;
+    --bg-page: #0b0f19;
+    --bg-card: #111726;
+    --border-card: #1e293b;
+    --accent-terracotta: #ea580c;
+    --accent-frost: #38bdf8;
   }
 
   body {
