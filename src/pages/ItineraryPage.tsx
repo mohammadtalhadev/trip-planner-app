@@ -1,9 +1,8 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
+import { ArrowLeft, MapPin } from 'lucide-react';
 import { useTripStore } from '../store/useTripStore';
 import { ItineraryBuilder } from '../components/itinerary/ItineraryBuilder';
-import { formatDateShort } from '../utils/date';
 
 export const ItineraryPage: React.FC = () => {
   const { tripId } = useParams<{ tripId: string }>();

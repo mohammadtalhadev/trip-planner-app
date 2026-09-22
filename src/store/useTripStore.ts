@@ -285,7 +285,7 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
 
 export const useTripStore = create<TripStoreState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       trips: INITIAL_DEMO_TRIPS,
       currentTripId: 'demo-turkey-vacation',
 

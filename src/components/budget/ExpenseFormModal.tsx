@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, Calendar, Tag, FileText } from 'lucide-react';
+import { DollarSign, Calendar, Tag } from 'lucide-react';
 import { Modal } from '../common/Modal';
 import { Expense, ExpenseCategory, ItineraryDay } from '../../types/trip';
 

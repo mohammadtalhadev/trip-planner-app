@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import {
   DollarSign,
-  Thermometer,
   Moon,
   Sun,
   Users,
   Compass,
   CheckCircle2,
-  RotateCcw,
   Sparkles,
 } from 'lucide-react';
 import { usePreferencesStore } from '../store/usePreferencesStore';

@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Search, Filter, ArrowUpDown, MapPin, Star, ChevronLeft, ChevronRight, Bookmark, BookmarkCheck } from 'lucide-react';
-import { POPULAR_DESTINATIONS } from '../services/geoapify';
+import { Search, MapPin, Star, ChevronLeft, ChevronRight, Bookmark, BookmarkCheck } from 'lucide-react';
 import { useSavedPlacesStore } from '../store/useSavedPlacesStore';
 import { usePagination } from '../hooks/usePagination';
 
@@ -178,7 +177,7 @@ export const DestinationsPage: React.FC = () => {
   }, [searchQuery, countryFilter, sortBy]);
 
   // Pagination hook
-  const { paginatedItems, totalPages, currentPage, goToPage, nextPage, prevPage, hasNextPage, hasPrevPage } =
+  const { paginatedItems, totalPages, currentPage, goToPage, hasNextPage, hasPrevPage } =
     usePagination({
       items: filteredDestinations,
       initialPage: pageParam,

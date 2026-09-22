@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Bookmark, BookmarkCheck, Trash2, MapPin, Star, ExternalLink, Compass } from 'lucide-react';
+import { Bookmark, Trash2, MapPin, Star, ExternalLink } from 'lucide-react';
 import { useSavedPlacesStore } from '../store/useSavedPlacesStore';
 import { EmptyState } from '../components/common/EmptyState';
 import { Badge } from '../components/common/Badge';

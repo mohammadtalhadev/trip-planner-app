@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Plus, Sparkles, Filter, FileEdit, Trash2, Calendar, Compass } from 'lucide-react';
-import { Trip, Activity, ActivityCategory } from '../../types/trip';
+import { Plus, FileEdit, Trash2, Compass } from 'lucide-react';
+import { Trip, Activity } from '../../types/trip';
 import { useTripStore } from '../../store/useTripStore';
 import { DayTabSelector } from './DayTabSelector';
 import { ActivityCard } from './ActivityCard';
@@ -101,7 +101,7 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({ trip }) => {
     e.dataTransfer.effectAllowed = 'move';
   }, []);
 
-  const handleDragOver = useCallback((e: React.DragEvent, index: number) => {
+  const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   }, []);

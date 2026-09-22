@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   Calendar,
   Users,
   MapPin,
-  Clock,
   Layers,
   DollarSign,
   ArrowRight,
   Plus,
   Trash2,
-  Share2,
 } from 'lucide-react';
 import { useTripStore } from '../store/useTripStore';
 import { TripSummaryCards } from '../components/trip/TripSummaryCards';
@@ -19,7 +17,6 @@ import { formatCurrency } from '../utils/currency';
 
 export const TripDashboardPage: React.FC = () => {
   const { tripId } = useParams<{ tripId: string }>();
-  const navigate = useNavigate();
 
   const trip = useTripStore((state) => state.trips.find((t) => t.id === tripId));
   const updateTrip = useTripStore((state) => state.updateTrip);

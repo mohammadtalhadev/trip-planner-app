@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, RefreshCw, AlertCircle } from 'lucide-react';
+import { ArrowLeft, RefreshCw } from 'lucide-react';
 import { useDestinationDetails } from '../hooks/useDestinationDetails';
 import { DestinationHero } from '../components/destination/DestinationHero';
 import { WeatherCard } from '../components/destination/WeatherCard';

@@ -1,5 +1,4 @@
-import React from 'react';
-import { DollarSign, TrendingUp, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { formatCurrency } from '../../utils/currency';
 
 interface BudgetOverviewProps {

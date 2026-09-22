@@ -1,12 +1,7 @@
 import React, { useState, useMemo, memo } from 'react';
 import {
-  DollarSign,
-  Filter,
-  ArrowUpDown,
   Edit2,
   Trash2,
-  Calendar,
-  Tag,
   Receipt,
 } from 'lucide-react';
 import { Expense, ExpenseCategory, ItineraryDay } from '../../types/trip';

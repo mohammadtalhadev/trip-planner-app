@@ -4,7 +4,6 @@ import {
   MapPin,
   CheckCircle2,
   Circle,
-  MoreVertical,
   ArrowUp,
   ArrowDown,
   ArrowRightLeft,

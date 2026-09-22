@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, MapPin, DollarSign, FileText, Tag } from 'lucide-react';
+import { Clock, MapPin, DollarSign, Tag } from 'lucide-react';
 import { Modal } from '../common/Modal';
 import { Activity, ActivityCategory } from '../../types/trip';
 

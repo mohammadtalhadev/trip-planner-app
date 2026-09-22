@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Search, MapPin, Calendar, Compass } from 'lucide-react';
+import { Plus, Search, Compass } from 'lucide-react';
 import { useTripStore } from '../store/useTripStore';
 import { TripCard } from '../components/trip/TripCard';
 import { CreateTripModal } from '../components/trip/CreateTripModal';

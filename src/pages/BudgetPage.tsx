@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Plus, MapPin, DollarSign } from 'lucide-react';
+import { ArrowLeft, Plus, MapPin } from 'lucide-react';
 import { useTripStore } from '../store/useTripStore';
 import { BudgetOverview } from '../components/budget/BudgetOverview';
 import { CategoryBreakdown } from '../components/budget/CategoryBreakdown';
