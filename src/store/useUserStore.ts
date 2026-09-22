@@ -8,6 +8,8 @@ export interface UserProfile {
   avatar: string;
   tier: string;
   isLoggedIn: boolean;
+  password?: string;
+  bio?: string;
 }
 
 export interface NotificationItem {
@@ -24,6 +26,11 @@ interface UserState {
   notifications: NotificationItem[];
   login: () => void;
   logout: () => void;
+  updateProfile: (updates: Partial<Pick<UserProfile, 'name' | 'email' | 'avatar' | 'bio'>>) => void;
+  updatePassword: (
+    currentPassword: string,
+    newPassword: string
+  ) => { success: boolean; error?: string };
   markAllNotificationsAsRead: () => void;
   clearNotifications: () => void;
 }
@@ -35,6 +42,8 @@ const DEFAULT_USER: UserProfile = {
   avatar: '/avatar.png',
   tier: 'Pro Traveler',
   isLoggedIn: true,
+  password: 'Password123!',
+  bio: 'Globe trotter exploring cultural heritage, alpine routes, and coastal retreats.',
 };
 
 const DEFAULT_NOTIFICATIONS: NotificationItem[] = [
@@ -66,7 +75,7 @@ const DEFAULT_NOTIFICATIONS: NotificationItem[] = [
 
 export const useUserStore = create<UserState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: DEFAULT_USER,
       notifications: DEFAULT_NOTIFICATIONS,
 
@@ -80,6 +89,44 @@ export const useUserStore = create<UserState>()(
         set((state) => ({
           user: { ...state.user, isLoggedIn: false },
         }));
+      },
+
+      updateProfile: (updates) => {
+        set((state) => ({
+          user: {
+            ...state.user,
+            ...updates,
+          },
+        }));
+      },
+
+      updatePassword: (currentPassword: string, newPassword: string) => {
+        const state = get();
+        // If a password already exists, require it to match
+        if (state.user.password && state.user.password.trim() !== '') {
+          if (state.user.password !== currentPassword) {
+            return {
+              success: false,
+              error: 'Current password does not match. Please verify and try again.',
+            };
+          }
+        }
+
+        if (newPassword.length < 6) {
+          return {
+            success: false,
+            error: 'New password must contain at least 6 characters.',
+          };
+        }
+
+        set({
+          user: {
+            ...state.user,
+            password: newPassword,
+          },
+        });
+
+        return { success: true };
       },
 
       markAllNotificationsAsRead: () => {

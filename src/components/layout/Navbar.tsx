@@ -16,6 +16,7 @@ import {
   LogOut,
   LogIn,
   User,
+  UserCog,
   ArrowRight,
 } from 'lucide-react';
 import { usePreferencesStore } from '../../store/usePreferencesStore';
@@ -23,6 +24,7 @@ import { useSavedPlacesStore } from '../../store/useSavedPlacesStore';
 import { useTripStore } from '../../store/useTripStore';
 import { useUserStore } from '../../store/useUserStore';
 import { POPULAR_DESTINATIONS } from '../../services/geoapify';
+import { EditProfileModal } from '../user/EditProfileModal';
 import { cn } from '../../utils/cn';
 
 interface NavbarProps {
@@ -51,6 +53,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [editProfileTab, setEditProfileTab] = useState<'profile' | 'password'>('profile');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -459,27 +463,53 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           {isProfileOpen && user.isLoggedIn && (
             <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
               {/* Profile Card Header */}
-              <div className="flex items-center gap-3 p-2 rounded-xl bg-stone-50 dark:bg-stone-800/60 mb-2 border border-stone-100 dark:border-stone-800">
-                <img
-                  src={user.avatar}
-                  alt={user.name}
-                  className="w-10 h-10 rounded-full object-cover ring-2 ring-sky-400"
-                />
-                <div className="overflow-hidden">
-                  <div className="text-xs font-bold text-stone-900 dark:text-white truncate">
-                    {user.name}
-                  </div>
-                  <div className="text-[10px] text-stone-400 truncate">
-                    {user.email}
-                  </div>
-                  <div className="inline-block mt-0.5 px-1.5 py-0.2 rounded-full bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 text-[9px] font-bold">
-                    {user.tier}
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/60 mb-2 border border-stone-100 dark:border-stone-800">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="w-10 h-10 rounded-full object-cover ring-2 ring-sky-400 shrink-0"
+                  />
+                  <div className="overflow-hidden">
+                    <div className="text-xs font-bold text-stone-900 dark:text-white truncate">
+                      {user.name}
+                    </div>
+                    <div className="text-[10px] text-stone-400 truncate">
+                      {user.email}
+                    </div>
+                    <div className="inline-block mt-0.5 px-1.5 py-0.2 rounded-full bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 text-[9px] font-bold">
+                      {user.tier}
+                    </div>
                   </div>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsProfileOpen(false);
+                    setEditProfileTab('profile');
+                    setIsEditProfileOpen(true);
+                  }}
+                  className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 text-stone-500 hover:text-stone-800 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors"
+                  title="Edit Profile"
+                >
+                  <UserCog className="w-3.5 h-3.5 text-blue-500" />
+                </button>
               </div>
 
               {/* Navigation Quick Links */}
               <div className="space-y-0.5 text-xs font-medium text-stone-700 dark:text-stone-300">
+                <button
+                  onClick={() => {
+                    setIsProfileOpen(false);
+                    setEditProfileTab('profile');
+                    setIsEditProfileOpen(true);
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-left transition-colors font-semibold text-blue-600 dark:text-blue-400"
+                >
+                  <UserCog className="w-4 h-4" />
+                  <span>Edit Profile & Password</span>
+                </button>
                 <button
                   onClick={() => {
                     setIsProfileOpen(false);
@@ -707,6 +737,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           </button>
         </div>
       )}
+
+      {/* Edit Profile & Password Modal */}
+      <EditProfileModal
+        isOpen={isEditProfileOpen}
+        onClose={() => setIsEditProfileOpen(false)}
+        defaultTab={editProfileTab}
+      />
     </nav>
   );
 };

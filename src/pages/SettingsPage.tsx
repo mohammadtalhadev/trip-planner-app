@@ -7,13 +7,21 @@ import {
   Compass,
   CheckCircle2,
   Sparkles,
+  User,
+  Mail,
+  KeyRound,
+  ShieldCheck,
+  Camera,
 } from 'lucide-react';
 import { usePreferencesStore } from '../store/usePreferencesStore';
+import { useUserStore } from '../store/useUserStore';
+import { EditProfileModal } from '../components/user/EditProfileModal';
 import { CurrencyCode, TempUnit, ThemeMode, TravelStyle } from '../types/settings';
 import { CURRENCY_NAMES, formatCurrency } from '../utils/currency';
 import { formatTemperature } from '../utils/weatherCodes';
 
 export const SettingsPage: React.FC = () => {
+  const user = useUserStore((state) => state.user);
   const {
     preferences,
     setCurrency,
@@ -24,6 +32,8 @@ export const SettingsPage: React.FC = () => {
   } = usePreferencesStore();
 
   const [savedNotice, setSavedNotice] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [modalTab, setModalTab] = useState<'profile' | 'password'>('profile');
 
   const triggerSavedNotice = () => {
     setSavedNotice(true);
@@ -80,6 +90,99 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       <div className="space-y-6">
+        {/* Account Profile & Security Section */}
+        <section className="p-6 bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle space-y-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400">
+                <User className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-base font-serif font-bold text-stone-900 dark:text-stone-100">
+                  Account Profile & Security
+                </h3>
+                <p className="text-xs text-stone-500">
+                  Manage your traveler identity, contact email, avatar image, and credentials.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>{user.isLoggedIn ? 'Authenticated' : 'Offline'}</span>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50/60 dark:bg-stone-800/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div
+                className="relative group cursor-pointer"
+                onClick={() => {
+                  setModalTab('profile');
+                  setIsEditModalOpen(true);
+                }}
+              >
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/avatar.png';
+                  }}
+                  className="w-14 h-14 rounded-full object-cover ring-2 ring-sky-400 shadow-sm"
+                />
+                <div className="absolute inset-0 rounded-full bg-black/40 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                  <Camera className="w-4 h-4" />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2">
+                  <h4 className="text-base font-bold text-stone-900 dark:text-white">
+                    {user.name}
+                  </h4>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300">
+                    {user.tier}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                  <Mail className="w-3.5 h-3.5 text-stone-400" />
+                  <span>{user.email}</span>
+                </div>
+                {user.bio && (
+                  <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 max-w-md line-clamp-1 italic">
+                    "{user.bio}"
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalTab('profile');
+                  setIsEditModalOpen(true);
+                }}
+                className="flex-1 sm:flex-none px-4 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-xs font-bold text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-700 shadow-xs transition-colors"
+              >
+                Edit Profile
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setModalTab('password');
+                  setIsEditModalOpen(true);
+                }}
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white dark:bg-stone-100 dark:text-stone-900 text-xs font-bold shadow-xs transition-colors"
+              >
+                <KeyRound className="w-3.5 h-3.5" />
+                <span>Change Password</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
         {/* Appearance / Theme */}
         <section className="p-6 bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-2xl shadow-subtle space-y-4">
           <div className="flex items-center gap-2.5">
@@ -289,6 +392,12 @@ export const SettingsPage: React.FC = () => {
           </div>
         </section>
       </div>
+
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        defaultTab={modalTab}
+      />
     </div>
   );
 };
