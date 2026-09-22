@@ -4,6 +4,9 @@
  */
 export function getInitialActiveUserId(): string {
   try {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return 'guest';
+    }
     const raw =
       localStorage.getItem('trip-planner-user-profile') ||
       localStorage.getItem('trip-planner-user');

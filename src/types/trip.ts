@@ -81,7 +81,15 @@ export interface Trip {
   updatedAt: string;
 }
 
-export type PlaceCategory = 'destination' | 'attraction' | 'restaurant' | 'hotel';
+export type PlaceCategory = 'destination' | 'attraction' | 'restaurant' | 'hotel' | 'cafe';
+
+export interface SavedBoard {
+  id: string;
+  name: string;
+  color?: string;
+  icon?: string;
+  description?: string;
+}
 
 export interface SavedPlace {
   id: string;
@@ -91,6 +99,10 @@ export interface SavedPlace {
   country?: string;
   description?: string;
   rating?: number;
+  reviewCount?: string;
+  tag?: string;
+  highlight?: string;
+  boardId?: string;
   imageUrl?: string;
   coordinates?: {
     lat: number;
@@ -98,3 +110,4 @@ export interface SavedPlace {
   };
   savedAt: string;
 }
+
