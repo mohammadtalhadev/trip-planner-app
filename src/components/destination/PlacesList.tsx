@@ -6,6 +6,7 @@ import { CardSkeleton } from '../common/Skeleton';
 import { ErrorCard } from '../common/ErrorCard';
 import { toEnglishPlaceName } from '../../utils/englishPlaces';
 import { getRealPlaceImage, handleImageError, DEFAULT_FALLBACK_IMAGE } from '../../utils/placeImages';
+import { deduplicatePlaces } from '../../services/openTripMap';
 
 interface PlaceCardProps {
   place: AttractionPlace;
@@ -66,9 +67,14 @@ const PlaceCard: React.FC<PlaceCardProps> = memo(
             </button>
 
             {/* Rating */}
-            <div className="absolute bottom-2.5 left-3 flex items-center gap-1 text-white text-[11px] font-bold">
+            <div className="absolute bottom-2.5 left-3 flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-slate-950/70 backdrop-blur-md text-white text-[11px] font-bold shadow-xs">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              <span>{place.rate ? `${place.rate}.0` : '4.5'}</span>
+              <span>{Number(place.rate || 4.7).toFixed(1)}</span>
+              {place.userRatingsTotal ? (
+                <span className="text-[10px] text-slate-300 font-normal">
+                  ({place.userRatingsTotal >= 1000 ? `${(place.userRatingsTotal / 1000).toFixed(1)}k` : place.userRatingsTotal})
+                </span>
+              ) : null}
             </div>
           </div>
 
@@ -161,8 +167,10 @@ export const PlacesList: React.FC<PlacesListProps> = ({
 
   const filteredPlaces = useMemo(() => {
     if (!places.data) return [];
-    if (selectedCategory === 'all') return places.data;
-    return places.data.filter((p) => p.category === selectedCategory);
+    // Strict deduplication to guarantee 0% duplicate places in Curated Places
+    const uniquePlaces = deduplicatePlaces(places.data);
+    if (selectedCategory === 'all') return uniquePlaces;
+    return uniquePlaces.filter((p) => p.category === selectedCategory);
   }, [places.data, selectedCategory]);
 
   return (

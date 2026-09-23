@@ -138,7 +138,7 @@ export const SavedPlacesPage: React.FC = () => {
                       {place.rating && (
                         <div className="flex items-center gap-1 text-xs font-mono font-semibold text-amber-300">
                           <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                          <span>{place.rating}</span>
+                          <span>{Number(place.rating).toFixed(1)}</span>
                         </div>
                       )}
                     </div>

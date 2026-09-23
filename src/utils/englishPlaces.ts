@@ -263,3 +263,112 @@ export function toEnglishPlaceName(
 
   return translated;
 }
+
+// In-memory translation cache to avoid repeated network calls
+const TRANSLATION_CACHE = new Map<string, string>();
+
+/**
+ * Checks if a string contains foreign/non-English words or non-Latin script.
+ */
+export function needsEnglishTranslation(text: string): boolean {
+  if (!text || typeof text !== 'string') return false;
+  if (NON_LATIN_REGEX.test(text)) return true;
+  // Diacritics and foreign accent markers (ç, ş, ğ, ö, ü, é, à, è, ô, ñ, etc.)
+  if (/[^\u0000-\u007F]/.test(text)) return true;
+  // Common foreign words
+  if (/\b(camii|cami|sarayı|müzesi|köprüsü|çarşısı|meydanı|musée|château|cathédrale|basilica|piazza|palazzo|calle|strada|rue|boulevard|jardin|parque|templo)\b/i.test(text)) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Asynchronously translates any foreign place name into fluent English.
+ * Uses local dictionary -> memory/localStorage cache -> Google Translate free endpoint.
+ */
+export async function translateToEnglishAsync(
+  rawName: string | undefined | null,
+  cityName?: string,
+  category?: string
+): Promise<string> {
+  if (!rawName || typeof rawName !== 'string') {
+    return toEnglishPlaceName(rawName, cityName, category);
+  }
+
+  const trimmed = rawName.trim();
+  if (trimmed.length === 0) {
+    return toEnglishPlaceName(rawName, cityName, category);
+  }
+
+  // 1. Check local dictionary first
+  const normalized = toEnglishPlaceName(trimmed, cityName, category);
+  if (normalized !== trimmed && !needsEnglishTranslation(normalized)) {
+    return normalized;
+  }
+
+  // 2. Check in-memory cache
+  const cacheKey = trimmed.toLowerCase();
+  if (TRANSLATION_CACHE.has(cacheKey)) {
+    return TRANSLATION_CACHE.get(cacheKey)!;
+  }
+
+  // 3. Check localStorage cache
+  try {
+    const cachedItem = localStorage.getItem(`tp_trans_${cacheKey}`);
+    if (cachedItem) {
+      TRANSLATION_CACHE.set(cacheKey, cachedItem);
+      return cachedItem;
+    }
+  } catch {
+    // Ignore storage errors in private browsing
+  }
+
+  // If text already looks clean and English, cache and return
+  if (!needsEnglishTranslation(trimmed)) {
+    TRANSLATION_CACHE.set(cacheKey, trimmed);
+    return trimmed;
+  }
+
+  // 4. Query live Google Translate API
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(trimmed)}`;
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (response.ok) {
+      const data = await response.json();
+      if (Array.isArray(data) && data[0] && Array.isArray(data[0])) {
+        const translatedParts = data[0]
+          .map((item: any) => (Array.isArray(item) ? item[0] : ''))
+          .filter(Boolean)
+          .join('');
+
+        let cleaned = translatedParts.trim();
+
+        // Remove duplicate redundant tokens like "Mosque Mosque" or "Museum Museum"
+        cleaned = cleaned.replace(/\b(\w+)\s+\1\b/gi, '$1');
+
+        if (cleaned.length > 1) {
+          // Final pass with toEnglishPlaceName to catch architectural terms
+          const finalEnglish = toEnglishPlaceName(cleaned, cityName, category);
+          TRANSLATION_CACHE.set(cacheKey, finalEnglish);
+          try {
+            localStorage.setItem(`tp_trans_${cacheKey}`, finalEnglish);
+          } catch {
+            // Storage quota safe
+          }
+          return finalEnglish;
+        }
+      }
+    }
+  } catch (err: any) {
+    // Graceful fallback to synchronous dictionary on timeout or network error
+  }
+
+  const fallback = toEnglishPlaceName(trimmed, cityName, category);
+  TRANSLATION_CACHE.set(cacheKey, fallback);
+  return fallback;
+}

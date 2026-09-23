@@ -52,6 +52,8 @@ export interface AttractionPlace {
     lat: number;
   };
   rate: number;
+  userRatingsTotal?: number;
+  ratingSource?: 'google' | 'wikipedia' | 'live';
   preview?: {
     source: string;
   };
