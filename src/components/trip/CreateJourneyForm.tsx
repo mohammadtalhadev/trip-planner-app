@@ -483,7 +483,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
     }
   };
 
-  // Generate Smart Itinerary
+  // Build sample itinerary from destination POIs
   const handleGenerateSmartItinerary = async () => {
     setIsGenerating(true);
 
@@ -1073,7 +1073,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Target Budget & Curated Telemetry */}
+          {/* RIGHT COLUMN: Target Budget & Estimated Expenses */}
           <div className="lg:col-span-5 space-y-6">
             {/* TARGET BUDGET CARD */}
             <div className="p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/90 shadow-frost space-y-6">
@@ -1260,7 +1260,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
               className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-7 py-3 rounded-2xl bg-[#c2410c] hover:bg-[#b91c1c] active:bg-[#9a3412] text-white font-bold text-sm shadow-lg shadow-orange-600/25 transition-all hover:scale-[1.02] disabled:opacity-50"
             >
               <Sparkles className="w-4 h-4 text-amber-200" />
-              <span>{isGenerating ? 'Synthesizing...' : 'Generate Smart Itinerary'}</span>
+              <span>{isGenerating ? 'Building Itinerary...' : 'Generate Itinerary'}</span>
             </button>
           </div>
         </div>

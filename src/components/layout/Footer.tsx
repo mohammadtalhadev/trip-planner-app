@@ -33,16 +33,16 @@ export const Footer: React.FC = () => {
       body: (
         <div className="space-y-3 text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
           <p>
-            At <strong>TripPlanner AI Technologies</strong>, your privacy is fundamental to our fluid travel philosophy.
+            At <strong>TripPlanner</strong>, your privacy is fundamental to our philosophy.
             All personal itineraries, expense ledgers, and saved places are stored strictly within your browser&apos;s
             secure local storage (client-side persistence).
           </p>
           <p>
             We do not sell, rent, or monetize your location history or travel routes. When fetching meteorological data,
-            satellite imagery, or geographical coordinates, queries are processed anonymously through our verified API gateways.
+            photos, or geographical coordinates, queries are processed anonymously through verified API gateways.
           </p>
           <p className="text-[11px] text-stone-400 dark:text-stone-500">
-            Last updated: September 2025 • Route Sync Protocol v2.4 Compliant
+            Last updated: September 2025
           </p>
         </div>
       ),
@@ -53,11 +53,11 @@ export const Footer: React.FC = () => {
       body: (
         <div className="space-y-3 text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
           <p>
-            By accessing TripPlanner, you agree to utilize our route telemetry, multi-currency ledgers,
-            and itinerary architect for personal, non-commercial travel planning purposes.
+            By accessing TripPlanner, you agree to utilize our routing tools, multi-currency budget tracker,
+            and itinerary builder for personal, non-commercial travel planning purposes.
           </p>
           <p>
-            Real-time flight pricing, weather projections, and geographical recommendations are aggregated from
+            Real-time weather projections, maps, and geographical recommendations are aggregated from
             open public data sources including Geoapify, Open-Meteo, and Wikipedia REST. Users are encouraged to verify
             operational hours and passport entry requirements directly with official consulates.
           </p>
@@ -70,11 +70,11 @@ export const Footer: React.FC = () => {
       body: (
         <div className="space-y-3 text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
           <p>
-            TripPlanner is engineered with a Zero-Leak security model. API keys and personal credentials are never exposed
-            to third-party tracking scripts. All outbound telemetry uses HTTPS TLS 1.3 encryption.
+            TripPlanner is engineered with client-side security in mind. API keys and personal data are never exposed
+            to third-party tracking scripts. All outbound network requests use HTTPS TLS 1.3 encryption.
           </p>
           <p>
-            Offline Vault caching utilizes encrypted IndexedDB/LocalStorage instances that exist solely on your physical device.
+            Local storage caching utilizes browser storage instances that exist solely on your physical device.
           </p>
         </div>
       ),
@@ -107,25 +107,27 @@ export const Footer: React.FC = () => {
             <div className="lg:col-span-2 space-y-5">
               {/* Brand Logo & Subtitle */}
               <Link to="/" className="inline-flex items-center gap-3 group">
-                <div className="w-9 h-9 rounded-2xl bg-[#c2410c] flex items-center justify-center text-white shadow-sm shadow-orange-500/25 transition-transform duration-200 group-hover:scale-105">
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" />
-                  </svg>
+                <div className="w-10 h-10 rounded-2xl overflow-hidden shadow-sm transition-transform duration-200 group-hover:scale-105 shrink-0">
+                  <img
+                    src="/logo.png"
+                    alt="TripPlanner Logo"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-sans font-bold text-xl tracking-tight text-slate-900 dark:text-white leading-none">
                     TripPlanner
                   </span>
                   <span className="text-[10px] tracking-wider uppercase font-semibold text-[#c2410c] dark:text-[#ea580c] font-sans mt-1">
-                    AI Studio • Fluid Travel
+                    Smart Travel • Fluid Journeys
                   </span>
                 </div>
               </Link>
 
               {/* Mission Statement */}
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed font-sans">
-                Liquid intelligence for mindful, effortless exploration. Synthesizing pacing telemetry,
-                multi-currency ledgers, and curated local gems into crystal harmony.
+                Your modern travel companion for mindful, effortless exploration. Plan detailed multi-day
+                itineraries, track expenses across currencies, and discover points of interest around the globe.
               </p>
 
 
@@ -149,7 +151,7 @@ export const Footer: React.FC = () => {
                 <Link
                   to="/settings"
                   className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800/80 hover:bg-[#c2410c] hover:text-white text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-center transition-all duration-200"
-                  title="API Telemetry & Settings"
+                  title="Settings & Preferences"
                 >
                   <Code2 className="w-3.5 h-3.5" />
                 </Link>
@@ -176,7 +178,7 @@ export const Footer: React.FC = () => {
                 </li>
                 <li>
                   <Link to="/trips" className="hover:text-[#c2410c] dark:hover:text-[#ea580c] transition-colors">
-                    Route Telemetry
+                    Trip Planner
                   </Link>
                 </li>
                 <li>
@@ -315,7 +317,7 @@ export const Footer: React.FC = () => {
           {/* Bottom Row: Copyright + Language & Currency Pills */}
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 dark:text-slate-500">
             <div>
-              © 2025 TripPlanner AI Technologies Inc. All rights reserved.
+              © 2025 TripPlanner Technologies Inc. All rights reserved.
             </div>
 
             <div className="flex items-center gap-3">

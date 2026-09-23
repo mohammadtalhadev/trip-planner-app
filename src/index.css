@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
   :root {
     --bg-page: #f6f8fd;
     --bg-card: #ffffff;
@@ -22,6 +27,11 @@
   body {
     background-color: var(--bg-page);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    scroll-behavior: smooth;
+  }
+
+  * {
+    scroll-behavior: smooth;
   }
 }
 
