@@ -83,15 +83,15 @@ export const CitySearchInput: React.FC<CitySearchInputProps> = ({
     <div ref={containerRef} className={cn('relative w-full', className)}>
       <div
         className={cn(
-          'relative flex items-center bg-slate-50/80 dark:bg-slate-900/70 border rounded-2xl transition-all duration-200',
+          'relative flex items-center bg-slate-50/80 dark:bg-slate-900/70 border rounded-full transition-all duration-200',
           isFocused
-            ? 'border-sky-500 dark:border-sky-400 ring-2 ring-sky-500/20 bg-white dark:bg-slate-900 shadow-sm'
+            ? 'border-[#ff5a36] dark:border-[#ff5a36] ring-2 ring-[#ff5a36]/20 bg-white dark:bg-slate-900 shadow-sm'
             : 'border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
         )}
       >
         <div className="pl-4 text-slate-400 dark:text-slate-500">
           {isSearching ? (
-            <Loader2 className="w-4 h-4 animate-spin text-[#c2410c]" />
+            <Loader2 className="w-4 h-4 animate-spin text-[#ff5a36]" />
           ) : (
             <Search className="w-4 h-4 stroke-[2.2]" />
           )}
