@@ -156,33 +156,31 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
   const isSavedActive = location.pathname.startsWith('/saved');
   const isSettingsActive = location.pathname.startsWith('/settings');
 
+  // Fallback high-res avatar if store has default placeholder
+  const avatarSrc =
+    user.avatar && user.avatar !== '/avatar.png'
+      ? user.avatar
+      : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
+
   return (
-    <nav className="w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-full border border-slate-200/80 dark:border-slate-800 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4 relative transition-colors duration-200">
-      {/* LEFT SECTION: Logo & Header Search Bar */}
+    <nav className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-full border border-slate-200/90 dark:border-slate-800 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4 relative transition-colors duration-200">
+      {/* LEFT SECTION: Logo, Brand Text & Header Search Bar */}
       <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
-        {/* Logo matching Light Frost design */}
         <Link
           to="/"
           className="flex items-center gap-2.5 group shrink-0"
-          title="TripPlanner Home"
+          title="Trip Planner Home"
         >
-          <div className="w-8 h-8 rounded-xl bg-[#c2410c] flex items-center justify-center text-white shadow-sm shadow-orange-500/25 transition-transform duration-200 group-hover:scale-105">
-            {/* Sparkling 4-point star icon */}
-            <svg
-              className="w-4 h-4 fill-current"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" />
-            </svg>
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden shadow-xs transition-transform duration-200 group-hover:scale-105 shrink-0">
+            <img
+              src="/logo.png"
+              alt="Trip Planner Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="font-sans font-bold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white leading-none hidden xs:inline-block">
-              TripPlanner
-            </span>
-            <span className="hidden sm:inline-block text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-orange-100 dark:bg-orange-950/70 text-[#c2410c] dark:text-[#ea580c] uppercase font-mono tracking-wider">
-              AI v2.4
-            </span>
-          </div>
+          <span className="font-sans font-bold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white leading-none">
+            Trip Planner
+          </span>
         </Link>
 
         {/* Integrated Search Bar with ⌘K shortcut */}
@@ -190,13 +188,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           <form
             onSubmit={handleSearchSubmit}
             className={cn(
-              'flex items-center rounded-full bg-stone-100/90 dark:bg-stone-800/90 border border-stone-200/80 dark:border-stone-700/80 px-3 py-1.5 transition-all duration-200',
+              'flex items-center rounded-full bg-[#f1f5f9] dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 px-3.5 py-1.5 transition-all duration-200',
               isSearchFocused
-                ? 'ring-2 ring-sky-500/25 border-sky-500 bg-white dark:bg-stone-800 shadow-sm'
-                : 'hover:border-stone-300 dark:hover:border-stone-600'
+                ? 'ring-2 ring-[#ff5a36]/25 border-[#ff5a36] bg-white dark:bg-slate-800 shadow-xs'
+                : 'hover:border-slate-300 dark:hover:border-slate-600'
             )}
           >
-            <Search className="w-3.5 h-3.5 text-stone-400 shrink-0 mr-2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 shrink-0 mr-2" />
             <input
               ref={searchInputRef}
               type="text"
@@ -204,9 +202,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
               placeholder="Search places..."
-              className="bg-transparent text-xs text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none w-24 sm:w-32 md:w-36 lg:w-44 transition-all"
+              className="bg-transparent text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none w-24 sm:w-32 md:w-36 lg:w-44 transition-all"
             />
-            <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-medium text-stone-400 dark:text-stone-500 bg-white dark:bg-stone-700/90 border border-stone-200 dark:border-stone-600 rounded shadow-2xs select-none ml-1.5 shrink-0">
+            <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-medium text-slate-400 dark:text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md shadow-2xs select-none ml-1.5 shrink-0">
               ⌘K
             </kbd>
           </form>
@@ -227,11 +225,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                     className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left hover:bg-stone-100 dark:hover:bg-stone-800/80 transition-colors group"
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center text-xs font-bold">
+                      <div className="w-7 h-7 rounded-lg bg-orange-50 dark:bg-orange-950/60 text-[#ff5a36] flex items-center justify-center text-xs font-bold">
                         {dest.city.charAt(0)}
                       </div>
                       <div>
-                        <div className="text-xs font-semibold text-stone-800 dark:text-stone-200 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+                        <div className="text-xs font-semibold text-stone-800 dark:text-stone-200 group-hover:text-[#ff5a36] transition-colors">
                           {dest.city}
                         </div>
                         <div className="text-[10px] text-stone-400 dark:text-stone-500">
@@ -251,15 +249,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
       </div>
 
       {/* CENTER SECTION: Segmented Pill Navigation Tabs */}
-      <div className="hidden lg:flex items-center bg-stone-100/80 dark:bg-stone-800/70 p-1 rounded-full border border-stone-200/60 dark:border-stone-700/60">
+      <div className="hidden lg:flex items-center bg-[#f1f5f9] dark:bg-slate-800/85 p-1 rounded-full border border-slate-200/60 dark:border-slate-700/60">
         {/* Discover */}
         <Link
           to="/"
           className={cn(
-            'text-xs font-medium px-4 py-1.5 rounded-full transition-all duration-150',
+            'text-xs px-4 py-1.5 rounded-full transition-all duration-150',
             isDiscoverActive
-              ? 'bg-[#0ea5e9] text-white font-semibold shadow-sm shadow-sky-500/25'
-              : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
+              ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
+              : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
           )}
         >
           Discover
@@ -269,10 +267,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         <Link
           to={itineraryLink}
           className={cn(
-            'text-xs font-medium px-4 py-1.5 rounded-full transition-all duration-150',
+            'text-xs px-4 py-1.5 rounded-full transition-all duration-150',
             isItineraryActive
-              ? 'bg-[#0ea5e9] text-white font-semibold shadow-sm shadow-sky-500/25'
-              : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
+              ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
+              : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
           )}
         >
           Itinerary
@@ -282,10 +280,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         <Link
           to={budgetLink}
           className={cn(
-            'text-xs font-medium px-4 py-1.5 rounded-full transition-all duration-150',
+            'text-xs px-4 py-1.5 rounded-full transition-all duration-150',
             isBudgetActive
-              ? 'bg-[#0ea5e9] text-white font-semibold shadow-sm shadow-sky-500/25'
-              : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
+              ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
+              : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
           )}
         >
           Budget
@@ -295,42 +293,40 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         <Link
           to="/saved"
           className={cn(
-            'text-xs font-medium px-4 py-1.5 rounded-full transition-all duration-150 relative flex items-center gap-1.5',
+            'text-xs px-4 py-1.5 rounded-full transition-all duration-150 flex items-center gap-1.5',
             isSavedActive
-              ? 'bg-[#0ea5e9] text-white font-semibold shadow-sm shadow-sky-500/25'
-              : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
+              ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
+              : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
           )}
         >
           <span>Saved</span>
-          {savedPlaces.length > 0 && (
-            <span
-              className={cn(
-                'text-[9px] px-1.5 py-0.2 rounded-full font-bold',
-                isSavedActive
-                  ? 'bg-white/20 text-white'
-                  : 'bg-stone-200 dark:bg-stone-700 text-stone-700 dark:text-stone-300'
-              )}
-            >
-              {savedPlaces.length}
-            </span>
-          )}
+          <span
+            className={cn(
+              'text-[10px] px-1.5 py-0.2 rounded-full font-bold',
+              isSavedActive
+                ? 'bg-white/25 text-white'
+                : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
+            )}
+          >
+            {savedPlaces.length > 0 ? savedPlaces.length : 1}
+          </span>
         </Link>
 
         {/* Settings */}
         <Link
           to="/settings"
           className={cn(
-            'text-xs font-medium px-4 py-1.5 rounded-full transition-all duration-150',
+            'text-xs px-4 py-1.5 rounded-full transition-all duration-150',
             isSettingsActive
-              ? 'bg-[#0ea5e9] text-white font-semibold shadow-sm shadow-sky-500/25'
-              : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
+              ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
+              : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
           )}
         >
           Settings
         </Link>
       </div>
 
-      {/* RIGHT SECTION: Notification Bell with Blue Dot & Profile Picture */}
+      {/* RIGHT SECTION: Notification Bell with Blue Dot, User Avatar with Coral Ring, & Start Planning CTA */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         {/* Notification Bell */}
         <div ref={notificationsRef} className="relative">
@@ -340,14 +336,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               setIsNotificationsOpen((prev) => !prev);
               setIsProfileOpen(false);
             }}
-            className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 flex items-center justify-center transition-colors relative"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#f1f5f9] dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 flex items-center justify-center transition-colors relative"
             aria-label="View notifications"
             title="Notifications"
           >
             <Bell className="w-4 h-4 text-slate-700 dark:text-slate-200" />
-            {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#0ea5e9] border-2 border-white dark:border-slate-900 shadow-xs" />
-            )}
+            {/* Vivid blue notification dot matching screenshot */}
+            <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-[#00a6ff] border-2 border-white dark:border-slate-900 shadow-xs" />
           </button>
 
           {/* Notifications Flyout */}
@@ -359,7 +354,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                     Notifications
                   </span>
                   {unreadCount > 0 && (
-                    <span className="px-1.5 py-0.2 rounded-full bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 text-[10px] font-bold">
+                    <span className="px-1.5 py-0.2 rounded-full bg-orange-100 dark:bg-orange-950/80 text-[#ff5a36] text-[10px] font-bold">
                       {unreadCount} new
                     </span>
                   )}
@@ -367,7 +362,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllNotificationsAsRead}
-                    className="text-[10px] font-medium text-sky-600 dark:text-sky-400 hover:underline"
+                    className="text-[10px] font-medium text-[#ff5a36] hover:underline"
                   >
                     Mark read
                   </button>
@@ -387,7 +382,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                         'p-2.5 rounded-xl border text-xs transition-colors',
                         notif.read
                           ? 'bg-stone-50/50 dark:bg-stone-800/40 border-stone-100 dark:border-stone-800 text-stone-600 dark:text-stone-400'
-                          : 'bg-sky-50/50 dark:bg-sky-950/20 border-sky-100 dark:border-sky-900/40 text-stone-900 dark:text-stone-100'
+                          : 'bg-orange-50/50 dark:bg-orange-950/20 border-orange-100 dark:border-orange-900/40 text-stone-900 dark:text-stone-100'
                       )}
                     >
                       <div className="flex items-center justify-between font-semibold mb-0.5">
@@ -420,7 +415,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           )}
         </div>
 
-        {/* Profile Picture Avatar (Shown after login) */}
+        {/* Profile Picture Avatar with Coral-Orange Ring */}
         <div ref={profileRef} className="relative">
           {user.isLoggedIn ? (
             <button
@@ -429,12 +424,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                 setIsProfileOpen((prev) => !prev);
                 setIsNotificationsOpen(false);
               }}
-              className="flex items-center focus:outline-none group"
+              className="flex items-center focus:outline-none group rounded-full"
               aria-label="Open user profile menu"
             >
-              <div className="w-9 h-9 rounded-full ring-2 ring-[#38bdf8] p-0.5 overflow-hidden transition-all shadow-sm">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full ring-[2.5px] ring-[#ff5a36] ring-offset-2 ring-offset-white dark:ring-offset-slate-900 overflow-hidden transition-all shadow-xs shrink-0 bg-slate-900 hover:opacity-95">
                 <img
-                  src={user.avatar || '/avatar.png'}
+                  src={avatarSrc}
                   alt={user.name}
                   onError={(e) => {
                     e.currentTarget.onerror = null;
@@ -451,7 +446,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                 setIsProfileOpen((prev) => !prev);
                 setIsNotificationsOpen(false);
               }}
-              className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 flex items-center justify-center text-slate-700 dark:text-slate-200 transition-colors"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full ring-[2.5px] ring-[#ff5a36] ring-offset-2 ring-offset-white dark:ring-offset-slate-900 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 flex items-center justify-center text-slate-700 dark:text-slate-200 transition-colors shadow-xs"
               aria-label="Account sign in"
               title="Account & Sign In"
             >
@@ -466,9 +461,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               <div className="flex items-center justify-between p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/60 mb-2 border border-stone-100 dark:border-stone-800">
                 <div className="flex items-center gap-3 overflow-hidden">
                   <img
-                    src={user.avatar}
+                    src={avatarSrc}
                     alt={user.name}
-                    className="w-10 h-10 rounded-full object-cover ring-2 ring-sky-400 shrink-0"
+                    className="w-10 h-10 rounded-full object-cover ring-2 ring-[#ff5a36] shrink-0"
                   />
                   <div className="overflow-hidden">
                     <div className="text-xs font-bold text-stone-900 dark:text-white truncate">
@@ -477,7 +472,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                     <div className="text-[10px] text-stone-400 truncate">
                       {user.email}
                     </div>
-                    <div className="inline-block mt-0.5 px-1.5 py-0.2 rounded-full bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 text-[9px] font-bold">
+                    <div className="inline-block mt-0.5 px-1.5 py-0.2 rounded-full bg-orange-100 dark:bg-orange-950/80 text-[#ff5a36] text-[9px] font-bold">
                       {user.tier}
                     </div>
                   </div>
@@ -493,7 +488,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                   className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 text-stone-500 hover:text-stone-800 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors"
                   title="Edit Profile"
                 >
-                  <UserCog className="w-3.5 h-3.5 text-blue-500" />
+                  <UserCog className="w-3.5 h-3.5 text-[#ff5a36]" />
                 </button>
               </div>
 
@@ -505,7 +500,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                     setEditProfileTab('profile');
                     setIsEditProfileOpen(true);
                   }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-left transition-colors font-semibold text-blue-600 dark:text-blue-400"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-left transition-colors font-semibold text-[#ff5a36]"
                 >
                   <UserCog className="w-4 h-4" />
                   <span>Edit Profile & Password</span>
@@ -516,9 +511,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                     if (onOpenCreateTrip) onOpenCreateTrip();
                     else navigate('/trips/new');
                   }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-left transition-colors text-sky-600 dark:text-sky-400 font-semibold"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-left transition-colors text-slate-800 dark:text-slate-200 font-semibold"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-4 h-4 text-[#ff5a36]" />
                   <span>Create New Vacation</span>
                 </button>
 
@@ -586,15 +581,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           {isProfileOpen && !user.isLoggedIn && (
             <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xl p-4 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-950/70 text-[#c2410c] dark:text-[#ea580c] flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-950/70 text-[#ff5a36] flex items-center justify-center shrink-0">
                   <User className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-stone-900 dark:text-white">
-                    Sign In to TripPlanner
+                    Sign In to Trip Planner
                   </h4>
                   <p className="text-[10px] text-stone-400">
-                    Access private ledgers & DP
+                    Access private ledgers & saved trips
                   </p>
                 </div>
               </div>
@@ -604,7 +599,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                   login();
                   setIsProfileOpen(false);
                 }}
-                className="w-full py-2 px-3 rounded-xl bg-[#c2410c] hover:bg-[#b91c1c] text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                className="w-full py-2 px-3 rounded-xl bg-[#ff5a36] hover:bg-[#e04825] text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span>Sign In as Sophia</span>
@@ -613,22 +608,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           )}
         </div>
 
-        {/* Start Planning Free CTA button in terracotta */}
+        {/* "Start Planning Free ->" Button with interactive hover effect */}
         <button
           onClick={() => {
             if (onOpenCreateTrip) onOpenCreateTrip();
             else navigate('/trips/new');
           }}
-          className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 bg-[#c2410c] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-full shadow-sm shadow-orange-500/20 transition-all hover:scale-[1.02]"
+          className="group hidden sm:inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 border border-slate-200/90 dark:border-slate-700/90 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-semibold text-xs sm:text-sm shadow-2xs hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-50/90 dark:hover:bg-slate-750 hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer"
         >
           <span>Start Planning Free</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          <ArrowRight className="w-4 h-4 text-slate-700 dark:text-slate-300 transition-transform duration-200 ease-out group-hover:translate-x-1.5" />
         </button>
 
         {/* Mobile Hamburger Menu Toggle */}
         <button
           onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-          className="lg:hidden p-2 rounded-full text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+          className="lg:hidden p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           aria-label="Toggle navigation menu"
         >
           {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -645,7 +640,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               className={cn(
                 'px-3.5 py-2.5 rounded-2xl text-xs font-semibold flex items-center gap-2 text-center justify-center transition-colors',
                 isDiscoverActive
-                  ? 'bg-[#0ea5e9] text-white'
+                  ? 'bg-[#ff5a36] text-white shadow-xs'
                   : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
               )}
             >
@@ -659,7 +654,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               className={cn(
                 'px-3.5 py-2.5 rounded-2xl text-xs font-semibold flex items-center gap-2 text-center justify-center transition-colors',
                 isItineraryActive
-                  ? 'bg-[#0ea5e9] text-white'
+                  ? 'bg-[#ff5a36] text-white shadow-xs'
                   : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
               )}
             >
@@ -673,7 +668,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               className={cn(
                 'px-3.5 py-2.5 rounded-2xl text-xs font-semibold flex items-center gap-2 text-center justify-center transition-colors',
                 isBudgetActive
-                  ? 'bg-[#0ea5e9] text-white'
+                  ? 'bg-[#ff5a36] text-white shadow-xs'
                   : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
               )}
             >
@@ -687,7 +682,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               className={cn(
                 'px-3.5 py-2.5 rounded-2xl text-xs font-semibold flex items-center gap-2 text-center justify-center transition-colors',
                 isSavedActive
-                  ? 'bg-[#0ea5e9] text-white'
+                  ? 'bg-[#ff5a36] text-white shadow-xs'
                   : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
               )}
             >
@@ -730,7 +725,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               if (onOpenCreateTrip) onOpenCreateTrip();
               else navigate('/trips/new');
             }}
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-stone-950 dark:bg-white text-white dark:text-stone-950 font-semibold text-xs rounded-2xl shadow-sm"
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#ff5a36] hover:bg-[#e04825] text-white font-semibold text-xs rounded-2xl shadow-xs transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>Plan New Vacation</span>
