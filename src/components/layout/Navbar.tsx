@@ -17,6 +17,7 @@ import {
   LogIn,
   User,
   UserCog,
+  UserPlus,
   ArrowRight,
 } from 'lucide-react';
 import { usePreferencesStore } from '../../store/usePreferencesStore';
@@ -42,7 +43,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
   const {
     user,
     notifications,
-    login,
     logout,
     markAllNotificationsAsRead,
     clearNotifications,
@@ -594,16 +594,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
                 </div>
               </div>
 
-              <button
-                onClick={() => {
-                  login();
-                  setIsProfileOpen(false);
-                }}
-                className="w-full py-2 px-3 rounded-xl bg-[#ff5a36] hover:bg-[#e04825] text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all"
-              >
-                <LogIn className="w-3.5 h-3.5" />
-                <span>Sign In as Sophia</span>
-              </button>
+              <div className="space-y-2">
+                <Link
+                  to="/login"
+                  onClick={() => setIsProfileOpen(false)}
+                  className="w-full py-2.5 px-3 rounded-xl bg-[#ff5a36] hover:bg-[#e04825] text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition-all"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>Sign In</span>
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setIsProfileOpen(false)}
+                  className="w-full py-2 px-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span>Create Account</span>
+                </Link>
+              </div>
             </div>
           )}
         </div>

@@ -38,6 +38,12 @@ const SavedPlacesPage = lazy(() =>
 const SettingsPage = lazy(() =>
   import('./pages/SettingsPage').then((m) => ({ default: m.SettingsPage }))
 );
+const LoginPage = lazy(() =>
+  import('./pages/LoginPage').then((m) => ({ default: m.LoginPage }))
+);
+const SignUpPage = lazy(() =>
+  import('./pages/SignUpPage').then((m) => ({ default: m.SignUpPage }))
+);
 const NotFoundPage = lazy(() =>
   import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))
 );
@@ -79,6 +85,8 @@ export const App: React.FC = () => {
             <Route path="trips/:tripId/budget" element={<BudgetPage />} />
             <Route path="saved" element={<SavedPlacesPage />} />
             <Route path="settings" element={<SettingsPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="signup" element={<SignUpPage />} />
             <Route path="404" element={<NotFoundPage />} />
             <Route path="*" element={<Navigate to="/404" replace />} />
           </Route>

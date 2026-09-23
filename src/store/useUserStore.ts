@@ -24,6 +24,7 @@ export interface NotificationItem {
 interface UserState {
   user: UserProfile;
   notifications: NotificationItem[];
+  setUser: (user: UserProfile) => void;
   login: () => void;
   logout: () => void;
   updateProfile: (updates: Partial<Pick<UserProfile, 'name' | 'email' | 'avatar' | 'bio'>>) => void;
@@ -36,14 +37,14 @@ interface UserState {
 }
 
 const DEFAULT_USER: UserProfile = {
-  id: 'usr-4412',
-  name: 'Sophia Vance',
-  email: 'sophia.vance@tripplanner.io',
-  avatar: '/avatar.png',
-  tier: 'Pro Traveler',
+  id: 'usr-admin',
+  name: 'Trip Planner Admin',
+  email: 'admin@tripplanner.com',
+  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+  tier: 'Administrator & Lead Explorer',
   isLoggedIn: true,
-  password: 'Password123!',
-  bio: 'Globe trotter exploring cultural heritage, alpine routes, and coastal retreats.',
+  password: 'Admin@321',
+  bio: 'Platform Administrator & Lead Explorer at Trip Planner.',
 };
 
 const DEFAULT_NOTIFICATIONS: NotificationItem[] = [
@@ -78,6 +79,8 @@ export const useUserStore = create<UserState>()(
     (set, get) => ({
       user: DEFAULT_USER,
       notifications: DEFAULT_NOTIFICATIONS,
+
+      setUser: (user) => set({ user }),
 
       login: () => {
         set((state) => ({
