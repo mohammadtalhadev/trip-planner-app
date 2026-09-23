@@ -191,7 +191,7 @@ export const SettingsPage: React.FC = () => {
                     <h4 className="text-base font-bold text-slate-900 dark:text-white">
                       {user.name}
                     </h4>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 whitespace-nowrap tracking-tight">
                       {user.tier}
                     </span>
                   </div>

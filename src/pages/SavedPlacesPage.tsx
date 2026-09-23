@@ -1,11 +1,9 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Bookmark,
   BookmarkCheck,
   Search,
-  LayoutGrid,
-  Map as MapIcon,
   Star,
   Plus,
   ArrowUpRight,
@@ -42,20 +40,16 @@ export const SavedPlacesPage: React.FC = () => {
   const createBoard = useSavedPlacesStore((state) => state.createBoard);
   const toggleSavePlace = useSavedPlacesStore((state) => state.toggleSavePlace);
 
-  // Local filter & view states
+  // Local filter states
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('recent');
-  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
 
   // Modals state
   const [selectedPlaceForTrip, setSelectedPlaceForTrip] = useState<SavedPlace | null>(null);
   const [isNewBoardModalOpen, setIsNewBoardModalOpen] = useState(false);
   const [newBoardName, setNewBoardName] = useState('');
   const [newBoardDesc, setNewBoardDesc] = useState('');
-
-  // Selected place for map preview
-  const [selectedMapPlace, setSelectedMapPlace] = useState<SavedPlace | null>(null);
 
   // Filtered by active board
   const boardFilteredPlaces = useMemo(() => {
@@ -124,12 +118,6 @@ export const SavedPlacesPage: React.FC = () => {
     return list;
   }, [boardFilteredPlaces, categoryFilter, searchQuery, sortBy]);
 
-  // Set initial map place when processed places change
-  useEffect(() => {
-    if (processedPlaces.length > 0 && !selectedMapPlace) {
-      setSelectedMapPlace(processedPlaces[0]);
-    }
-  }, [processedPlaces, selectedMapPlace]);
 
   // Category tab definitions matching Stitch
   const categoryTabs = [
@@ -201,10 +189,9 @@ export const SavedPlacesPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Search Bar & View Mode Toggles */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          {/* Search Input */}
-          <div className="relative min-w-[260px] sm:min-w-[300px]">
+        {/* Search Bar */}
+        <div className="flex items-center gap-3">
+          <div className="relative min-w-[260px] sm:min-w-[320px]">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
             <input
               type="text"
@@ -221,34 +208,6 @@ export const SavedPlacesPage: React.FC = () => {
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
-          </div>
-
-          {/* View Mode: [Grid] vs [Map Split] */}
-          <div className="flex items-center p-1 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shrink-0">
-            <button
-              type="button"
-              onClick={() => setViewMode('grid')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                viewMode === 'grid'
-                  ? 'bg-[#ff5a36] text-white shadow-2xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <LayoutGrid className="w-3.5 h-3.5" />
-              <span>Grid</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('map')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                viewMode === 'map'
-                  ? 'bg-[#ff5a36] text-white shadow-2xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <MapIcon className="w-3.5 h-3.5" />
-              <span>Map Split</span>
-            </button>
           </div>
         </div>
       </div>
@@ -277,7 +236,7 @@ export const SavedPlacesPage: React.FC = () => {
       {/* 2. Category Filter Pills & Sort Selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-y border-slate-200/80 dark:border-slate-800 py-3">
         {/* Category Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-thin">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
           {categoryTabs.map((tab) => (
             <button
               key={tab.id}
@@ -317,7 +276,7 @@ export const SavedPlacesPage: React.FC = () => {
       </div>
 
       {/* 3. Board Collections Bar strictly matching Stitch */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
         <div className="flex items-center gap-1.5 text-xs font-mono font-bold tracking-wider text-slate-400 uppercase mr-1 shrink-0">
           <Folder className="w-3.5 h-3.5 text-amber-500" />
           <span>BOARDS:</span>
@@ -397,7 +356,7 @@ export const SavedPlacesPage: React.FC = () => {
             </Link>
           </div>
         </div>
-      ) : viewMode === 'grid' ? (
+      ) : (
         /* Full 3-Column Grid View */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {processedPlaces.map((place) => {
@@ -511,158 +470,6 @@ export const SavedPlacesPage: React.FC = () => {
               </div>
             );
           })}
-        </div>
-      ) : (
-        /* Map Split View: Left Cards List + Right Map Panel */
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left Column: Scrollable cards list (lg:col-span-7) */}
-          <div className="lg:col-span-7 space-y-4 max-h-[80vh] overflow-y-auto pr-1 scrollbar-thin">
-            {processedPlaces.map((place) => {
-              const isSelected = selectedMapPlace?.id === place.id;
-              const destUrl = `/destinations/${encodeURIComponent(
-                place.cityName.toLowerCase().replace(/\s+/g, '-')
-              )}?city=${encodeURIComponent(place.cityName)}&country=${encodeURIComponent(
-                place.country || ''
-              )}&lat=${place.coordinates?.lat || 35.0}&lon=${place.coordinates?.lon || 135.7}`;
-
-              return (
-                <div
-                  key={place.id}
-                  onClick={() => setSelectedMapPlace(place)}
-                  className={`p-4 rounded-3xl border transition-all cursor-pointer flex flex-col sm:flex-row gap-4 ${
-                    isSelected
-                      ? 'bg-white dark:bg-slate-900 border-[#ff5a36] shadow-card ring-2 ring-[#ff5a36]/20'
-                      : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-300 shadow-frost'
-                  }`}
-                >
-                  <div className="relative w-full sm:w-36 h-32 rounded-2xl overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800">
-                    <img
-                      src={place.imageUrl || DEFAULT_FALLBACK_IMAGE}
-                      alt={place.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[9px] font-bold text-white">
-                      {place.tag || place.category}
-                    </div>
-                  </div>
-
-                  <div className="flex-1 min-w-0 space-y-2 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="text-[10px] font-mono font-bold uppercase text-slate-400">
-                          {place.cityName}
-                        </span>
-                        <div className="flex items-center gap-1 text-xs font-mono font-bold text-amber-500">
-                          <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                          <span>{place.rating || 4.9}</span>
-                        </div>
-                      </div>
-
-                      <h4 className="font-serif text-base font-bold text-slate-900 dark:text-white truncate">
-                        {place.name}
-                      </h4>
-
-                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                        {place.description}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-2 pt-1">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedPlaceForTrip(place);
-                        }}
-                        className="flex-1 py-1.5 px-3 rounded-xl bg-[#f0f4ff] hover:bg-indigo-100 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-bold text-xs flex items-center justify-center gap-1.5"
-                      >
-                        <Plus className="w-3 h-3" />
-                        <span>Add to Trip</span>
-                      </button>
-
-                      <Link
-                        to={destUrl}
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                        title="Explore guide"
-                      >
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Right Column: Interactive Map Split (lg:col-span-5) */}
-          <div className="lg:col-span-5 sticky top-20 rounded-3xl overflow-hidden border border-slate-200/90 dark:border-slate-800 shadow-frost bg-slate-900 h-[75vh] flex flex-col">
-            {/* Map Header */}
-            <div className="p-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between z-10">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-200">
-                <Compass className="w-4 h-4 text-[#ff5a36]" />
-                <span>Geographic Pin Overview ({processedPlaces.length} locations)</span>
-              </div>
-              <span className="text-[10px] font-mono text-slate-400">{activeBoardName}</span>
-            </div>
-
-            {/* Map Canvas / Simulated Interactive Vector View with pins */}
-            <div className="relative flex-1 bg-[#1a202c] overflow-hidden flex items-center justify-center p-4">
-              {/* Stylized background terrain texture */}
-              <div className="absolute inset-0 opacity-25 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px]" />
-
-              {/* Centered Map Card Preview */}
-              {selectedMapPlace && (
-                <div className="relative z-10 max-w-xs w-full bg-white dark:bg-slate-900 rounded-3xl p-4 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-3 animate-in fade-in zoom-in-95">
-                  <div className="relative h-32 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800">
-                    <img
-                      src={selectedMapPlace.imageUrl || DEFAULT_FALLBACK_IMAGE}
-                      alt={selectedMapPlace.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-bold">
-                      {selectedMapPlace.tag || selectedMapPlace.category}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-mono text-[10px] font-bold uppercase text-slate-400">
-                        {selectedMapPlace.cityName}, {selectedMapPlace.country}
-                      </span>
-                      <div className="flex items-center gap-1 font-mono text-amber-500 font-bold">
-                        <Star className="w-3 h-3 fill-amber-400" />
-                        <span>{selectedMapPlace.rating}</span>
-                      </div>
-                    </div>
-                    <h4 className="font-serif font-bold text-slate-900 dark:text-white mt-0.5">
-                      {selectedMapPlace.name}
-                    </h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-1">
-                      {selectedMapPlace.description}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPlaceForTrip(selectedMapPlace)}
-                      className="flex-1 py-2 px-3 rounded-xl bg-[#ff5a36] hover:bg-[#e04826] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-colors"
-                    >
-                      <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                      <span>Add to Trip</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Pin indicators on map */}
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10 text-[11px] font-mono text-white/70 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10">
-                <span>Lat: {selectedMapPlace?.coordinates?.lat || 35.0}° N</span>
-                <span>Lon: {selectedMapPlace?.coordinates?.lon || 135.7}° E</span>
-              </div>
-            </div>
-          </div>
         </div>
       )}
 

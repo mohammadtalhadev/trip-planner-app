@@ -425,7 +425,7 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({
         {/* Left Column: Timeline & Activities (lg:col-span-8) */}
         <div className="lg:col-span-8 space-y-5">
           {/* Category Filter Pills */}
-          <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1 scrollbar-thin">
+          <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1 no-scrollbar">
             <div className="flex items-center gap-1.5 flex-nowrap">
               {categories.map((cat) => (
                 <button

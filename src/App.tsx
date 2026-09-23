@@ -1,5 +1,7 @@
 import React, { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ReactLenis } from 'lenis/react';
+import 'lenis/dist/lenis.css';
 import { Layout } from './components/layout/Layout';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { usePreferencesStore } from './store/usePreferencesStore';
@@ -67,34 +69,36 @@ export const App: React.FC = () => {
   }, [applyTheme]);
 
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="destinations" element={<DestinationsPage />} />
-            <Route
-              path="destinations/:destinationId"
-              element={<DestinationDetailPage />}
-            />
-            <Route path="trips" element={<TripsPage />} />
-            <Route path="trips/new" element={<NewTripPage />} />
-            <Route path="trips/:tripId" element={<TripDashboardPage />} />
-            <Route path="trips/:tripId/itinerary" element={<ItineraryPage />} />
-            <Route path="trips/:tripId/budget" element={<BudgetPage />} />
-            <Route path="itinerary" element={<Navigate to="/trips/demo-turkey-vacation/itinerary" replace />} />
-            <Route path="budget" element={<Navigate to="/trips/demo-turkey-vacation/budget" replace />} />
-            <Route path="saved" element={<SavedPlacesPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="signup" element={<SignUpPage />} />
-            <Route path="404" element={<NotFoundPage />} />
-            <Route path="*" element={<Navigate to="/404" replace />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <ReactLenis root options={{ autoRaf: true, lerp: 0.08, duration: 1.2, smoothWheel: true }}>
+      <BrowserRouter>
+        <ScrollToTop />
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="destinations" element={<DestinationsPage />} />
+              <Route
+                path="destinations/:destinationId"
+                element={<DestinationDetailPage />}
+              />
+              <Route path="trips" element={<TripsPage />} />
+              <Route path="trips/new" element={<NewTripPage />} />
+              <Route path="trips/:tripId" element={<TripDashboardPage />} />
+              <Route path="trips/:tripId/itinerary" element={<ItineraryPage />} />
+              <Route path="trips/:tripId/budget" element={<BudgetPage />} />
+              <Route path="itinerary" element={<Navigate to="/trips/demo-turkey-vacation/itinerary" replace />} />
+              <Route path="budget" element={<Navigate to="/trips/demo-turkey-vacation/budget" replace />} />
+              <Route path="saved" element={<SavedPlacesPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="signup" element={<SignUpPage />} />
+              <Route path="404" element={<NotFoundPage />} />
+              <Route path="*" element={<Navigate to="/404" replace />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </ReactLenis>
   );
 };
 

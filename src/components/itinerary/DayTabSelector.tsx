@@ -17,7 +17,7 @@ export const DayTabSelector: React.FC<DayTabSelectorProps> = ({
   onAddDay,
 }) => {
   return (
-    <div className="flex items-center gap-3 overflow-x-auto pb-3 pt-1 scrollbar-thin">
+    <div className="flex items-center gap-3 overflow-x-auto pb-3 pt-1 no-scrollbar">
       {days.map((day) => {
         const isActive = day.id === activeDayId;
         const totalActs = day.activities.length;

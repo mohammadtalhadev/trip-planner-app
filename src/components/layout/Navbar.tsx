@@ -480,24 +480,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
 
           {/* User Profile Flyout Menu */}
           {isProfileOpen && user.isLoggedIn && (
-            <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
               {/* Profile Card Header */}
               <div className="flex items-center justify-between p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/60 mb-2 border border-stone-100 dark:border-stone-800">
-                <div className="flex items-center gap-3 overflow-hidden">
+                <div className="flex items-center gap-3 min-w-0 flex-1 mr-2">
                   <img
                     src={avatarSrc}
                     alt={user.name}
                     className="w-10 h-10 rounded-full object-cover ring-2 ring-[#ff5a36] shrink-0"
                   />
-                  <div className="overflow-hidden">
+                  <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-stone-900 dark:text-white truncate">
                       {user.name}
                     </div>
                     <div className="text-[10px] text-stone-400 truncate">
                       {user.email}
                     </div>
-                    <div className="inline-block mt-0.5 px-1.5 py-0.2 rounded-full bg-orange-100 dark:bg-orange-950/80 text-[#ff5a36] text-[9px] font-bold">
-                      {user.tier}
+                    <div className="inline-flex items-center mt-1 px-2.5 py-0.5 rounded-full bg-orange-100 dark:bg-orange-950/80 text-[#ff5a36] text-[10px] font-bold tracking-tight whitespace-nowrap shadow-2xs">
+                      <span className="truncate max-w-[160px]">{user.tier}</span>
                     </div>
                   </div>
                 </div>
