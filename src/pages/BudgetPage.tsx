@@ -36,7 +36,6 @@ export const BudgetPage: React.FC = () => {
 
   const {
     preferredCurrency,
-    ratesSource,
     convert,
     convertBetween,
     formatRaw,
@@ -299,9 +298,6 @@ export const BudgetPage: React.FC = () => {
                 Currency Calculator
               </h4>
             </div>
-            <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
-              Source: Open Exchange Rates API ({ratesSource})
-            </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">

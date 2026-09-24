@@ -31,6 +31,16 @@ export const Modal: React.FC<ModalProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
+  // Lock body scroll when modal is open to prevent background website scroll bleed
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const maxWidthClasses = {
@@ -46,13 +56,17 @@ export const Modal: React.FC<ModalProps> = ({
   }[maxWidth];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/70 backdrop-blur-md animate-in fade-in duration-200">
+    <div
+      data-lenis-prevent
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/70 backdrop-blur-md animate-in fade-in duration-200"
+    >
       <div
         className="fixed inset-0"
         onClick={onClose}
         aria-hidden="true"
       />
       <div
+        data-lenis-prevent
         className={cn(
           'relative w-full bg-white dark:bg-slate-900 rounded-3xl shadow-frost border border-slate-200/80 dark:border-slate-800 overflow-hidden z-10 animate-in zoom-in-95 duration-200',
           maxWidthClasses
@@ -72,7 +86,11 @@ export const Modal: React.FC<ModalProps> = ({
             </button>
           </div>
         )}
-        <div className={cn('max-h-[90vh] overflow-y-auto', noPadding ? 'p-0' : 'p-6')}>
+        <div
+          data-lenis-prevent
+          onWheel={(e) => e.stopPropagation()}
+          className={cn('max-h-[90vh] overflow-y-auto overscroll-contain', noPadding ? 'p-0' : 'p-6')}
+        >
           {children}
         </div>
       </div>

@@ -40,7 +40,6 @@ export const SettingsPage: React.FC = () => {
 
   const {
     exchangeRates,
-    ratesSource,
     convertBetween,
     formatRaw,
     refreshRates,
@@ -315,38 +314,28 @@ export const SettingsPage: React.FC = () => {
           </div>
 
           <div className="space-y-5 pt-1">
-            {/* Live Exchange API Status & Refresh Header */}
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-xs">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="font-semibold text-slate-800 dark:text-slate-200">
-                  Live Exchange Rate API ({ratesSource})
-                </span>
-                <span className="hidden sm:inline text-slate-400 font-mono text-[11px]">
-                  • open.er-api.com
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={async () => {
-                  setIsRefreshingRates(true);
-                  await refreshRates();
-                  setTimeout(() => setIsRefreshingRates(false), 500);
-                  triggerSavedNotice();
-                }}
-                disabled={isRefreshingRates}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium transition-colors"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 text-[#c2410c] ${isRefreshingRates ? 'animate-spin' : ''}`} />
-                <span>Sync Live Rates</span>
-              </button>
-            </div>
-
             {/* Currency Selector */}
             <div>
-              <label className="block text-[11px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-2">
-                Preferred Currency (propagates across all trips & budgets)
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-[11px] font-mono font-bold text-slate-500 uppercase tracking-widest">
+                  Preferred Currency (propagates across all trips & budgets)
+                </label>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsRefreshingRates(true);
+                    await refreshRates();
+                    setTimeout(() => setIsRefreshingRates(false), 500);
+                    triggerSavedNotice();
+                  }}
+                  disabled={isRefreshingRates}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium text-[11px] transition-colors"
+                  title="Sync exchange rates"
+                >
+                  <RefreshCw className={`w-3 h-3 text-[#c2410c] ${isRefreshingRates ? 'animate-spin' : ''}`} />
+                  <span>Sync Rates</span>
+                </button>
+              </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {currencies.map((c) => {
                   const isSelected = preferences.currency === c;

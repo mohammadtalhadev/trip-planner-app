@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Sparkles,
   Calendar,
   Users,
   Search,
   X,
   ChevronLeft,
   ChevronRight,
-  ShieldCheck,
   Check,
   Compass,
   Globe2,
@@ -727,7 +725,7 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                   onClick={handleInspireRoute}
                   className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Compass className="w-3.5 h-3.5" />
                   <span>Inspire your route</span>
                 </button>
               </div>
@@ -1125,14 +1123,50 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
                 </div>
               </div>
 
+              {/* Manual Budget Input */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between">
+                  <label className="block text-[11px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    Type Budget Manually
+                  </label>
+                  <span className="text-[10px] font-mono text-slate-400">
+                    Exact Amount
+                  </span>
+                </div>
+                <div className="relative flex items-center">
+                  <span className="absolute left-3.5 font-mono font-bold text-slate-400 dark:text-slate-500 text-sm">
+                    {CURRENCY_SYMBOLS[currency]}
+                  </span>
+                  <input
+                    type="number"
+                    min="1"
+                    step="50"
+                    value={budget || ''}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value, 10);
+                      setBudget(isNaN(val) ? 0 : Math.max(0, val));
+                    }}
+                    placeholder="Enter custom budget..."
+                    className="w-full pl-9 pr-14 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none focus:ring-2 focus:ring-[#c2410c] focus:bg-white dark:focus:bg-slate-800 transition-all"
+                  />
+                  <span className="absolute right-3.5 font-mono text-[11px] text-slate-400 dark:text-slate-500 font-semibold">
+                    {currency}
+                  </span>
+                </div>
+              </div>
+
               {/* Range Slider */}
               <div className="space-y-2">
+                <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 dark:text-slate-500">
+                  <span>Quick Slider</span>
+                  <span>Range: $500 – $20k+</span>
+                </div>
                 <input
                   type="range"
                   min="500"
                   max="20000"
                   step="100"
-                  value={budget}
+                  value={Math.min(20000, Math.max(500, budget))}
                   onChange={(e) => setBudget(parseInt(e.target.value, 10))}
                   className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#c2410c] dark:accent-[#ea580c]"
                 />
@@ -1222,19 +1256,49 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
               </div>
             </div>
 
-            {/* ESTIMATED DISCOVERY INDEX CARD */}
-            <div className="relative rounded-3xl overflow-hidden shadow-lg group">
-              <img
-                src={coverImage}
-                alt="Curated Travel"
-                className="w-full h-44 object-cover object-center group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent p-5 flex flex-col justify-end">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-400">
-                  ESTIMATED DISCOVERY INDEX
+            {/* TRIP DISCOVERY & HIGHLIGHTS PREVIEW */}
+            <div className="rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/90 shadow-frost overflow-hidden space-y-3 p-5">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <Compass className="w-4 h-4 text-[#c2410c]" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                    Trip Discovery Highlights
+                  </span>
+                </div>
+                <span className="text-[11px] font-mono font-semibold text-slate-500 dark:text-slate-400">
+                  {totalDays} Days • ~{totalDays * 3} Stops
                 </span>
-                <div className="text-white text-base sm:text-lg font-black tracking-tight mt-1">
-                  {getDiscoveryIndexHeadline()}
+              </div>
+
+              <div className="relative rounded-2xl overflow-hidden shadow-sm group h-36">
+                <img
+                  src={coverImage}
+                  alt={selectedHubs[0]?.city || 'Destination'}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent p-4 flex flex-col justify-end">
+                  <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-orange-300">
+                    {selectedHubs.map((h) => h.city).join(' & ') || 'Custom Route'}
+                  </div>
+                  <div className="text-white text-sm sm:text-base font-bold tracking-tight">
+                    {getDiscoveryIndexHeadline()}
+                  </div>
+                </div>
+              </div>
+
+              {/* Dynamic Metrics */}
+              <div className="grid grid-cols-2 gap-2 text-xs pt-1">
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+                  <div className="text-[10px] font-mono text-slate-400 uppercase">Daily Budget</div>
+                  <div className="font-bold text-slate-800 dark:text-slate-100 mt-0.5">
+                    {CURRENCY_SYMBOLS[currency]}{perDayBudget} / day
+                  </div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+                  <div className="text-[10px] font-mono text-slate-400 uppercase">Selected Vibe</div>
+                  <div className="font-bold text-slate-800 dark:text-slate-100 mt-0.5 truncate">
+                    {selectedVibes.slice(0, 2).join(', ') || 'Custom Route'}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1242,31 +1306,24 @@ export const CreateJourneyForm: React.FC<CreateJourneyFormProps> = ({
         </div>
 
         {/* BOTTOM FOOTER BAR */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200/80 dark:border-slate-800">
-          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            <span>Automatic offline syncing enabled • Encrypted storage</span>
-          </div>
+        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-slate-200/80 dark:border-slate-800">
+          <button
+            type="button"
+            onClick={handleSaveDraft}
+            className="w-full sm:w-auto px-5 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/60 font-bold text-xs text-slate-700 dark:text-slate-200 transition-colors shadow-xs"
+          >
+            Save as Draft
+          </button>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <button
-              type="button"
-              onClick={handleSaveDraft}
-              className="flex-1 sm:flex-none px-5 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/60 font-bold text-xs text-slate-700 dark:text-slate-200 transition-colors shadow-xs"
-            >
-              Save as Draft
-            </button>
-
-            <button
-              type="button"
-              disabled={isGenerating}
-              onClick={handleGenerateSmartItinerary}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-7 py-3 rounded-2xl bg-[#c2410c] hover:bg-[#b91c1c] active:bg-[#9a3412] text-white font-bold text-sm shadow-lg shadow-orange-600/25 transition-all hover:scale-[1.02] disabled:opacity-50"
-            >
-              <Sparkles className="w-4 h-4 text-amber-200" />
-              <span>{isGenerating ? 'Building Itinerary...' : 'Generate Itinerary'}</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            disabled={isGenerating}
+            onClick={handleGenerateSmartItinerary}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-2xl bg-[#c2410c] hover:bg-[#b91c1c] active:bg-[#9a3412] text-white font-bold text-sm shadow-lg shadow-orange-600/25 transition-all hover:scale-[1.02] disabled:opacity-50"
+          >
+            <Compass className="w-4 h-4 text-amber-200" />
+            <span>{isGenerating ? 'Building Itinerary...' : 'Generate Itinerary'}</span>
+          </button>
         </div>
       </div>
     </div>
