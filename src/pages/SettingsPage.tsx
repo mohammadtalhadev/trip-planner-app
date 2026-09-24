@@ -385,12 +385,9 @@ export const SettingsPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Calculator className="w-4 h-4 text-[#c2410c]" />
                   <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider font-mono">
-                    Real-Time Currency Calculator
+                    Currency Calculator
                   </h4>
                 </div>
-                <span className="text-[10px] font-mono text-slate-400">
-                  Live API Conversion
-                </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">

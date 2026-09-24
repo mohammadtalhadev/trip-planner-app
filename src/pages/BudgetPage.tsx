@@ -296,7 +296,7 @@ export const BudgetPage: React.FC = () => {
             <div className="flex items-center gap-2">
               <Calculator className="w-4 h-4 text-[#c2410c]" />
               <h4 className="font-serif font-bold text-sm text-slate-900 dark:text-white">
-                Live Currency Exchange Calculator
+                Currency Calculator
               </h4>
             </div>
             <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
