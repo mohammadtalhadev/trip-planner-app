@@ -175,7 +175,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
       : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
 
   return (
-    <nav className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-full border border-slate-200/90 dark:border-slate-800 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4 relative transition-colors duration-200">
+    <nav className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-full border border-slate-200/90 dark:border-slate-800 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] px-3 sm:px-4 lg:px-3.5 xl:px-5 py-2 sm:py-2 flex items-center justify-between gap-2 lg:gap-2 xl:gap-3.5 relative transition-colors duration-200">
       {/* LEFT SECTION: Logo, Brand Text & Header Search Bar */}
       <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
         <Link
@@ -200,13 +200,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           <form
             onSubmit={handleSearchSubmit}
             className={cn(
-              'flex items-center rounded-full bg-[#f1f5f9] dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 px-3.5 py-1.5 transition-all duration-200',
+              'flex items-center rounded-full bg-[#f1f5f9] dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 px-3 py-1.5 transition-all duration-200',
               isSearchFocused
                 ? 'ring-2 ring-[#ff5a36]/25 border-[#ff5a36] bg-white dark:bg-slate-800 shadow-xs'
                 : 'hover:border-slate-300 dark:hover:border-slate-600'
             )}
           >
-            <Search className="w-3.5 h-3.5 text-slate-400 shrink-0 mr-2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 shrink-0 mr-1.5" />
             <input
               ref={searchInputRef}
               type="text"
@@ -214,9 +214,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
               placeholder="Search places..."
-              className="bg-transparent text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none w-24 sm:w-32 md:w-36 lg:w-44 transition-all"
+              className="bg-transparent text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none w-20 sm:w-28 md:w-32 lg:w-24 xl:w-36 2xl:w-44 focus:w-32 lg:focus:w-36 xl:focus:w-48 transition-all"
             />
-            <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-medium text-slate-400 dark:text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md shadow-2xs select-none ml-1.5 shrink-0">
+            <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-medium text-slate-400 dark:text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md shadow-2xs select-none ml-1.5 shrink-0">
               ⌘K
             </kbd>
           </form>
@@ -261,12 +261,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
       </div>
 
       {/* CENTER SECTION: Segmented Pill Navigation Tabs */}
-      <div className="hidden lg:flex items-center bg-[#f1f5f9] dark:bg-slate-800/85 p-1 rounded-full border border-slate-200/60 dark:border-slate-700/60">
+      <div className="hidden lg:flex items-center bg-[#f1f5f9] dark:bg-slate-800/85 p-1 rounded-full border border-slate-200/60 dark:border-slate-700/60 shrink-0">
         {/* Discover */}
         <Link
           to="/"
           className={cn(
-            'text-xs px-4 py-1.5 rounded-full transition-all duration-150',
+            'text-xs px-2.5 xl:px-3.5 2xl:px-4 py-1.5 rounded-full transition-all duration-150 shrink-0',
             isDiscoverActive
               ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
               : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
@@ -279,7 +279,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         <Link
           to={itineraryLink}
           className={cn(
-            'text-xs px-4 py-1.5 rounded-full transition-all duration-150',
+            'text-xs px-2.5 xl:px-3.5 2xl:px-4 py-1.5 rounded-full transition-all duration-150 shrink-0',
             isItineraryActive
               ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
               : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
@@ -293,7 +293,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           to={budgetLink}
           title="Budget"
           className={cn(
-            'text-xs px-4 py-1.5 rounded-full transition-all duration-150',
+            'text-xs px-2.5 xl:px-3.5 2xl:px-4 py-1.5 rounded-full transition-all duration-150 shrink-0',
             isBudgetActive
               ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
               : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
@@ -307,7 +307,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           <Link
             to="/saved"
             className={cn(
-              'text-xs px-4 py-1.5 rounded-full transition-all duration-150 flex items-center gap-1.5',
+              'text-xs px-2.5 xl:px-3.5 2xl:px-4 py-1.5 rounded-full transition-all duration-150 flex items-center gap-1.5 shrink-0',
               isSavedActive
                 ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
                 : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
@@ -333,7 +333,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         <Link
           to="/settings"
           className={cn(
-            'text-xs px-4 py-1.5 rounded-full transition-all duration-150',
+            'text-xs px-2.5 xl:px-3.5 2xl:px-4 py-1.5 rounded-full transition-all duration-150 shrink-0',
             isSettingsActive
               ? 'bg-[#ff5a36] text-white font-semibold shadow-xs'
               : 'text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
@@ -344,7 +344,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
       </div>
 
       {/* RIGHT SECTION: Notification Bell with Blue Dot, User Avatar with Coral Ring, & Start Planning CTA */}
-      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+      <div className="flex items-center gap-1.5 lg:gap-1.5 xl:gap-2.5 shrink-0">
         {/* Quick Preferred Currency Selector Pill */}
         <div ref={currencyRef} className="relative">
           <button
@@ -710,10 +710,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
             if (onOpenCreateTrip) onOpenCreateTrip();
             else navigate('/trips/new');
           }}
-          className="group hidden sm:inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 border border-slate-200/90 dark:border-slate-700/90 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-semibold text-xs sm:text-sm shadow-2xs hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-50/90 dark:hover:bg-slate-750 hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer"
+          className="group hidden sm:inline-flex items-center gap-1.5 xl:gap-2 px-3 py-1.5 lg:px-3 lg:py-2 xl:px-4.5 xl:py-2.5 border border-slate-200/90 dark:border-slate-700/90 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-semibold text-xs xl:text-sm whitespace-nowrap shrink-0 shadow-2xs hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-50/90 dark:hover:bg-slate-750 hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer"
         >
-          <span>Start Planning Free</span>
-          <ArrowRight className="w-4 h-4 text-slate-700 dark:text-slate-300 transition-transform duration-200 ease-out group-hover:translate-x-1.5" />
+          <span className="hidden xl:inline">Start Planning Free</span>
+          <span className="inline xl:hidden">Start Planning</span>
+          <ArrowRight className="w-3.5 h-3.5 xl:w-4 xl:h-4 text-slate-700 dark:text-slate-300 transition-transform duration-200 ease-out group-hover:translate-x-1" />
         </button>
 
         {/* Mobile Hamburger Menu Toggle */}

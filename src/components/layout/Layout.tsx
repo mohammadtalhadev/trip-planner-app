@@ -11,7 +11,7 @@ export const Layout: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-[#f6f8fd] dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100 transition-colors duration-200">
       {/* Floating Header Capsule */}
-      <header className="sticky top-3.5 z-40 w-full px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <header className="sticky top-3.5 z-40 w-full px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl mx-auto">
         <Navbar onOpenCreateTrip={() => setIsCreateModalOpen(true)} />
       </header>
 
