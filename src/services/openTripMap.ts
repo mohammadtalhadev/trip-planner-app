@@ -302,6 +302,9 @@ async function processAndEnrichPlaces(
   return enriched;
 }
 
+// In-memory cache for ultra-fast attractions loading
+const ATTRACTIONS_CACHE = new Map<string, AttractionPlace[]>();
+
 export async function fetchAttractions(
   lat: number,
   lon: number,
@@ -310,14 +313,48 @@ export async function fetchAttractions(
 ): Promise<AttractionPlace[]> {
   const cityKey = cityName ? cityName.trim().toLowerCase() : '';
   const cityDisplayName = cityName || 'City';
+  const cacheKey = cityKey || `${lat.toFixed(2)}_${lon.toFixed(2)}`;
+
+  // 0. Instant Cache Lookup (0ms return)
+  if (ATTRACTIONS_CACHE.has(cacheKey)) {
+    return ATTRACTIONS_CACHE.get(cacheKey)!;
+  }
+  try {
+    const cached = localStorage.getItem(`tp_attractions_${cacheKey}`);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        ATTRACTIONS_CACHE.set(cacheKey, parsed);
+        return parsed;
+      }
+    }
+  } catch {}
+
+  const cacheAndReturn = (list: AttractionPlace[]) => {
+    if (list && list.length > 0) {
+      ATTRACTIONS_CACHE.set(cacheKey, list);
+      try {
+        localStorage.setItem(`tp_attractions_${cacheKey}`, JSON.stringify(list));
+      } catch {}
+    }
+    return list;
+  };
 
   // 1. Primary: Geoapify Places API v2 with &lang=en forced for English names
   if (GEOAPIFY_KEY && GEOAPIFY_KEY.trim() !== '' && GEOAPIFY_KEY !== 'your_geoapify_key_here') {
     try {
       const categories = 'tourism.sights,tourism.attraction,entertainment.museum,catering.restaurant,accommodation.hotel';
-      const geoapifyPlacesUrl = `https://api.geoapify.com/v2/places?categories=${categories}&filter=circle:${lon},${lat},15000&bias=proximity:${lon},${lat}&limit=25&lang=en&apiKey=${GEOAPIFY_KEY}`;
+      const geoapifyPlacesUrl = `https://api.geoapify.com/v2/places?categories=${categories}&filter=circle:${lon},${lat},15000&bias=proximity:${lon},${lat}&limit=20&lang=en&apiKey=${GEOAPIFY_KEY}`;
 
-      const response = await fetch(geoapifyPlacesUrl, { signal });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+      const onAbort = () => controller.abort();
+      signal?.addEventListener('abort', onAbort);
+
+      const response = await fetch(geoapifyPlacesUrl, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      signal?.removeEventListener('abort', onAbort);
       if (response.ok) {
         const data = await response.json();
         if (data.features && Array.isArray(data.features) && data.features.length > 0) {
@@ -361,7 +398,7 @@ export async function fetchAttractions(
           if (rawPlaces.length > 0) {
             const enriched = await processAndEnrichPlaces(rawPlaces, cityDisplayName);
             if (enriched.length > 0) {
-              return enriched.slice(0, 18);
+              return cacheAndReturn(enriched.slice(0, 18));
             }
           }
         }
@@ -441,7 +478,8 @@ export async function fetchAttractions(
   // 4. Curated City Fallback
   if (cityKey && CITY_FALLBACK_ATTRACTIONS[cityKey]) {
     const fallbackList = CITY_FALLBACK_ATTRACTIONS[cityKey];
-    return await processAndEnrichPlaces(fallbackList, cityDisplayName);
+    const enriched = await processAndEnrichPlaces(fallbackList, cityDisplayName);
+    return cacheAndReturn(enriched);
   }
 
   // 5. General Fallback
@@ -484,5 +522,6 @@ export async function fetchAttractions(
     },
   ];
 
-  return await processAndEnrichPlaces(generalList, cityDisplayName);
+  const enriched = await processAndEnrichPlaces(generalList, cityDisplayName);
+  return cacheAndReturn(enriched);
 }

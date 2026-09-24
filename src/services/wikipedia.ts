@@ -1,9 +1,26 @@
 import { WikipediaSummary } from '../types/api';
 
+const WIKI_CACHE = new Map<string, WikipediaSummary>();
+
 export async function fetchWikiSummary(
   cityName: string,
   signal?: AbortSignal
 ): Promise<WikipediaSummary> {
+  const cacheKey = cityName.trim().toLowerCase();
+
+  // Instant cache lookup (0ms)
+  if (WIKI_CACHE.has(cacheKey)) {
+    return WIKI_CACHE.get(cacheKey)!;
+  }
+  try {
+    const local = localStorage.getItem(`tp_wiki_${cacheKey}`);
+    if (local) {
+      const parsed = JSON.parse(local);
+      WIKI_CACHE.set(cacheKey, parsed);
+      return parsed;
+    }
+  } catch {}
+
   const cleanCity = encodeURIComponent(cityName.trim());
   const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${cleanCity}`;
 
@@ -23,7 +40,7 @@ export async function fetchWikiSummary(
 
   const data = await response.json();
 
-  return {
+  const result: WikipediaSummary = {
     title: data.title || cityName,
     extract: data.extract || 'No description available for this destination.',
     description: data.description,
@@ -42,4 +59,11 @@ export async function fetchWikiSummary(
         }
       : undefined,
   };
+
+  WIKI_CACHE.set(cacheKey, result);
+  try {
+    localStorage.setItem(`tp_wiki_${cacheKey}`, JSON.stringify(result));
+  } catch {}
+
+  return result;
 }

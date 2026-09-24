@@ -332,7 +332,7 @@ export async function translateToEnglishAsync(
   // 4. Query live Google Translate API
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2500);
+    const timeoutId = setTimeout(() => controller.abort(), 600);
 
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(trimmed)}`;
     const response = await fetch(url, { signal: controller.signal });

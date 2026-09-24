@@ -20,7 +20,7 @@ interface UseCitySearchResult {
  * 3. Exact request sequence counter (prevents stale responses from overwriting latest search)
  * 4. Explicit API lifecycle states (idle -> loading -> success / empty / error)
  */
-export function useCitySearch(debounceMs: number = 300): UseCitySearchResult {
+export function useCitySearch(debounceMs: number = 180): UseCitySearchResult {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GeoapifyCity[]>([]);
   const [status, setStatus] = useState<AsyncStatus | 'empty' | 'refetching'>('idle');

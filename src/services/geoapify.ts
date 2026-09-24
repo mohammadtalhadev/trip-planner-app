@@ -106,6 +106,9 @@ export const POPULAR_DESTINATIONS: GeoapifyCity[] = [
   },
 ];
 
+// In-memory cache for ultra-fast autocomplete search responses
+const CITY_SEARCH_CACHE = new Map<string, GeoapifyCity[]>();
+
 export async function searchCities(
   query: string,
   signal?: AbortSignal
@@ -115,21 +118,44 @@ export async function searchCities(
     return [];
   }
 
-  // 1. If Geoapify Key is available, use Geoapify Autocomplete API
+  const lowerQuery = trimmed.toLowerCase();
+
+  // 0. Instant Cache Lookup (0ms return)
+  if (CITY_SEARCH_CACHE.has(lowerQuery)) {
+    return CITY_SEARCH_CACHE.get(lowerQuery)!;
+  }
+
+  const cacheAndReturn = (results: GeoapifyCity[]) => {
+    if (results && results.length > 0) {
+      CITY_SEARCH_CACHE.set(lowerQuery, results);
+    }
+    return results;
+  };
+
+  // 1. If Geoapify Key is available, use Geoapify Autocomplete API with 1.8s timeout
   if (GEOAPIFY_KEY && GEOAPIFY_KEY.trim() !== '' && GEOAPIFY_KEY !== 'your_geoapify_key_here') {
     try {
       const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
         trimmed
       )}&type=city&apiKey=${GEOAPIFY_KEY}`;
 
-      const response = await fetch(url, { signal });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1800);
+
+      const onAbort = () => controller.abort();
+      signal?.addEventListener('abort', onAbort);
+
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      signal?.removeEventListener('abort', onAbort);
+
       if (!response.ok) {
         throw new Error(`Geoapify error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
-      if (data.features && Array.isArray(data.features)) {
-        return data.features.map((feature: any, index: number) => ({
+      if (data.features && Array.isArray(data.features) && data.features.length > 0) {
+        const results = data.features.map((feature: any, index: number) => ({
           id: feature.properties.place_id || `geo-${index}-${feature.properties.lat}`,
           city: feature.properties.city || feature.properties.name || trimmed,
           country: feature.properties.country || '',
@@ -139,12 +165,13 @@ export async function searchCities(
           lon: feature.properties.lon,
           state: feature.properties.state,
         }));
+        return cacheAndReturn(results);
       }
     } catch (err: any) {
-      if (err.name === 'AbortError') {
+      if (err.name === 'AbortError' && signal?.aborted) {
         throw err;
       }
-      console.warn('Geoapify request failed, falling back to OpenStreetMap / curated search', err);
+      console.warn('Geoapify request timed out or failed, falling back to instant search', err);
     }
   }
 
@@ -154,17 +181,25 @@ export async function searchCities(
       trimmed
     )}&format=json&addressdetails=1&limit=6`;
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1200);
+
+    const onAbort = () => controller.abort();
+    signal?.addEventListener('abort', onAbort);
+
     const response = await fetch(osmUrl, {
-      signal,
+      signal: controller.signal,
       headers: {
         'Accept-Language': 'en',
       },
     });
+    clearTimeout(timeoutId);
+    signal?.removeEventListener('abort', onAbort);
 
     if (response.ok) {
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
-        return data.map((item: any) => {
+        const results = data.map((item: any) => {
           const city =
             item.address?.city ||
             item.address?.town ||
@@ -183,21 +218,22 @@ export async function searchCities(
             state: item.address?.state,
           };
         });
+        return cacheAndReturn(results);
       }
     }
   } catch (err: any) {
-    if (err.name === 'AbortError') {
+    if (err.name === 'AbortError' && signal?.aborted) {
       throw err;
     }
     console.warn('Nominatim search failed, using local curated list', err);
   }
 
   // 3. Fallback: Filter curated popular destinations
-  const lowerQuery = trimmed.toLowerCase();
-  return POPULAR_DESTINATIONS.filter(
+  const matches = POPULAR_DESTINATIONS.filter(
     (dest) =>
       dest.city.toLowerCase().includes(lowerQuery) ||
       dest.country.toLowerCase().includes(lowerQuery) ||
       dest.formatted.toLowerCase().includes(lowerQuery)
   );
+  return cacheAndReturn(matches);
 }

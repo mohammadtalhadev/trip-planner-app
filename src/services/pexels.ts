@@ -54,12 +54,39 @@ const GENERIC_TRAVEL_PHOTOS = [
   'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
 ];
 
+const PHOTOS_CACHE = new Map<string, PexelsPhoto[]>();
+
 export async function fetchDestinationPhotos(
   cityName: string,
   signal?: AbortSignal
 ): Promise<PexelsPhoto[]> {
   const trimmed = cityName.trim();
   const cityKey = trimmed.toLowerCase();
+
+  // Instant cache lookup (0ms)
+  if (PHOTOS_CACHE.has(cityKey)) {
+    return PHOTOS_CACHE.get(cityKey)!;
+  }
+  try {
+    const local = localStorage.getItem(`tp_photos_${cityKey}`);
+    if (local) {
+      const parsed = JSON.parse(local);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        PHOTOS_CACHE.set(cityKey, parsed);
+        return parsed;
+      }
+    }
+  } catch {}
+
+  const cacheAndReturn = (photos: PexelsPhoto[]) => {
+    if (photos && photos.length > 0) {
+      PHOTOS_CACHE.set(cityKey, photos);
+      try {
+        localStorage.setItem(`tp_photos_${cityKey}`, JSON.stringify(photos));
+      } catch {}
+    }
+    return photos;
+  };
 
   // 1. Try Pexels API if key is available
   if (PEXELS_KEY && PEXELS_KEY.trim() !== '' && PEXELS_KEY !== 'your_pexels_key_here') {
@@ -81,7 +108,7 @@ export async function fetchDestinationPhotos(
 
       const data = await response.json();
       if (data.photos && Array.isArray(data.photos) && data.photos.length > 0) {
-        return data.photos.map((p: any) => ({
+        const list = data.photos.map((p: any) => ({
           id: p.id,
           url: p.url,
           src: {
@@ -94,6 +121,7 @@ export async function fetchDestinationPhotos(
           alt: p.alt || `${trimmed} photography`,
           photographer: p.photographer || 'Pexels Contributor',
         }));
+        return cacheAndReturn(list);
       }
     } catch (err: any) {
       if (err.name === 'AbortError') {
@@ -106,7 +134,7 @@ export async function fetchDestinationPhotos(
   // 2. Fallback to curated city photos
   const photoUrls = CITY_FALLBACK_PHOTOS[cityKey] || GENERIC_TRAVEL_PHOTOS;
 
-  return photoUrls.map((url, idx) => ({
+  const fallbackList = photoUrls.map((url, idx) => ({
     id: 900000 + idx,
     url,
     src: {
@@ -119,4 +147,6 @@ export async function fetchDestinationPhotos(
     alt: `${trimmed} travel scenery`,
     photographer: 'Unsplash Community',
   }));
+
+  return cacheAndReturn(fallbackList);
 }
