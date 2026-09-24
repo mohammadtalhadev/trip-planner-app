@@ -7,7 +7,6 @@ import {
   Compass,
   Sunset,
   Bookmark,
-  Sparkles,
   Clock,
   Umbrella,
 } from 'lucide-react';
@@ -19,7 +18,7 @@ import { ActivityCard } from './ActivityCard';
 import { ActivityModal } from './ActivityModal';
 import { MoveActivityModal } from './MoveActivityModal';
 import { formatDayOfWeek, formatDateShort } from '../../utils/date';
-import { formatCurrency } from '../../utils/currency';
+import { useCurrency } from '../../hooks/useCurrency';
 
 interface ItineraryBuilderProps {
   trip: Trip;
@@ -33,6 +32,7 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({
   onAddActivityClose,
 }) => {
   const navigate = useNavigate();
+  const { format } = useCurrency();
   const [activeDayId, setActiveDayId] = useState<string>(trip.days[0]?.id || '');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
@@ -241,7 +241,7 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({
     setQuickAddTitle('');
   };
 
-  const handleGenerateAiDayPlan = (targetDayId: string) => {
+  const handlePrefillCuratedActivities = (targetDayId: string) => {
     const dest = trip.destination || 'the city';
     const day = trip.days.find((d) => d.id === targetDayId) || activeDay;
     if (!day) return;
@@ -581,11 +581,11 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({
 
               <button
                 type="button"
-                onClick={() => handleGenerateAiDayPlan(freeDay.id)}
+                onClick={() => handlePrefillCuratedActivities(freeDay.id)}
                 className="inline-flex items-center gap-1.5 text-xs text-[#c2410c] dark:text-orange-400 hover:underline font-semibold cursor-pointer pt-1"
               >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Generate AI Day Plan</span>
+                <Compass className="w-3.5 h-3.5" />
+                <span>Add Curated Day Activities</span>
               </button>
             </div>
           </div>
@@ -598,10 +598,10 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({
               </span>
               <div className="flex items-baseline justify-between mt-1.5">
                 <span className="text-2xl sm:text-3xl font-serif font-black text-slate-900 dark:text-white tracking-tight">
-                  {formatCurrency(totalSpent, trip.currency)}
+                  {format(totalSpent, trip.currency)}
                 </span>
                 <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">
-                  of {formatCurrency(budgetTarget, trip.currency)} target
+                  of {format(budgetTarget, trip.currency)} target
                 </span>
               </div>
             </div>
@@ -611,17 +611,17 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({
               <div
                 style={{ width: `${lodgingPct}%` }}
                 className="h-full bg-indigo-500 transition-all duration-500"
-                title={`Lodging: ${formatCurrency(lodgingCost, trip.currency)}`}
+                title={`Lodging: ${format(lodgingCost, trip.currency)}`}
               />
               <div
                 style={{ width: `${stopsPct}%` }}
                 className="h-full bg-sky-400 transition-all duration-500"
-                title={`Stops: ${formatCurrency(stopsCost, trip.currency)}`}
+                title={`Stops: ${format(stopsCost, trip.currency)}`}
               />
               <div
                 style={{ width: `${diningPct}%` }}
                 className="h-full bg-[#ff5a36] transition-all duration-500"
-                title={`Dining: ${formatCurrency(diningCost, trip.currency)}`}
+                title={`Dining: ${format(diningCost, trip.currency)}`}
               />
             </div>
 
@@ -630,21 +630,21 @@ export const ItineraryBuilder: React.FC<ItineraryBuilderProps> = ({
               <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                 <span className="text-[10px] text-slate-400 block font-medium">Lodging</span>
                 <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 block mt-0.5">
-                  {formatCurrency(lodgingCost, trip.currency)}
+                  {format(lodgingCost, trip.currency)}
                 </span>
               </div>
 
               <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                 <span className="text-[10px] text-slate-400 block font-medium">Stops</span>
                 <span className="text-xs font-bold text-sky-600 dark:text-sky-400 block mt-0.5">
-                  {formatCurrency(stopsCost, trip.currency)}
+                  {format(stopsCost, trip.currency)}
                 </span>
               </div>
 
               <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                 <span className="text-[10px] text-slate-400 block font-medium">Dining</span>
                 <span className="text-xs font-bold text-[#c2410c] dark:text-orange-400 block mt-0.5">
-                  {formatCurrency(diningCost, trip.currency)}
+                  {format(diningCost, trip.currency)}
                 </span>
               </div>
             </div>

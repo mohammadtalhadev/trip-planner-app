@@ -15,12 +15,15 @@ import {
   Camera,
   LogIn,
   ArrowRight,
+  RefreshCw,
+  Calculator,
 } from 'lucide-react';
 import { usePreferencesStore } from '../store/usePreferencesStore';
 import { useUserStore } from '../store/useUserStore';
+import { useCurrency } from '../hooks/useCurrency';
 import { EditProfileModal } from '../components/user/EditProfileModal';
 import { CurrencyCode, TempUnit, ThemeMode, TravelStyle } from '../types/settings';
-import { CURRENCY_NAMES, formatCurrency } from '../utils/currency';
+import { CURRENCY_NAMES, CURRENCY_SYMBOLS } from '../utils/currency';
 import { formatTemperature } from '../utils/weatherCodes';
 
 export const SettingsPage: React.FC = () => {
@@ -35,9 +38,27 @@ export const SettingsPage: React.FC = () => {
     setTravelStyle,
   } = usePreferencesStore();
 
+  const {
+    exchangeRates,
+    ratesSource,
+    convertBetween,
+    formatRaw,
+    refreshRates,
+  } = useCurrency();
+
   const [savedNotice, setSavedNotice] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [modalTab, setModalTab] = useState<'profile' | 'password'>('profile');
+
+  // Currency Converter Tool State
+  const [calcAmount, setCalcAmount] = useState<number>(100);
+  const [calcFrom, setCalcFrom] = useState<CurrencyCode>('USD');
+  const [calcTo, setCalcTo] = useState<CurrencyCode>(preferences.currency);
+  const [isRefreshingRates, setIsRefreshingRates] = useState(false);
+
+  useEffect(() => {
+    setCalcTo(preferences.currency);
+  }, [preferences.currency]);
 
   useEffect(() => {
     if (location.state && (location.state as { openEditProfile?: boolean }).openEditProfile) {
@@ -293,37 +314,143 @@ export const SettingsPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-4 pt-1">
+          <div className="space-y-5 pt-1">
+            {/* Live Exchange API Status & Refresh Header */}
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  Live Exchange Rate API ({ratesSource})
+                </span>
+                <span className="hidden sm:inline text-slate-400 font-mono text-[11px]">
+                  • open.er-api.com
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={async () => {
+                  setIsRefreshingRates(true);
+                  await refreshRates();
+                  setTimeout(() => setIsRefreshingRates(false), 500);
+                  triggerSavedNotice();
+                }}
+                disabled={isRefreshingRates}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium transition-colors"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 text-[#c2410c] ${isRefreshingRates ? 'animate-spin' : ''}`} />
+                <span>Sync Live Rates</span>
+              </button>
+            </div>
+
             {/* Currency Selector */}
             <div>
               <label className="block text-[11px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-2">
-                Preferred Currency
+                Preferred Currency (propagates across all trips & budgets)
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {currencies.map((c) => {
                   const isSelected = preferences.currency === c;
+                  const rateVal = exchangeRates[c] || 1;
                   return (
                     <button
                       key={c}
                       onClick={() => handleCurrencyChange(c)}
-                      className={`p-3 rounded-2xl border text-left flex items-center justify-between transition-all ${
+                      className={`p-3 rounded-2xl border text-left flex flex-col justify-between gap-1 transition-all ${
                         isSelected
                           ? 'border-[#c2410c] bg-[#c2410c] text-white font-bold shadow-md shadow-orange-600/20'
                           : 'border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'
                       }`}
                     >
-                      <div>
+                      <div className="flex items-center justify-between w-full">
                         <span className="text-xs font-mono font-bold block">{c}</span>
-                        <span className={`text-[10px] truncate block ${isSelected ? 'text-orange-100' : 'text-slate-400'}`}>
-                          {CURRENCY_NAMES[c].split(' ')[0]}
+                        <span className={`text-sm font-mono font-bold ${isSelected ? 'text-orange-100' : 'text-slate-400'}`}>
+                          {CURRENCY_SYMBOLS[c]}
                         </span>
                       </div>
-                      <span className={`text-sm font-mono font-bold ${isSelected ? 'text-orange-100' : 'text-slate-400'}`}>
-                        {formatCurrency(100, c).charAt(0)}
+                      <span className={`text-[10px] truncate block ${isSelected ? 'text-orange-100' : 'text-slate-400'}`}>
+                        {CURRENCY_NAMES[c].split(' ')[0]}
+                      </span>
+                      <span className={`text-[9px] font-mono block ${isSelected ? 'text-orange-200' : 'text-slate-400'}`}>
+                        1 USD = {rateVal.toFixed(c === 'JPY' ? 0 : 2)} {c}
                       </span>
                     </button>
                   );
                 })}
+              </div>
+            </div>
+
+            {/* INTERACTIVE REAL-TIME CURRENCY CONVERTER */}
+            <div className="p-4 rounded-2xl bg-orange-50/40 dark:bg-slate-800/40 border border-orange-200/60 dark:border-slate-700/80 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Calculator className="w-4 h-4 text-[#c2410c]" />
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider font-mono">
+                    Real-Time Currency Calculator
+                  </h4>
+                </div>
+                <span className="text-[10px] font-mono text-slate-400">
+                  Live API Conversion
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+                <div>
+                  <label className="block text-[10px] font-mono text-slate-500 mb-1">
+                    Amount
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    value={calcAmount || ''}
+                    onChange={(e) => setCalcAmount(parseFloat(e.target.value) || 0)}
+                    placeholder="100"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-mono font-bold focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-mono text-slate-500 mb-1">
+                    From
+                  </label>
+                  <select
+                    value={calcFrom}
+                    onChange={(e) => setCalcFrom(e.target.value as CurrencyCode)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold focus:outline-none"
+                  >
+                    {currencies.map((c) => (
+                      <option key={c} value={c}>
+                        {c} ({CURRENCY_SYMBOLS[c]})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-mono text-slate-500 mb-1">
+                    To
+                  </label>
+                  <select
+                    value={calcTo}
+                    onChange={(e) => setCalcTo(e.target.value as CurrencyCode)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold focus:outline-none"
+                  >
+                    {currencies.map((c) => (
+                      <option key={c} value={c}>
+                        {c} ({CURRENCY_SYMBOLS[c]})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col justify-center">
+                  <span className="text-[10px] text-slate-400 font-mono uppercase block">
+                    Result
+                  </span>
+                  <span className="text-sm font-mono font-black text-[#c2410c] dark:text-orange-400 truncate">
+                    {formatRaw(convertBetween(calcAmount || 0, calcFrom, calcTo), calcTo)}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -357,10 +484,10 @@ export const SettingsPage: React.FC = () => {
             </div>
 
             {/* Live Preview Card */}
-            <div className="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 flex items-center justify-between text-xs">
+            <div className="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
               <span className="text-slate-500 font-mono text-[11px]">Format Preview:</span>
-              <div className="flex items-center gap-4 font-mono font-bold text-slate-800 dark:text-slate-200">
-                <span>Budget: {formatCurrency(2500, preferences.currency)}</span>
+              <div className="flex items-center gap-3 font-mono font-bold text-slate-800 dark:text-slate-200 flex-wrap">
+                <span>Budget: {formatRaw(convertBetween(2500, 'USD', preferences.currency), preferences.currency)}</span>
                 <span>•</span>
                 <span>Weather: {formatTemperature(22, preferences.tempUnit)}</span>
               </div>

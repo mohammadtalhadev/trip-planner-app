@@ -1,10 +1,16 @@
 import { create } from 'zustand';
 import { CurrencyCode, TempUnit, ThemeMode, TravelStyle, UserPreferences } from '../types/settings';
 import { getInitialActiveUserId } from './userStorageHelper';
+import { BASELINE_EXCHANGE_RATES, fetchLiveExchangeRates } from '../services/currency';
 
 export interface PreferencesState {
   preferences: UserPreferences;
   activeUserId: string;
+  exchangeRates: Record<CurrencyCode, number>;
+  ratesStatus: 'idle' | 'loading' | 'success' | 'cached' | 'fallback';
+  ratesSource: 'live' | 'cached' | 'fallback';
+  lastRatesUpdated: string;
+
   loadUserPreferences: (userId: string) => void;
   setCurrency: (currency: CurrencyCode) => void;
   setTempUnit: (unit: TempUnit) => void;
@@ -12,6 +18,7 @@ export interface PreferencesState {
   setDefaultTravelers: (count: number) => void;
   setTravelStyle: (style: TravelStyle) => void;
   applyTheme: () => void;
+  fetchRates: (forceFresh?: boolean) => Promise<void>;
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -81,6 +88,10 @@ const initialPreferences = loadStoredPreferences(initialUserId);
 export const usePreferencesStore = create<PreferencesState>((set, get) => ({
   preferences: initialPreferences,
   activeUserId: initialUserId,
+  exchangeRates: BASELINE_EXCHANGE_RATES,
+  ratesStatus: 'idle',
+  ratesSource: 'fallback',
+  lastRatesUpdated: new Date().toISOString(),
 
   loadUserPreferences: (userId: string) => {
     const prefs = loadStoredPreferences(userId);
@@ -141,7 +152,27 @@ export const usePreferencesStore = create<PreferencesState>((set, get) => ({
       document.documentElement.classList.remove('dark');
     }
   },
+
+  fetchRates: async (forceFresh = false) => {
+    set({ ratesStatus: 'loading' });
+    try {
+      const data = await fetchLiveExchangeRates(forceFresh);
+      set({
+        exchangeRates: data.rates,
+        ratesStatus: 'success',
+        ratesSource: data.source,
+        lastRatesUpdated: data.lastUpdated,
+      });
+    } catch (err) {
+      console.warn('Failed to fetch live exchange rates:', err);
+      set({
+        ratesStatus: 'fallback',
+        ratesSource: 'fallback',
+      });
+    }
+  },
 }));
 
-// Apply theme on module load
+// Apply theme and fetch live currency rates on module initialization
 usePreferencesStore.getState().applyTheme();
+usePreferencesStore.getState().fetchRates(false);

@@ -14,12 +14,11 @@ import {
   Train,
   Bed,
   ShoppingBag,
-  Sparkles,
   Pin,
 } from 'lucide-react';
 import { Activity, ActivityCategory } from '../../types/trip';
-import { formatCurrency } from '../../utils/currency';
 import { formatTime12Hour } from '../../utils/date';
+import { useCurrency } from '../../hooks/useCurrency';
 
 interface ActivityCardProps {
   activity: Activity;
@@ -53,6 +52,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = memo(
     onDragOver,
     onDrop,
   }) => {
+    const { format } = useCurrency();
     const [isPinned, setIsPinned] = useState(false);
 
     // Duration calculation or estimated duration
@@ -117,7 +117,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = memo(
         default:
           return {
             label: 'Activity',
-            icon: Sparkles,
+            icon: Compass,
             color: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700',
           };
       }
@@ -192,7 +192,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = memo(
                 {/* Cost Tag */}
                 {activity.cost !== undefined && activity.cost > 0 ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200/80 dark:border-stone-700">
-                    <span>{formatCurrency(activity.cost, currency)}</span>
+                    <span>{format(activity.cost, currency)}</span>
                   </span>
                 ) : (
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/80">

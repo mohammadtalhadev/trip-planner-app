@@ -19,12 +19,16 @@ import {
   UserCog,
   UserPlus,
   ArrowRight,
+  ChevronDown,
+  Check,
 } from 'lucide-react';
 import { usePreferencesStore } from '../../store/usePreferencesStore';
 import { useSavedPlacesStore } from '../../store/useSavedPlacesStore';
 import { useTripStore } from '../../store/useTripStore';
 import { useUserStore } from '../../store/useUserStore';
 import { POPULAR_DESTINATIONS } from '../../services/geoapify';
+import { CurrencyCode } from '../../types/settings';
+import { CURRENCY_SYMBOLS } from '../../utils/currency';
 import { cn } from '../../utils/cn';
 
 interface NavbarProps {
@@ -36,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
   const location = useLocation();
 
   // Stores
-  const { preferences, setTheme } = usePreferencesStore();
+  const { preferences, setTheme, setCurrency } = usePreferencesStore();
   const savedPlaces = useSavedPlacesStore((state) => state.savedPlaces);
   const { trips, currentTripId } = useTripStore();
   const {
@@ -52,12 +56,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isCurrencyMenuOpen, setIsCurrencyMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const currencyRef = useRef<HTMLDivElement>(null);
 
   // Unread notifications count
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -87,6 +93,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         setIsSearchFocused(false);
         setIsNotificationsOpen(false);
         setIsProfileOpen(false);
+        setIsCurrencyMenuOpen(false);
         searchInputRef.current?.blur();
       }
     };
@@ -115,6 +122,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
         !profileRef.current.contains(e.target as Node)
       ) {
         setIsProfileOpen(false);
+      }
+      if (
+        currencyRef.current &&
+        !currencyRef.current.contains(e.target as Node)
+      ) {
+        setIsCurrencyMenuOpen(false);
       }
     };
 
@@ -182,8 +195,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           </span>
         </Link>
 
-        {/* Integrated Search Bar with ⌘K shortcut */}
-        <div ref={searchContainerRef} className="relative">
+        {/* Integrated Search Bar with ⌘K shortcut (Hidden on mobile to preserve compact navbar) */}
+        <div ref={searchContainerRef} className="relative hidden md:block">
           <form
             onSubmit={handleSearchSubmit}
             className={cn(
@@ -331,13 +344,62 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
       </div>
 
       {/* RIGHT SECTION: Notification Bell with Blue Dot, User Avatar with Coral Ring, & Start Planning CTA */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        {/* Quick Preferred Currency Selector Pill */}
+        <div ref={currencyRef} className="relative">
+          <button
+            type="button"
+            onClick={() => setIsCurrencyMenuOpen((prev) => !prev)}
+            className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-full flex items-center gap-1 bg-[#f1f5f9] dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 text-slate-700 dark:text-slate-200 ring-1 ring-slate-200/70 dark:ring-slate-700/80 transition-colors text-[11px] font-mono font-bold cursor-pointer"
+            title={`Active Currency: ${preferences.currency} (Click to switch)`}
+          >
+            <span className="text-[#ff5a36] font-bold">{CURRENCY_SYMBOLS[preferences.currency]}</span>
+            <span>{preferences.currency}</span>
+            <ChevronDown className="w-3 h-3 text-slate-400" />
+          </button>
+
+          {isCurrencyMenuOpen && (
+            <div className="absolute right-0 top-full mt-2 w-44 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                Preferred Currency
+              </div>
+              <div className="space-y-0.5 mt-0.5">
+                {(['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'INR'] as CurrencyCode[]).map((c) => {
+                  const isSelected = preferences.currency === c;
+                  return (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => {
+                        setCurrency(c);
+                        setIsCurrencyMenuOpen(false);
+                      }}
+                      className={cn(
+                        'w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-mono transition-colors text-left cursor-pointer',
+                        isSelected
+                          ? 'bg-[#ff5a36] text-white font-bold'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      )}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold">{CURRENCY_SYMBOLS[c]}</span>
+                        <span>{c}</span>
+                      </div>
+                      {isSelected && <Check className="w-3.5 h-3.5" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Display Environment (Theme Mode) Quick Toggle Button */}
         <button
           type="button"
           onClick={toggleTheme}
           className={cn(
-            'w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-200 relative group cursor-pointer',
+            'w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-200 relative group cursor-pointer',
             preferences.theme === 'dark'
               ? 'bg-slate-800 text-amber-400 hover:bg-slate-700 hover:text-amber-300 ring-1 ring-slate-700/80 shadow-xs'
               : 'bg-[#f1f5f9] text-slate-700 hover:bg-slate-200/80 hover:text-slate-900 ring-1 ring-slate-200/70 shadow-2xs'
@@ -346,9 +408,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCreateTrip }) => {
           title={preferences.theme === 'dark' ? 'Display Environment: Dark (Switch to Light Mode)' : 'Display Environment: Light (Switch to Dark Mode)'}
         >
           {preferences.theme === 'dark' ? (
-            <Sun className="w-4 h-4 transition-transform duration-300 group-hover:rotate-45" />
+            <Sun className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-45" />
           ) : (
-            <Moon className="w-4 h-4 transition-transform duration-300 group-hover:-rotate-12" />
+            <Moon className="w-3.5 h-3.5 transition-transform duration-300 group-hover:-rotate-12" />
           )}
         </button>
 

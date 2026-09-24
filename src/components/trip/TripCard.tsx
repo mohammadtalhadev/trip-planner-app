@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Calendar, Users, MapPin, CheckCircle2, DollarSign, Trash2, ArrowRight } from 'lucide-react';
 import { Trip } from '../../types/trip';
 import { formatDateShort } from '../../utils/date';
-import { formatCurrency } from '../../utils/currency';
+import { useCurrency } from '../../hooks/useCurrency';
 
 interface TripCardProps {
   trip: Trip;
@@ -11,6 +11,7 @@ interface TripCardProps {
 }
 
 export const TripCard: React.FC<TripCardProps> = memo(({ trip, onDelete }) => {
+  const { format } = useCurrency();
   // Compute activity stats
   const stats = useMemo(() => {
     let totalActivities = 0;
@@ -114,14 +115,14 @@ export const TripCard: React.FC<TripCardProps> = memo(({ trip, onDelete }) => {
               <div>
                 <span className="text-slate-400 block text-[10px] uppercase tracking-wider font-semibold">Spent</span>
                 <span className="font-mono font-semibold text-slate-800 dark:text-slate-200">
-                  {formatCurrency(stats.totalSpent, trip.currency)}
+                  {format(stats.totalSpent, trip.currency)}
                 </span>
               </div>
             </div>
             <div className="text-right">
               <span className="text-slate-400 block text-[10px] uppercase tracking-wider font-semibold">Budget</span>
               <span className="font-mono font-semibold text-slate-800 dark:text-slate-200">
-                {formatCurrency(trip.budget, trip.currency)}
+                {format(trip.budget, trip.currency)}
               </span>
             </div>
           </div>

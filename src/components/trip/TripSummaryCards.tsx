@@ -1,13 +1,14 @@
 import React from 'react';
 import { Calendar, CheckCircle2, DollarSign, Clock, MapPin } from 'lucide-react';
 import { Trip } from '../../types/trip';
-import { formatCurrency } from '../../utils/currency';
+import { useCurrency } from '../../hooks/useCurrency';
 
 interface TripSummaryCardsProps {
   trip: Trip;
 }
 
 export const TripSummaryCards: React.FC<TripSummaryCardsProps> = ({ trip }) => {
+  const { format } = useCurrency();
   // Aggregate stats from actual state
   let totalActivities = 0;
   let completedActivities = 0;
@@ -100,14 +101,14 @@ export const TripSummaryCards: React.FC<TripSummaryCardsProps> = ({ trip }) => {
             </div>
           </div>
           <div className="text-base sm:text-lg font-mono font-bold text-stone-900 dark:text-stone-100 truncate">
-            {formatCurrency(totalSpent, trip.currency)}{' '}
+            {format(totalSpent, trip.currency)}{' '}
             <span className="text-xs font-normal text-stone-400">
-              / {formatCurrency(trip.budget, trip.currency)}
+              / {format(trip.budget, trip.currency)}
             </span>
           </div>
           <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 font-sans">
             {trip.budget >= totalSpent
-              ? `${formatCurrency(trip.budget - totalSpent, trip.currency)} remaining`
+              ? `${format(trip.budget - totalSpent, trip.currency)} remaining`
               : 'Budget exceeded'}
           </p>
         </div>
@@ -157,7 +158,7 @@ export const TripSummaryCards: React.FC<TripSummaryCardsProps> = ({ trip }) => {
                 <div className="flex items-center gap-3 shrink-0">
                   {act.cost ? (
                     <span className="text-xs font-mono font-medium text-stone-700 dark:text-stone-300">
-                      {formatCurrency(act.cost, trip.currency)}
+                      {format(act.cost, trip.currency)}
                     </span>
                   ) : null}
                   <span

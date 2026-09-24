@@ -13,10 +13,11 @@ import {
 import { useTripStore } from '../store/useTripStore';
 import { TripSummaryCards } from '../components/trip/TripSummaryCards';
 import { formatDateShort } from '../utils/date';
-import { formatCurrency } from '../utils/currency';
+import { useCurrency } from '../hooks/useCurrency';
 
 export const TripDashboardPage: React.FC = () => {
   const { tripId } = useParams<{ tripId: string }>();
+  const { format } = useCurrency();
 
   const trip = useTripStore((state) => state.trips.find((t) => t.id === tripId));
   const updateTrip = useTripStore((state) => state.updateTrip);
@@ -115,7 +116,7 @@ export const TripDashboardPage: React.FC = () => {
             <span>•</span>
             <span className="flex items-center gap-1.5">
               <DollarSign className="w-3.5 h-3.5 text-brand-300" />
-              Budget: {formatCurrency(trip.budget, trip.currency)}
+              Budget: {format(trip.budget, trip.currency)}
             </span>
           </div>
         </div>
@@ -184,7 +185,7 @@ export const TripDashboardPage: React.FC = () => {
                 <DollarSign className="w-4 h-4" />
               </div>
               <span className="text-xs font-mono text-stone-400">
-                Cap: {formatCurrency(trip.budget, trip.currency)}
+                Cap: {format(trip.budget, trip.currency)}
               </span>
             </div>
             <h3 className="text-base font-serif font-bold text-stone-900 dark:text-stone-100">

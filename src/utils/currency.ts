@@ -1,4 +1,5 @@
 import { CurrencyCode } from '../types/settings';
+import { BASELINE_EXCHANGE_RATES, convertCurrencyWithRates } from '../services/currency';
 
 export const CURRENCY_SYMBOLS: Record<CurrencyCode, string> = {
   USD: '$',
@@ -20,17 +21,12 @@ export const CURRENCY_NAMES: Record<CurrencyCode, string> = {
   INR: 'Indian Rupee (INR)',
 };
 
-// Base conversion rates (relative to USD 1.0)
-export const EXCHANGE_RATES: Record<CurrencyCode, number> = {
-  USD: 1.0,
-  EUR: 0.92,
-  GBP: 0.79,
-  JPY: 154.2,
-  CAD: 1.36,
-  AUD: 1.52,
-  INR: 84.5,
-};
+// Aliased for backward compatibility with existing tests
+export const EXCHANGE_RATES: Record<CurrencyCode, number> = BASELINE_EXCHANGE_RATES;
 
+/**
+ * Format an amount with its currency symbol and appropriate decimal precision
+ */
 export function formatCurrency(
   amount: number,
   currency: CurrencyCode | string = 'USD'
@@ -38,23 +34,38 @@ export function formatCurrency(
   const code = (currency in CURRENCY_SYMBOLS ? currency : 'USD') as CurrencyCode;
   const symbol = CURRENCY_SYMBOLS[code] || '$';
 
-  // For JPY, usually whole numbers without decimals
+  // For JPY, display whole numbers without decimals
   const decimals = code === 'JPY' ? 0 : 2;
 
   const formattedNum = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
-  }).format(amount);
+  }).format(amount || 0);
 
   return `${symbol}${formattedNum}`;
 }
 
+/**
+ * Convert an amount between currencies using cached live rates or baseline rates
+ */
 export function convertCurrency(
   amount: number,
-  from: CurrencyCode,
-  to: CurrencyCode
+  from: CurrencyCode | string,
+  to: CurrencyCode | string
 ): number {
   if (from === to) return amount;
-  const inUSD = amount / EXCHANGE_RATES[from];
-  return inUSD * EXCHANGE_RATES[to];
+
+  // Attempt to use cached live rates if available
+  let activeRates: Record<string, number> = BASELINE_EXCHANGE_RATES;
+  try {
+    const raw = typeof window !== 'undefined' ? localStorage.getItem('tp_live_exchange_rates_v1') : null;
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.rates?.EUR) {
+        activeRates = parsed.rates;
+      }
+    }
+  } catch {}
+
+  return convertCurrencyWithRates(amount, from, to, activeRates);
 }
